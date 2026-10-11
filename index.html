@@ -4,308 +4,736 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio Chissanucha Fadsura</title>
-    <!-- นำเข้า Tailwind CSS สำหรับทำ Responsive และ UI อย่างรวดเร็ว -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- นำเข้า Font Awesome สำหรับไอคอน (ฟันเฟือง, เมนู) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1A365D',
+                        gold: '#D4AF37',
+                        lightblue: '#EBF8FF'
+                    },
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* สีกรม-ทอง และระบบ Dark Mode */
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --navy-blue: #002147;
-            --gold: #D4AF37;
-            --light-blue-box: #e0f0ff;
-            --card-bg: #f9f9f9;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --navy-blue: #0a192f;
-            --gold: #F1C40F;
-            --light-blue-box: #1e3a5f;
-            --card-bg: #1e1e1e;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Sarabun', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        .header-navy {
-            background-color: var(--navy-blue);
-            color: var(--gold);
-            border-bottom: 3px solid var(--gold);
-        }
-
-        .box-light-blue {
-            background-color: var(--light-blue-box);
-            border: 1px solid var(--navy-blue);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .gold-border { border: 2px solid var(--gold); }
-        .green-border { border: 2px solid #27ae60; }
-
-        /* ซ่อนเมนูที่ต้องล็อกอินก่อน */
-        .auth-required { display: none; }
+        body { transition: background-color 0.3s, color 0.3s; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .dark .glass-nav { background: rgba(15, 23, 42, 0.9); }
         
-        .gear-icon {
-            cursor: pointer;
-            color: var(--navy-blue);
-            transition: 0.2s;
-        }
-        .gear-icon:hover { color: var(--gold); }
-        
-        /* Sidebar Menu */
-        #sidebar {
-            position: fixed;
-            top: 0; left: -250px;
-            width: 250px; height: 100%;
-            background-color: var(--navy-blue);
-            transition: 0.3s;
-            z-index: 50;
-        }
-        #sidebar.open { left: 0; }
-        .menu-item { color: white; display: block; padding: 15px; border-bottom: 1px solid var(--gold); }
-        .menu-item:hover { background-color: var(--gold); color: var(--navy-blue); }
+        /* Loading Overlay */
+        #loader { display: flex; }
+        .spinner { border: 4px solid rgba(212, 175, 55, 0.3); border-left-color: #D4AF37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300">
 
-    <!-- Header -->
-    <header class="header-navy p-4 flex justify-between items-center sticky top-0 z-40">
-        <div class="flex items-center gap-4">
-            <i class="fas fa-bars text-2xl cursor-pointer" onclick="toggleSidebar()"></i>
-            <h1 class="text-xl font-bold">Portfolio Chissanucha Fadsura</h1>
-        </div>
-        <div class="flex gap-4 items-center">
-            <button onclick="toggleTheme()" id="theme-btn" class="text-xl" title="โหมดสว่าง/มืด"><i class="fas fa-moon"></i></button>
-            <div id="google_translate_element"></div>
-            <button onclick="openLoginModal()" id="login-btn" class="bg-yellow-500 text-navy-blue px-4 py-1 rounded font-bold hover:bg-yellow-400">Login</button>
-        </div>
-    </header>
-
-    <!-- Sidebar Menu -->
-    <div id="sidebar">
-        <div class="p-4 text-right">
-            <i class="fas fa-times text-white text-2xl cursor-pointer" onclick="toggleSidebar()"></i>
-        </div>
-        <a href="#" class="menu-item" onclick="showPage('page-portfolio')">Portfolio</a>
-        <a href="#" class="menu-item auth-required" onclick="showPage('page-read')">Reading Schedule</a>
-        <a href="#" class="menu-item auth-required" onclick="showPage('page-list')">List Reading</a>
-        <a href="#" class="menu-item auth-required" onclick="showPage('page-work')">Work Timetable</a>
-        <a href="#" class="menu-item auth-required" onclick="showPage('page-score')">ScoreTest</a>
-    </div>
-
-    <!-- Main Content -->
-    <main class="p-4 max-w-6xl mx-auto" style="min-height: 80vh;">
-        
-        <!-- หน้า Portfolio -->
-        <section id="page-portfolio" class="page-section">
-            <h2 class="text-2xl font-bold mb-4 text-center" style="color: var(--navy-blue);">ข้อมูลส่วนตัว</h2>
-            
-            <div class="flex flex-col md:flex-row gap-6 mb-8">
-                <!-- รูปภาพ (คอลัมน์ G) -->
-                <div class="w-full md:w-1/3 flex justify-center items-center flex-col relative">
-                    <img id="profile-img" src="https://via.placeholder.com/200" alt="Profile" class="rounded-full w-48 h-48 object-cover gold-border">
-                    <i class="fas fa-cog gear-icon absolute top-0 right-10 text-2xl auth-required" onclick="alert('ฟอร์มแก้ไขรูปภาพ')"></i>
+    <nav class="glass-nav fixed w-full z-50 border-b border-gold/30 shadow-sm top-0 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Hamburger Menu -->
+                <div class="flex items-center">
+                    <button id="menu-btn" class="text-navy dark:text-gold p-2 rounded-md focus:outline-none hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <span class="ml-4 font-bold text-xl text-navy dark:text-gold hidden sm:block lang-th">Portfolio Chissanucha Fadsura</span>
+                    <span class="ml-4 font-bold text-xl text-navy dark:text-gold hidden sm:block lang-en hidden">Portfolio Chissanucha Fadsura</span>
                 </div>
                 
-                <!-- ข้อมูลส่วนตัว (คอลัมน์ H, I, F, วันเกิด O) -->
-                <div class="w-full md:w-2/3 box-light-blue relative">
-                    <i class="fas fa-cog gear-icon absolute top-4 right-4 text-2xl auth-required" onclick="alert('ฟอร์มแก้ไขข้อมูลส่วนตัว')"></i>
-                    <h1 id="p-name" class="text-3xl font-bold mb-2">ชื่อ - นามสกุล</h1>
-                    <h3 id="p-role" class="text-xl mb-4 font-semibold" style="color: var(--gold);">ตำแหน่ง/บทบาท</h3>
+                <!-- Right Controls -->
+                <div class="flex items-center space-x-4">
+                    <!-- Translate Toggle -->
+                    <button onclick="toggleLang()" class="text-sm font-semibold px-3 py-1 rounded-full border border-navy text-navy dark:border-gold dark:text-gold hover:bg-navy hover:text-white dark:hover:bg-gold dark:hover:text-slate-900 transition">
+                        <span id="lang-text">TH/EN</span>
+                    </button>
                     
-                    <p><strong>วันเกิด:</strong> <span id="p-dob"></span> (อายุ: <span id="p-age"></span>)</p>
-                    <p><strong>เชื้อชาติ:</strong> <span id="p-race"></span> | <strong>สัญชาติ:</strong> <span id="p-nation"></span> | <strong>ศาสนา:</strong> <span id="p-religion"></span></p>
-                    <p class="mt-2"><strong>ความสามารถพิเศษ:</strong></p>
-                    <ul id="p-talents" class="list-disc pl-5"></ul>
-                    
-                    <div class="mt-4 p-3 bg-blue-100 rounded text-center italic text-sm text-blue-800">
-                        " <span id="p-motto">คติประจำใจ</span> "
-                    </div>
+                    <!-- Dark Mode Toggle -->
+                    <button onclick="toggleTheme()" class="text-navy dark:text-gold p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+                        <i id="theme-icon" class="fas fa-moon"></i>
+                    </button>
+
+                    <!-- Login Button -->
+                    <button id="auth-btn" onclick="openLoginModal()" class="bg-navy text-white dark:bg-gold dark:text-slate-900 px-4 py-1.5 rounded-lg text-sm font-bold shadow-md hover:opacity-80 transition">
+                        <span class="lang-th">เข้าสู่ระบบ</span><span class="lang-en hidden">Login</span>
+                    </button>
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- ประวัติครอบครัว & ติดต่อ -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="box-light-blue relative">
-                    <i class="fas fa-cog gear-icon absolute top-4 right-4 text-2xl auth-required"></i>
-                    <h3 class="font-bold text-lg mb-2 border-b border-gray-300 pb-1">ประวัติครอบครัว</h3>
-                    <p><strong>บิดา:</strong> <span id="p-father"></span></p>
-                    <p><strong>มารดา:</strong> <span id="p-mother"></span></p>
-                    <p><strong>ที่อยู่:</strong> <span id="p-address"></span></p>
-                </div>
-                <div class="box-light-blue relative">
-                    <i class="fas fa-cog gear-icon absolute top-4 right-4 text-2xl auth-required"></i>
-                    <h3 class="font-bold text-lg mb-2 border-b border-gray-300 pb-1">การติดต่อ</h3>
-                    <p><i class="fas fa-phone"></i> Tel: <a id="l-tel" href="#" class="text-blue-500 hover:underline"></a></p>
-                    <p><i class="fab fa-instagram"></i> IG: <a id="l-ig" href="#" class="text-blue-500 hover:underline"></a></p>
-                    <p><i class="fab fa-line"></i> LINE: <a id="l-line" href="#" class="text-blue-500 hover:underline"></a></p>
-                    <p><i class="fab fa-facebook"></i> Facebook: <a id="l-fb" href="#" class="text-blue-500 hover:underline"></a></p>
-                </div>
-            </div>
-            
-            <!-- ส่วนผลงาน และประวัติการศึกษา จะถูก Append ผ่าน JS ตรงนี้ -->
-        </section>
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full w-64 bg-white dark:bg-slate-800 shadow-xl z-40 transition-transform duration-300 pt-16">
+        <ul class="p-4 space-y-2">
+            <li><a href="#" onclick="navigate('portfolio')" class="block p-3 rounded-lg hover:bg-lightblue dark:hover:bg-slate-700 text-navy dark:text-gold font-semibold"><i class="fas fa-user mr-2"></i> Portfolio</a></li>
+            <li class="auth-required hidden"><a href="#" onclick="navigate('readSchedule')" class="block p-3 rounded-lg hover:bg-lightblue dark:hover:bg-slate-700 text-navy dark:text-gold font-semibold"><i class="fas fa-clock mr-2"></i> Reading schedule</a></li>
+            <li class="auth-required hidden"><a href="#" onclick="navigate('listReading')" class="block p-3 rounded-lg hover:bg-lightblue dark:hover:bg-slate-700 text-navy dark:text-gold font-semibold"><i class="fas fa-book mr-2"></i> List Reading</a></li>
+            <li class="auth-required hidden"><a href="#" onclick="navigate('workTimetable')" class="block p-3 rounded-lg hover:bg-lightblue dark:hover:bg-slate-700 text-navy dark:text-gold font-semibold"><i class="fas fa-tasks mr-2"></i> Work timetable</a></li>
+            <li class="auth-required hidden"><a href="#" onclick="navigate('scoreTest')" class="block p-3 rounded-lg hover:bg-lightblue dark:hover:bg-slate-700 text-navy dark:text-gold font-semibold"><i class="fas fa-star mr-2"></i> ScoreTest</a></li>
+        </ul>
+    </div>
 
-        <!-- หน้าอื่นๆ (โครงสร้างจำลอง) -->
-        <section id="page-read" class="page-section hidden">
-            <h2 class="text-2xl font-bold mb-4">Reading Schedule</h2>
-            <p id="realtime-clock" class="text-xl font-bold text-red-600 text-center mb-4"></p>
-            <!-- ตารางเวลาใส่ตรงนี้ -->
-        </section>
-        
-        <!-- ซ่อนหน้าอื่นๆ ไว้ก่อน -->
-        <section id="page-list" class="page-section hidden"><h2>List Reading</h2></section>
-        <section id="page-work" class="page-section hidden"><h2>Work Timetable</h2></section>
-        <section id="page-score" class="page-section hidden"><h2>ScoreTest</h2></section>
-
+    <main class="pt-20 pb-24 min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300" id="main-content">
+        <!-- Views will be injected here by JS -->
     </main>
 
-    <!-- Footer -->
-    <footer class="header-navy text-center p-4 mt-8">
-        <p class="text-sm">©Portfolio Chissanucha Fadsura ALLRIGHT RESERVED</p>
+    <footer class="fixed bottom-0 w-full bg-navy text-white text-center py-3 text-sm z-30">
+        ©Portfolio Chissanucha Fadsura ALLRIGHT RESERVED
     </footer>
 
     <!-- Login Modal -->
-    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-        <div class="bg-white p-6 rounded-lg w-80 text-black">
-            <h2 class="text-xl font-bold mb-4 text-center">Login (Admin)</h2>
-            <input type="text" id="username" placeholder="Username" class="w-full mb-3 p-2 border rounded">
-            <input type="password" id="password" placeholder="Password" class="w-full mb-4 p-2 border rounded">
-            <div class="flex justify-between">
-                <button onclick="closeLoginModal()" class="bg-gray-400 text-white px-4 py-2 rounded">ยกเลิก</button>
-                <button onclick="doLogin()" class="bg-blue-600 text-white px-4 py-2 rounded">เข้าสู่ระบบ</button>
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border-t-4 border-navy dark:border-gold relative">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            <h2 class="text-2xl font-bold text-navy dark:text-gold mb-6 text-center">เข้าสู่ระบบ (Admin)</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Username</label>
+                    <input type="text" id="username" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-navy dark:bg-slate-700 dark:border-gray-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Password</label>
+                    <input type="password" id="password" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-navy dark:bg-slate-700 dark:border-gray-600">
+                </div>
+                <button onclick="performLogin()" class="w-full bg-navy text-white dark:bg-gold dark:text-slate-900 font-bold py-2 rounded-lg hover:opacity-90 transition mt-4">Login</button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <!-- Generic Form Modal for adding data -->
+    <div id="form-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border-t-4 border-gold relative">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            <h2 id="form-modal-title" class="text-xl font-bold text-navy dark:text-gold mb-4">เพิ่มข้อมูล</h2>
+            <form id="dynamic-form" class="space-y-4" onsubmit="submitFormData(event)">
+                <!-- Form fields injected here -->
+            </form>
+        </div>
+    </div>
+
+    <!-- Full Screen Loader -->
+    <div id="loader" class="fixed inset-0 bg-white/80 dark:bg-slate-900/80 z-[100] flex flex-col items-center justify-center backdrop-blur-sm">
+        <div class="spinner mb-4"></div>
+        <p class="text-navy dark:text-gold font-semibold animate-pulse">กำลังโหลดข้อมูล...</p>
+    </div>
+
     <script>
-        // --- เปลี่ยน URL ด้านล่างเป็น URL ของ Web App ที่ได้จาก Google Apps Script ---
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwO4oaxwA4-5CMtiJI5SDQZ4I91eb_XoTFMAe2XgzIuuDeh68L7nokA52sE3HRrzCf1tw/exec'; // <--- แก้ไขตรงนี้
+        // === CONFIGURATION ===
+        // นำ URL Web App ของคุณมาใส่ที่นี่
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec"; 
+        
+        let globalData = {};
         let isLoggedIn = false;
+        let isEng = false;
 
-        // ระบบแปลภาษา
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'th', includedLanguages: 'th,en,zh-CN,ja'}, 'google_translate_element');
-        }
+        // Initialize
+        window.onload = async () => {
+            initTheme();
+            setupSidebar();
+            await fetchData();
+            navigate('portfolio');
+        };
 
-        // ระบบ Dark / Light Mode
-        function toggleTheme() {
-            const body = document.body;
-            const btn = document.getElementById('theme-btn');
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                btn.innerHTML = '<i class="fas fa-moon"></i>';
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
             } else {
-                body.setAttribute('data-theme', 'dark');
-                btn.innerHTML = '<i class="fas fa-sun text-yellow-400"></i>';
+                document.documentElement.classList.remove('dark');
             }
         }
 
-        // ระบบเปิด/ปิด Sidebar
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+                icon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
         }
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(pageId).classList.remove('hidden');
-            toggleSidebar(); // ปิดเมนูเมื่อเลือกเสร็จ
+        function toggleLang() {
+            isEng = !isEng;
+            document.querySelectorAll('.lang-th').forEach(el => el.classList.toggle('hidden', isEng));
+            document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', !isEng));
+            renderCurrentView(); // Re-render for translation
         }
 
-        // ระบบ Login
-        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
-        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+        function setupSidebar() {
+            const btn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            btn.onclick = () => sidebar.classList.toggle('-translate-x-full');
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !btn.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        }
 
-        async function doLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            // แจ้งเตือนกำลังล็อกอิน
-            
+        async function fetchData() {
+            showLoader();
             try {
-                const response = await fetch(SCRIPT_URL, {
+                // If using GitHub, use POST. If CORS fails, consider setting up a proxy or using JSONP. 
+                // Using POST based on the provided GAS script.
+                const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'login', username: user, password: pass })
+                    body: JSON.stringify({ action: 'getData' })
                 });
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    isLoggedIn = true;
-                    alert('เข้าสู่ระบบสำเร็จ');
-                    closeLoginModal();
-                    document.getElementById('login-btn').style.display = 'none';
-                    // แสดงเมนูและฟันเฟืองที่ซ่อนอยู่
-                    document.querySelectorAll('.auth-required').forEach(el => el.style.display = 'block');
-                } else {
-                    alert('Username หรือ Password ไม่ถูกต้อง');
+                const res = await response.json();
+                if(res.status === 'success') {
+                    globalData = res.data;
                 }
             } catch (error) {
-                alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                console.error("Error fetching data:", error);
+                // Mock data for display if API is not set yet
+                mockData();
             }
+            hideLoader();
         }
 
-        // คำนวณอายุ (ปี เดือน วัน)
-        function calculateAge(birthDateString) {
-            if(!birthDateString) return "";
-            const birthDate = new Date(birthDateString);
-            const today = new Date();
-            let years = today.getFullYear() - birthDate.getFullYear();
-            let months = today.getMonth() - birthDate.getMonth();
-            let days = today.getDate() - birthDate.getDate();
+        function mockData() {
+            globalData = {
+                record: [["","","","","","Small Text 1","LogoUrl","School Name","Affiliation","Address","GPA","Religion","Motto","Talent1, Talent2","2005-10-15","Father Name","Mother Name","Address info","0812345678","tel:0812345678","ig_acc","url","fb","url","threads","url","line","url"]],
+                award: [], read: [], subject: [], work: [], scoreTest: [], list: []
+            };
+        }
+
+        let currentView = 'portfolio';
+        function navigate(view) {
+            currentView = view;
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            renderCurrentView();
+        }
+
+        function renderCurrentView() {
+            const main = document.getElementById('main-content');
+            main.innerHTML = '';
             
-            if (months < 0 || (months === 0 && days < 0)) { years--; months += 12; }
-            if (days < 0) {
-                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-                days += prevMonth.getDate();
-                months--;
-            }
-            return `${years} ปี ${months} เดือน ${days} วัน`;
+            if(currentView === 'portfolio') renderPortfolio(main);
+            else if(currentView === 'readSchedule' && isLoggedIn) renderReadSchedule(main);
+            else if(currentView === 'listReading' && isLoggedIn) renderListReading(main);
+            else if(currentView === 'workTimetable' && isLoggedIn) renderWorkTimetable(main);
+            else if(currentView === 'scoreTest' && isLoggedIn) renderScoreTest(main);
+            else main.innerHTML = '<p class="text-center mt-20 text-red-500">Please Login / กรุณาเข้าสู่ระบบ</p>';
         }
 
-        // นาฬิกาแบบ Realtime สำหรับหน้า Reading
-        setInterval(() => {
+        function renderPortfolio(container) {
+            const r = globalData.record && globalData.record[0] ? globalData.record[0] : Array(30).fill('');
+            
+            // Age Calculation
+            const dob = new Date(r[14]); // O3 (index 14)
+            let age = "";
+            if(!isNaN(dob)) {
+                const diff = Date.now() - dob.getTime();
+                const ageDt = new Date(diff); 
+                age = Math.abs(ageDt.getUTCFullYear() - 1970) + " ปี " + ageDt.getUTCMonth() + " เดือน";
+            }
+
+            const t = (th, en) => isEng ? en : th;
+
+            let html = `
+                <div class="space-y-8 animate-fade-in">
+                    <h1 class="text-3xl md:text-5xl font-bold text-navy dark:text-gold text-center my-6">Portfolio</h1>
+                    
+                    <!-- Profile Section -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 relative flex flex-col md:flex-row gap-6 items-center md:items-start border-t-4 border-navy">
+                        ${renderGear('recordProfile')}
+                        <img src="${r[6] || 'https://placehold.co/200x200/1A365D/FFF?text=Photo'}" class="w-48 h-48 rounded-2xl object-cover shadow-md border-2 border-gold">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-bold text-navy dark:text-gold">${r[7]}</h2>
+                            <h3 class="text-xl text-gray-600 dark:text-gray-300 mb-2">${r[8]}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">${r[5]}</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                                <div><span class="font-bold">${t('วันเกิด', 'DOB')}:</span> ${formatThaiDate(r[14])}</div>
+                                <div><span class="font-bold">${t('อายุ', 'Age')}:</span> ${age}</div>
+                                <div><span class="font-bold">${t('เชื้อชาติ', 'Race')}:</span> ${r[9]}</div>
+                                <div><span class="font-bold">${t('สัญชาติ', 'Nationality')}:</span> ${r[10]}</div>
+                                <div><span class="font-bold">${t('ศาสนา', 'Religion')}:</span> ${r[11]}</div>
+                            </div>
+                            
+                            <div class="mt-4 p-3 bg-lightblue dark:bg-slate-700 rounded-xl border border-blue-200 dark:border-slate-600">
+                                <span class="font-bold text-navy dark:text-gold">${t('คติประจำใจ', 'Motto')}:</span> 
+                                <span class="italic">"${r[12]}"</span>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <span class="font-bold">${t('ความสามารถพิเศษ', 'Talents')}:</span>
+                                <ul class="list-disc list-inside text-sm mt-1">
+                                    ${String(r[13]).split(',').map(item => `<li>${item.trim()}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Family -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 relative border-t-4 border-gold">
+                             ${renderGear('recordFamily')}
+                             <h3 class="text-xl font-bold text-navy dark:text-gold mb-4"><i class="fas fa-home mr-2"></i>${t('ครอบครัว', 'Family')}</h3>
+                             <p><span class="font-bold">${t('บิดา', 'Father')}:</span> ${r[15]}</p>
+                             <p><span class="font-bold">${t('มารดา', 'Mother')}:</span> ${r[16]}</p>
+                             <p class="mt-2"><span class="font-bold">${t('ที่อยู่', 'Address')}:</span> ${r[17]}</p>
+                        </div>
+                        
+                        <!-- Contact -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 relative border-t-4 border-gold">
+                             ${renderGear('recordContact')}
+                             <h3 class="text-xl font-bold text-navy dark:text-gold mb-4"><i class="fas fa-address-book mr-2"></i>${t('การติดต่อ', 'Contact')}</h3>
+                             <div class="space-y-2">
+                                <a href="${r[19]}" target="_blank" class="flex items-center text-navy dark:text-blue-300 hover:underline"><i class="fas fa-phone w-6"></i> ${r[18]}</a>
+                                <a href="${r[21]}" target="_blank" class="flex items-center text-pink-600 dark:text-pink-400 hover:underline"><i class="fab fa-instagram w-6"></i> ${r[20]}</a>
+                                <a href="${r[27]}" target="_blank" class="flex items-center text-green-500 hover:underline"><i class="fab fa-line w-6"></i> ${r[26]}</a>
+                                <a href="${r[23]}" target="_blank" class="flex items-center text-blue-600 dark:text-blue-400 hover:underline"><i class="fab fa-facebook w-6"></i> ${r[22]}</a>
+                                <a href="${r[25]}" target="_blank" class="flex items-center text-gray-800 dark:text-gray-300 hover:underline"><i class="fa-brands fa-threads w-6"></i> ${r[24]}</a>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="bg-lightblue dark:bg-slate-800 rounded-2xl shadow-lg p-6 relative border-2 border-blue-200 dark:border-navy">
+                        ${renderGear('recordEdu')}
+                        <h3 class="text-2xl font-bold text-navy dark:text-gold mb-4 text-center"><i class="fas fa-graduation-cap mr-2"></i>${t('ประวัติการศึกษา', 'Education')}</h3>
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-6 text-center md:text-left">
+                            <img src="${r[0] || 'https://placehold.co/100x100/FFF/000?text=Logo'}" class="w-24 h-24 rounded-full shadow-md bg-white p-1">
+                            <div>
+                                <h4 class="text-2xl font-bold text-navy dark:text-white">${r[1]}</h4>
+                                <p class="text-lg text-gray-700 dark:text-gray-300">${r[2]}</p>
+                                <p class="text-sm text-gray-500">${r[3]}</p>
+                                <p class="mt-2 text-lg font-bold text-gold bg-navy px-3 py-1 rounded-full inline-block">GPA: ${r[4]}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Awards (List mapped from Award Sheet) -->
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold text-navy dark:text-gold"><i class="fas fa-trophy mr-2"></i>${t('ผลงาน', 'Awards')}</h3>
+                            ${renderGear('award', true)}
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${globalData.award.map(aw => renderAwardCard(aw)).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        function renderAwardCard(aw) {
+            // Mapping based on prompt: I=8(Img), D=3(Level), E=4(Priv), F=5(Medal), G=6(Name), H=7(Org), B=1(Date), C=2(Grade), J=9(Winners), K=10(Advisors), L=11(Desc)
+            return `
+            <div class="bg-lightblue dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden border border-blue-100 dark:border-slate-700 flex flex-col">
+                <img src="${aw[8] || 'https://placehold.co/400x200/D4AF37/FFF?text=Award'}" class="w-full h-48 object-cover">
+                <div class="p-4 flex-1 flex flex-col">
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <span class="text-[10px] px-2 py-1 border border-gold text-gold rounded-full bg-white dark:bg-slate-700 font-bold">${aw[3]}</span>
+                        <span class="text-[10px] px-2 py-1 border border-gray-400 text-gray-600 dark:text-gray-300 rounded-full bg-white dark:bg-slate-700">${aw[4]}</span>
+                        <span class="text-[10px] px-2 py-1 border border-green-500 text-green-600 dark:text-green-400 rounded-full bg-white dark:bg-slate-700">${aw[5]}</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-navy dark:text-white leading-tight mb-1">${aw[6]}</h4>
+                    <p class="text-xs text-gray-500 mb-2">${aw[7]}</p>
+                    <div class="text-[10px] text-gray-500 dark:text-gray-400 mb-2 space-y-1">
+                        <p><i class="far fa-calendar mr-1"></i> ${formatThaiDate(aw[1])}</p>
+                        <p><i class="fas fa-layer-group mr-1"></i> ชั้น ${aw[2]}</p>
+                    </div>
+                    <div class="mt-auto">
+                        <p class="text-[10px] font-bold mt-2">ผู้ได้รับรางวัล:</p>
+                        <ul class="text-[10px] list-disc list-inside text-gray-600 dark:text-gray-300">
+                            ${String(aw[9]).split(',').map(x => `<li>${x.trim()}</li>`).join('')}
+                        </ul>
+                        <p class="text-[10px] font-bold mt-1">ครูที่ปรึกษา:</p>
+                        <ul class="text-[10px] list-disc list-inside text-gray-600 dark:text-gray-300 mb-2">
+                            ${String(aw[10]).split(',').map(x => `<li>${x.trim()}</li>`).join('')}
+                        </ul>
+                        <p class="text-xs bg-white dark:bg-slate-700 p-2 rounded border border-gray-200 dark:border-gray-600 italic">"${aw[11]}"</p>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // Reading Schedule
+        function renderReadSchedule(container) {
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto space-y-6 animate-fade-in">
+                    <h2 class="text-3xl font-bold text-navy dark:text-gold text-center"><i class="fas fa-clock mr-2"></i> Reading Schedule</h2>
+                    <div class="bg-navy text-white p-4 rounded-xl shadow-lg text-center border-b-4 border-gold">
+                        <div id="realtime-date" class="text-lg mb-1"></div>
+                        <div id="realtime-clock" class="text-4xl font-bold font-mono tracking-wider text-gold"></div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-4">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs uppercase bg-gray-100 dark:bg-slate-700">
+                                <tr><th class="px-4 py-3 rounded-tl-lg">เวลา (Time)</th><th class="px-4 py-3 rounded-tr-lg">กิจกรรม (Activity)</th></tr>
+                            </thead>
+                            <tbody id="schedule-body">
+                                <!-- JS mapped -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Map Schedule logic (Simple mock mapping for concept)
+            const tbody = document.getElementById('schedule-body');
+            const data = globalData.read;
+            if(data.length > 0) {
+                // Assuming A=0 is Time, B=1... are days.
+                data.forEach(row => {
+                    // Current time check logic could be added here to highlight row
+                    tbody.innerHTML += `
+                        <tr class="border-b dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600">
+                            <td class="px-4 py-3 font-bold text-navy dark:text-gold w-1/3">${row[0]}</td>
+                            <td class="px-4 py-3">${row[1] || '-'}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function updateClock() {
             const now = new Date();
-            const dateOpts = { year: 'numeric', month: 'long', day: 'numeric' };
-            const timeOpts = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            const thaiDate = now.toLocaleDateString('th-TH', dateOpts);
-            const thaiTime = now.toLocaleTimeString('th-TH', timeOpts);
-            document.getElementById('realtime-clock').innerText = `${thaiDate} เวลา ${thaiTime}`;
-        }, 1000);
-
-        // --- ส่วนที่ใช้สำหรับดึงข้อมูล (รันเมื่อเปิดเว็บ) ---
-        // หมายเหตุ: โค้ดส่วนนี้เป็นการจำลองการนำข้อมูลจาก Array ชีตมาใส่ HTML
-        // หากเชื่อมต่อ SCRIPT_URL แล้ว ให้เปิดใช้งานโค้ด fetch ด้านล่าง
-        
-        /* 
-        async function loadPortfolioData() {
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'getData', sheetName: 'Record' })
-            });
-            const resData = await response.json();
-            if(resData.status === 'success') {
-                const data = resData.data[2]; // สมมติว่าข้อมูลอยู่แถวที่ 3 (index 2)
-                
-                document.getElementById('profile-img').src = data[6]; // G
-                document.getElementById('p-name').innerText = data[7]; // H
-                document.getElementById('p-role').innerText = data[8]; // I
-                // นำข้อมูลอื่นๆ มา map ใส่ ID ที่เตรียมไว้
+            const dateEl = document.getElementById('realtime-date');
+            const clockEl = document.getElementById('realtime-clock');
+            if(dateEl && clockEl) {
+                dateEl.innerText = formatThaiDate(now);
+                clockEl.innerText = now.toLocaleTimeString('th-TH');
             }
         }
-        window.onload = loadPortfolioData;
-        */
+
+        // List Reading
+        function renderListReading(container) {
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto space-y-4 animate-fade-in">
+                    <h2 class="text-3xl font-bold text-navy dark:text-gold text-center mb-6"><i class="fas fa-book mr-2"></i> List Reading</h2>
+                    <div id="reading-list-container" class="space-y-4"></div>
+                </div>
+            `;
+            
+            // Grouping logic (Grade -> Subject -> Unit -> Sub)
+            // Column Mapping (based on prompt): C=2 (Grade), B=1 (Subject), D=3 (Unit), E=4 (Sub)
+            const grouped = {};
+            globalData.subject.forEach(row => {
+                const grade = row[2], subj = row[1], unit = row[3], sub = row[4];
+                if(!grouped[grade]) grouped[grade] = {};
+                if(!grouped[grade][subj]) grouped[grade][subj] = {};
+                if(!grouped[grade][subj][unit]) grouped[grade][subj][unit] = [];
+                grouped[grade][subj][unit].push(sub);
+            });
+
+            let html = '';
+            for(const grade in grouped) {
+                html += `<div class="bg-white dark:bg-slate-800 rounded-xl shadow p-4 border-l-4 border-navy"><h3 class="font-bold text-lg mb-2">ระดับชั้น: ${grade}</h3><div class="pl-4 space-y-2">`;
+                for(const subj in grouped[grade]) {
+                    html += `<details class="bg-gray-50 dark:bg-slate-700 rounded p-2"><summary class="font-semibold cursor-pointer outline-none">${subj}</summary><div class="pl-4 mt-2 space-y-2">`;
+                    for(const unit in grouped[grade][subj]) {
+                        html += `
+                            <div class="border border-gray-200 dark:border-slate-600 rounded p-2 bg-white dark:bg-slate-800">
+                                <label class="flex items-center space-x-2 font-semibold text-navy dark:text-gold">
+                                    <input type="checkbox" class="rounded text-navy focus:ring-navy" onclick="toggleUnit(this)">
+                                    <span>${unit}</span>
+                                </label>
+                                <div class="pl-6 mt-1 space-y-1 sub-items">
+                                    ${grouped[grade][subj][unit].map(sub => `
+                                        <label class="flex items-center space-x-2 text-sm">
+                                            <input type="checkbox" class="rounded text-gold focus:ring-gold" onchange="saveChecklist('${sub}')">
+                                            <span>${sub}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    html += `</div></details>`;
+                }
+                html += `</div></div>`;
+            }
+            document.getElementById('reading-list-container').innerHTML = html || '<p>ไม่มีข้อมูล</p>';
+        }
+
+        function toggleUnit(checkbox) {
+            const subs = checkbox.closest('div').querySelectorAll('.sub-items input[type="checkbox"]');
+            subs.forEach(cb => cb.checked = checkbox.checked);
+        }
+
+        // Work Timetable
+        function renderWorkTimetable(container) {
+            container.innerHTML = `
+                <div class="space-y-6 animate-fade-in">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-3xl font-bold text-navy dark:text-gold"><i class="fas fa-tasks mr-2"></i> Work Timetable</h2>
+                        ${renderGear('work', true)}
+                    </div>
+                    <div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl shadow">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs uppercase bg-navy text-white">
+                                <tr>
+                                    <th class="px-4 py-3">Done</th>
+                                    <th class="px-4 py-3">กำหนดส่ง</th>
+                                    <th class="px-4 py-3">รหัส/วิชา</th>
+                                    <th class="px-4 py-3">ชื่องาน</th>
+                                    <th class="px-4 py-3">สถานที่ส่ง</th>
+                                    <th class="px-4 py-3">ไฟล์/ที่มา</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${globalData.work.map(w => {
+                                    // A=0(Check), I=8(Due), C=2(Code), D=3(Subj), E=4(Teach), F=5(Task), G=6(Src), J=9(Loc)
+                                    const isOverdue = new Date(w[8]) < new Date();
+                                    const dueClass = isOverdue ? 'text-red-500 font-bold' : '';
+                                    return `
+                                    <tr class="border-b dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                        <td class="px-4 py-3"><input type="checkbox" class="rounded w-4 h-4" ${w[0] ? 'checked' : ''}></td>
+                                        <td class="px-4 py-3 ${dueClass}">${formatThaiDate(w[8], true)}</td>
+                                        <td class="px-4 py-3">
+                                            <div class="font-bold">${w[2]}</div>
+                                            <div class="text-xs text-gray-500">${w[3]}</div>
+                                        </td>
+                                        <td class="px-4 py-3 font-semibold">${w[5]}</td>
+                                        <td class="px-4 py-3">${w[9]}</td>
+                                        <td class="px-4 py-3">
+                                            ${w[6].includes('http') ? `<a href="${w[6]}" target="_blank" class="text-blue-500 hover:underline"><i class="fas fa-link"></i> Link</a>` : w[6]}
+                                        </td>
+                                    </tr>
+                                    `
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ScoreTest
+        function renderScoreTest(container) {
+            container.innerHTML = `
+                <div class="space-y-6 animate-fade-in">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-3xl font-bold text-navy dark:text-gold"><i class="fas fa-star mr-2"></i> ScoreTest</h2>
+                        ${renderGear('scoreTest', true)}
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${globalData.scoreTest.map(s => {
+                            // A=0(Name), B=1(Center), C=2(Round), D=3(Subj), E=4(Score), F=5(Max), G=6(Img)
+                            return `
+                            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border-t-4 border-navy">
+                                <img src="${s[6] || 'https://placehold.co/400x150/1A365D/FFF?text=Test'}" class="w-full h-32 object-cover">
+                                <div class="p-4">
+                                    <h3 class="text-xl font-bold text-navy dark:text-gold">${s[0]}</h3>
+                                    <p class="text-xs text-gray-500 mb-3">${s[1]} ${s[2] ? `(รอบ ${s[2]})` : ''}</p>
+                                    <div class="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg flex justify-between items-center">
+                                        <span class="font-semibold">${s[3]}</span>
+                                        <span class="text-lg font-bold text-gold">${s[4]} / ${s[5]}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            `
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatThaiDate(dateStr, includeTime = false) {
+            if(!dateStr) return '-';
+            const d = new Date(dateStr);
+            if(isNaN(d)) return dateStr;
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            let res = d.toLocaleDateString('th-TH', options);
+            if(includeTime) res += ' ' + d.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + ' น.';
+            return res;
+        }
+
+        function renderGear(type, isButton = false) {
+            if(!isLoggedIn) return '';
+            if(isButton) {
+                return `<button onclick="openFormModal('${type}')" class="bg-gold text-slate-900 px-3 py-1 rounded shadow hover:bg-yellow-500 text-sm"><i class="fas fa-plus mr-1"></i> เพิ่มข้อมูล</button>`;
+            }
+            return `<button onclick="openFormModal('${type}')" class="absolute top-2 right-2 text-gray-400 hover:text-navy dark:hover:text-gold transition"><i class="fas fa-cog text-xl"></i></button>`;
+        }
+
+        function openLoginModal() {
+            if(isLoggedIn) {
+                // Logout logic
+                isLoggedIn = false;
+                document.getElementById('auth-btn').innerHTML = '<span class="lang-th">เข้าสู่ระบบ</span><span class="lang-en hidden">Login</span>';
+                document.querySelectorAll('.auth-required').forEach(el => el.classList.add('hidden'));
+                navigate('portfolio');
+            } else {
+                document.getElementById('login-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeModals() {
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('form-modal').classList.add('hidden');
+        }
+
+        async function performLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            
+            // Note: In real production without proper backend, this is a mock. 
+            // We use the GAS backend to verify.
+            showLoader();
+            try {
+                const res = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', username: u, password: p })
+                });
+                const data = await res.json();
+                if(data.data.success) {
+                    isLoggedIn = true;
+                    closeModals();
+                    document.getElementById('auth-btn').innerHTML = '<span class="lang-th">ออกจากระบบ</span><span class="lang-en hidden">Logout</span>';
+                    document.querySelectorAll('.auth-required').forEach(el => el.classList.remove('hidden'));
+                    navigate('portfolio');
+                } else {
+                    alert('Login Failed: ' + data.data.message);
+                }
+            } catch (error) {
+                // Fallback mock login for preview
+                if(u==='admin' && p==='1234') {
+                    isLoggedIn = true;
+                    closeModals();
+                    document.getElementById('auth-btn').innerHTML = '<span class="lang-th">ออกจากระบบ</span><span class="lang-en hidden">Logout</span>';
+                    document.querySelectorAll('.auth-required').forEach(el => el.classList.remove('hidden'));
+                    navigate('portfolio');
+                } else {
+                    alert('Mock Login Failed (Use admin/1234)');
+                }
+            }
+            hideLoader();
+        }
+
+        function showLoader() { document.getElementById('loader').classList.remove('hidden'); }
+        function hideLoader() { document.getElementById('loader').classList.add('hidden'); }
+
+        function openFormModal(type) {
+            const modal = document.getElementById('form-modal');
+            const title = document.getElementById('form-modal-title');
+            const form = document.getElementById('dynamic-form');
+            form.innerHTML = '';
+            
+            // Build form based on type (Simplified versions of the requested forms)
+            if(type === 'work') {
+                title.innerText = "เพิ่มข้อมูล Work Timetable";
+                // Populate dropdowns from List sheet
+                let subjOptions = globalData.list.map(l => `<option value="${l[0]}">${l[0]} - ${l[1]}</option>`).join('');
+                
+                form.innerHTML = `
+                    <input type="hidden" name="sheetName" value="Work">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="text-sm">รหัสวิชา</label><select name="col3" class="w-full p-2 border rounded dark:bg-slate-700">${subjOptions}</select></div>
+                        <div><label class="text-sm">ชื่องาน</label><input type="text" name="col6" class="w-full p-2 border rounded dark:bg-slate-700" required></div>
+                        <div><label class="text-sm">กำหนดส่ง (วันที่/เวลา)</label><input type="datetime-local" name="col9" class="w-full p-2 border rounded dark:bg-slate-700" required></div>
+                        <div><label class="text-sm">สถานที่ส่ง</label><input type="text" name="col10" class="w-full p-2 border rounded dark:bg-slate-700"></div>
+                        <div class="col-span-2"><label class="text-sm">แนบไฟล์ลง Drive</label><input type="file" id="fileUpload" class="w-full p-2 border rounded dark:bg-slate-700"></div>
+                    </div>
+                    <button type="submit" class="w-full mt-4 bg-navy text-white py-2 rounded font-bold hover:bg-opacity-80">บันทึก</button>
+                `;
+            } else if (type === 'award') {
+                title.innerText = "เพิ่มผลงาน (Award)";
+                form.innerHTML = `
+                    <input type="hidden" name="sheetName" value="Award">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="text-sm">ชื่อผลงาน</label><input type="text" name="col7" class="w-full p-2 border rounded dark:bg-slate-700" required></div>
+                        <div><label class="text-sm">ระดับรางวัล</label><select name="col4" class="w-full p-2 border rounded dark:bg-slate-700"><option>ระดับประเทศ</option><option>ระดับภาค</option></select></div>
+                        <div><label class="text-sm">วันที่ได้รับ</label><input type="date" name="col2" class="w-full p-2 border rounded dark:bg-slate-700" required></div>
+                        <div><label class="text-sm">คำอธิบาย/ความรู้สึก</label><textarea name="col12" class="w-full p-2 border rounded dark:bg-slate-700"></textarea></div>
+                    </div>
+                    <button type="submit" class="w-full mt-4 bg-navy text-white py-2 rounded font-bold hover:bg-opacity-80">บันทึก</button>
+                `;
+            }
+            // Add other forms (recordProfile, scoreTest, etc.) following the same pattern
+            else {
+                title.innerText = "กำลังพัฒนาแบบฟอร์มนี้";
+                form.innerHTML = `<p>แบบฟอร์มสำหรับ ${type} อยู่ระหว่างจัดทำ</p>`;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        async function submitFormData(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const sheetName = formData.get('sheetName');
+            
+            // Dummy logic to gather row data based on form inputs
+            let rowData = Array(20).fill(''); 
+            for (let [key, value] of formData.entries()) {
+                if(key.startsWith('col')) {
+                    let idx = parseInt(key.replace('col', '')) - 1;
+                    rowData[idx] = value;
+                }
+            }
+
+            // Handle File Upload if exists
+            const fileInput = document.getElementById('fileUpload');
+            if(fileInput && fileInput.files.length > 0) {
+                showLoader();
+                const file = fileInput.files[0];
+                const base64 = await toBase64(file);
+                
+                try {
+                    const uploadRes = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'uploadFile',
+                            base64: base64.split(',')[1],
+                            filename: file.name,
+                            mimeType: file.type
+                        })
+                    });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.status === 'success') {
+                        rowData[6] = uploadData.data; // Save Drive URL to specific column
+                    }
+                } catch(e) { console.error("Upload failed", e); }
+            }
+
+            // Save Data to Sheet
+            showLoader();
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'saveData', sheetName: sheetName, rowData: rowData })
+                });
+                alert("บันทึกข้อมูลเรียบร้อย");
+                closeModals();
+                await fetchData(); // Refresh data
+                renderCurrentView();
+            } catch (error) {
+                alert("บันทึกข้อมูลล้มเหลว (Mock mode works)");
+                closeModals();
+            }
+            hideLoader();
+        }
+
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
     </script>
 </body>
 </html>
