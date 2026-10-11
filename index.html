@@ -1294,7 +1294,14 @@ function parseSheetDate(v) {
   // รูปแบบ "yyyy-MM-dd HH:mm:ss" จาก toSafe()
   var m = s.match(/^(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}):(\d{2}))?/);
   if (m) {
-    return new Date(+m[1], +m[2] - 1, +m[3], m[4] ? +m[4] : 0, m[5] ? +m[5] : 0, m[6] ? +m[6] : 0);
+    var yy = +m[1]; if (yy > 2400) yy -= 543; // ปี พ.ศ. ที่เก็บใน Sheet → ค.ศ.
+    return new Date(yy, +m[2] - 1, +m[3], m[4] ? +m[4] : 0, m[5] ? +m[5] : 0, m[6] ? +m[6] : 0);
+  }
+  // รูปแบบ วัน/เดือน/ปี เช่น 12/10/2569 (รูปแบบไทย ไม่ใช่ เดือน/วัน/ปี)
+  var m3 = s.match(/^\s*(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})\s*$/);
+  if (m3) {
+    var y3 = +m3[3]; if (y3 > 2400) y3 -= 543;
+    return new Date(y3, +m3[2] - 1, +m3[1]);
   }
   // รูปแบบไทย ## มกราคม ####
   var m2 = s.match(/(\d{1,2})\s*([^\s\d]+)\s*(\d{4})/);
@@ -1664,7 +1671,7 @@ function renderReading() {
   // normalize วันที่ให้เทียบกันได้แม้เป็น Date จาก sheet
   // ใช้เวลาไทย (Asia/Bangkok)
   var now = nowBKK();
-  var todayKey = parseSheetDate(fmtThaiDate(now));
+  var todayKey = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   var targetCol = -1;
   (d.headers || []).forEach(function (h, i) {
     if (!h) return;
