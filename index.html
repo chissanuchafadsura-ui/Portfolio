@@ -1,769 +1,2417 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Portfolio Chissanucha Fadsura</title>
-  <style>
-    :root {
-      --navy: #16324f;
-      --navy2: #1f4e79;
-      --gold: #c9a227;
-      --bg: #f7f9fc;
-      --card: #ffffff;
-      --text: #17222e;
-      --muted: #5f6f7f;
-      --blue-soft: #e8f2ff;
-      --border: #dbe5f0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Portfolio Chissanucha Fadsura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ THEME TOKENS (light + dark) ============ */
+:root, [data-theme="light"] {
+  --bg: #ffffff;
+  --bg-soft: #f8fafc;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #1f2937;
+  --text-soft: #6b7280;
+  --text-mute: #9ca3af;
+  --navy: #1e3a5f;
+  --navy-soft: #dfeaf5;
+  --navy-border: #a8c4e5;
+  --gold: #bfa25a;
+  --gold-soft: #f7efd9;
+  --gold-border: #d6c28a;
+  --green: #2f855a;
+  --green-soft: #e2f2e8;
+  --green-border: #7fb894;
+  --red: #c0392b;
+  --red-soft: #fdecea;
+  --shadow: 0 1px 3px rgba(15,23,42,.08), 0 4px 16px rgba(15,23,42,.06);
+  --shadow-lg: 0 8px 30px rgba(15,23,42,.14);
+  --hero-img-h: 300px;
+}
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-soft: #141d33;
+  --card: #1a2438;
+  --border: #2b3a52;
+  --text: #e2e8f0;
+  --text-soft: #a7b4c6;
+  --text-mute: #7a8aa0;
+  --navy: #7aa7d6;
+  --navy-soft: #22364f;
+  --navy-border: #3f5a80;
+  --gold: #d6bb74;
+  --gold-soft: #332d1c;
+  --gold-border: #6e5f2e;
+  --green: #6fb28c;
+  --green-soft: #1d3628;
+  --green-border: #41694f;
+  --red: #e57368;
+  --red-soft: #3c1e1a;
+  --shadow: 0 1px 3px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.55);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Sarabun', 'Kanit', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background .25s ease, color .25s ease;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; font-family: inherit; }
 
-    body.dark {
-      --bg: #0e1520;
-      --card: #16202c;
-      --text: #e8eef5;
-      --muted: #9fb0c0;
-      --blue-soft: #17293d;
-      --border: #26384b;
-    }
+/* ============ HEADER ============ */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hamburger {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  color: var(--text);
+  flex-shrink: 0;
+}
+.hamburger svg { width: 20px; height: 20px; }
+.brand {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600; font-size: 1rem;
+  color: var(--navy);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.icon-btn {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: 1rem;
+}
+.icon-btn svg { width: 17px; height: 17px; }
+.lang-btn {
+  padding: 0 12px; height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: .8rem; font-weight: 600;
+  letter-spacing: .5px;
+}
+.login-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 12px; height: 34px;
+  border-radius: 999px;
+  background: var(--navy-soft);
+  border: 1px solid var(--navy-border);
+  color: var(--navy);
+  font-size: .75rem; font-weight: 600;
+}
 
-    * { box-sizing: border-box; }
+/* ============ DRAWER / MENU ============ */
+.drawer-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(10,15,25,.55);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: min(280px, 82vw);
+  background: var(--card);
+  z-index: 201;
+  transform: translateX(-100%);
+  transition: transform .25s ease;
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--border);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.drawer-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: .95rem; font-weight: 600;
+  color: var(--navy);
+  margin: 0 0 4px;
+  line-height: 1.35;
+}
+.drawer-sub { font-size: .7rem; color: var(--text-mute); }
+.drawer-nav { flex: 1; overflow-y: auto; padding: 10px; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 11px 14px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font-size: .9rem; font-weight: 500;
+  text-align: left;
+}
+.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: .8; }
+.nav-item.active {
+  background: var(--navy-soft);
+  border-color: var(--navy-border);
+  color: var(--navy);
+  font-weight: 600;
+}
+.nav-item .lock {
+  margin-left: auto;
+  font-size: .65rem;
+  color: var(--text-mute);
+}
+.drawer-foot {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  font-size: .7rem;
+  color: var(--text-mute);
+  text-align: center;
+  line-height: 1.5;
+}
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Sarabun", "Noto Sans Thai", sans-serif;
-      transition: .25s;
-    }
+/* ============ MAIN ============ */
+main { flex: 1; width: 100%; }
+.page { display: none; animation: fadeUp .3s ease; }
+.page.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.container { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
+.page-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.35rem; font-weight: 600;
+  color: var(--navy);
+  margin: 8px 0 4px;
+}
+.page-sub { font-size: .82rem; color: var(--text-soft); margin: 0 0 18px; }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: var(--card);
-      border-bottom: 2px solid var(--gold);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
+/* Login gate */
+.login-gate {
+  max-width: 380px; margin: 40px auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.login-gate svg { width: 40px; height: 40px; color: var(--navy); margin: 0 auto 12px; }
+.login-gate h2 { font-size: 1.05rem; margin: 0 0 4px; color: var(--text); }
+.login-gate p { font-size: .8rem; color: var(--text-soft); margin: 0 0 18px; }
+.field { text-align: left; margin-bottom: 12px; }
+.field label { display: block; font-size: .75rem; font-weight: 600; color: var(--text-soft); margin-bottom: 5px; }
+.field input {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: .9rem;
+}
+.field input:focus { outline: 2px solid var(--navy-border); outline-offset: -1px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--navy-border);
+  background: var(--navy);
+  color: #fff;
+  font-size: .85rem; font-weight: 600;
+  width: 100%;
+  transition: opacity .15s ease;
+}
+.btn:hover { opacity: .9; }
+.btn.gold {
+  background: var(--gold);
+  border-color: var(--gold-border);
+  color: #2b2410;
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+.login-err { color: var(--red); font-size: .78rem; margin: 10px 0 0; min-height: 1em; }
 
-    .brand {
-      font-weight: 800;
-      color: var(--navy);
-      font-size: 18px;
-    }
+/* ============ PORTFOLIO PAGE ============ */
+.hero {
+  display: grid; grid-template-columns: 160px 1fr; gap: 20px;
+  margin-bottom: 24px;
+}
+.hero-photo-wrap {
+  width: 160px; height: 200px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid var(--gold-border);
+  background: var(--bg-soft);
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.hero-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.hero-photo-nav {
+  position: absolute; inset: auto 0 0 0;
+  display: flex; gap: 4px; padding: 6px;
+  justify-content: center;
+  background: linear-gradient(transparent, rgba(0,0,0,.55));
+}
+.hero-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.5);
+  border: none; padding: 0;
+}
+.hero-dot.on { background: #fff; }
+.hero-text h1 {
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 600; margin: 0 0 4px;
+  color: var(--navy);
+  line-height: 1.25;
+}
+.hero-sub {
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(.95rem, 3vw, 1.2rem);
+  color: var(--gold);
+  margin: 0 0 8px; font-weight: 400;
+}
+.hero-desc {
+  font-size: .85rem; color: var(--text-soft);
+  margin: 0; line-height: 1.7;
+}
 
-    body.dark .brand { color: var(--gold); }
+/* Section cards */
+.section { margin-bottom: 26px; }
+.section-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.section-head h2 {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.02rem; font-weight: 600;
+  color: var(--navy);
+  margin: 0;
+}
+.gear-btn {
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text-mute);
+  display: inline-grid; place-items: center;
+  font-size: 1rem;
+}
+.gear-btn:hover { color: var(--navy); border-color: var(--navy-border); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.card.navy { background: var(--navy-soft); border-color: var(--navy-border); }
+.info-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px 18px;
+}
+.info-item .lbl { font-size: .72rem; color: var(--text-mute); font-weight: 600; margin-bottom: 2px; }
+.info-item .val { font-size: .88rem; color: var(--text); }
+.talent-list { margin: 6px 0 0; padding-left: 18px; }
+.talent-list li { font-size: .85rem; margin-bottom: 3px; }
+.motto-box {
+  background: var(--navy-soft);
+  border: 1.5px solid var(--navy-border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-family: 'Kanit', sans-serif;
+  font-size: .95rem;
+  color: var(--navy);
+  font-weight: 500;
+  text-align: center;
+}
+.contact-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.contact-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  font-size: .82rem; font-weight: 500;
+  color: var(--text);
+  min-width: 0;
+}
+.contact-pill .c-ico {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--navy-soft);
+  color: var(--navy);
+  display: grid; place-items: center;
+  font-size: .75rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.contact-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    .top-actions { display: flex; gap: 8px; }
+/* Education */
+.edu-item {
+  background: var(--navy-soft);
+  border: 1.5px solid var(--navy-border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: grid; grid-template-columns: 56px 1fr; gap: 14px;
+  margin-bottom: 12px;
+  align-items: start;
+}
+.edu-logo {
+  width: 56px; height: 56px;
+  border-radius: 10px; overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.edu-logo img { width: 100%; height: 100%; object-fit: contain; }
+.edu-name { font-family: 'Kanit', sans-serif; font-size: 1rem; font-weight: 600; color: var(--navy); margin: 0 0 2px; }
+.edu-aff { font-size: .85rem; color: var(--text); margin: 0 0 2px; }
+.edu-addr { font-size: .75rem; color: var(--text-soft); margin: 0 0 2px; }
+.edu-gpa { font-size: .82rem; color: var(--text); font-weight: 600; margin: 4px 0 0; }
+.edu-gpa span { color: var(--gold); }
 
-    .icon-btn {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      font-size: 18px;
-      cursor: pointer;
-    }
+/* Awards */
+/* Award — ใส่กรอบสีน้ำเงินอ่อนตาม spec */
+.award-item {
+  background: var(--navy-soft);
+  border: 1.5px solid var(--navy-border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.award-top { display: grid; grid-template-columns: 120px 1fr; gap: 14px; margin-bottom: 12px; }
+.award-imgs {
+  width: 120px; height: 100px;
+  border-radius: 10px; overflow: hidden;
+  border: 1.5px solid var(--gold-border);
+  position: relative;
+  background: var(--bg-soft);
+}
+.award-imgs img { width: 100%; height: 100%; object-fit: cover; }
+.award-imgs .nav {
+  position: absolute; inset: auto 0 0 0;
+  display: flex; gap: 4px; padding: 5px; justify-content: center;
+  background: linear-gradient(transparent, rgba(0,0,0,.5));
+}
+.award-imgs .nav button {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,.55); border: none; padding: 0;
+}
+.award-imgs .nav button.on { background: #fff; }
+.award-title { font-family: 'Kanit', sans-serif; font-size: .98rem; font-weight: 600; color: var(--text); margin: 0 0 6px; line-height: 1.4; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.tag {
+  font-size: .68rem; font-weight: 600;
+  padding: 3px 9px; border-radius: 999px;
+  line-height: 1.5;
+}
+.tag.gold { background: var(--gold-soft); border: 1px solid var(--gold-border); color: #8a6d1c; }
+.tag.silver { background: #f0f2f5; border: 1px solid #b8bfc9; color: #5a6472; }
+.tag.bronze { background: #fbeee2; border: 1px solid #d9a570; color: #9c5f1e; }
+.tag.white { background: #ffffff; border: 1px solid #d1d5db; color: #4b5563; }
+.tag.green { background: var(--green-soft); border: 1px solid var(--green-border); color: var(--green); }
+.award-meta { font-size: .72rem; color: var(--text-soft); margin: 0 0 4px; }
+.award-people { font-size: .75rem; color: var(--text-soft); margin: 4px 0; }
+.award-desc { font-size: .8rem; color: var(--text-soft); line-height: 1.6; margin: 6px 0 0; }
 
-    .menu-btn { font-size: 22px; }
+/* ============ READING SCHEDULE ============ */
+.clock-panel {
+  background: var(--navy-soft);
+  border: 1.5px solid var(--navy-border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px;
+  margin-bottom: 18px;
+}
+.clock-date { font-family: 'Kanit', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--navy); }
+.clock-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem; font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+.sched-table { width: 100%; border-collapse: collapse; }
+.sched-table th, .sched-table td {
+  padding: 10px 12px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: .84rem;
+}
+.sched-table th {
+  background: var(--bg-soft);
+  font-size: .72rem; color: var(--text-mute);
+  text-transform: uppercase; letter-spacing: .4px;
+}
+.sched-time { font-weight: 600; white-space: nowrap; color: var(--text); }
+.sched-act { color: var(--text-soft); }
+tr.slot-now {
+  background: var(--gold-soft) !important;
+  outline: 2px solid var(--gold-border);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+tr.slot-now .sched-time, tr.slot-now .sched-act { color: var(--text); font-weight: 700; }
 
-    nav {
-      position: fixed;
-      inset: 0 auto 0 0;
-      width: 280px;
-      max-width: 85vw;
-      background: var(--card);
-      border-right: 2px solid var(--gold);
-      padding: 18px;
-      transform: translateX(-105%);
-      transition: .25s;
-      z-index: 100;
-    }
+/* ============ LIST READING ============ */
+.tree-node { margin-bottom: 8px; }
+.tree-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  cursor: pointer;
+  user-select: none;
+}
+/* ปุ่มขยาย/หุบ (caret) อยู่ขวามือตาม spec */
+.tree-caret {
+  transition: transform .2s ease;
+  flex-shrink: 0;
+  margin-left: auto; /* ดันไปขวาสุด */
+  order: 3;
+}
+.tree-row.open .tree-caret { transform: rotate(90deg); }
+.tree-label {
+  flex: 1;
+  font-size: .86rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  order: 1;
+}
+.chk { order: 2; }
+.tree-row.lv1 { border-left: 4px solid var(--navy); font-weight: 600; }
+.tree-row.lv2 { margin-left: 16px; border-left: 4px solid var(--gold); }
+.tree-row.lv3 { margin-left: 32px; border-left: 4px solid var(--green); }
+.tree-row.lv4 { margin-left: 48px; border-left: 4px solid var(--text-mute); }
+.chk {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  color: transparent;
+  font-size: .7rem; font-weight: 700;
+}
+.chk.on { background: var(--green); border-color: var(--green); color: #fff; }
+.tree-children { display: none; }
+.tree-children.open { display: block; animation: fadeUp .2s ease; }
+.progress-bar {
+  height: 6px; border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+  margin: 4px 0 0;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy), var(--gold));
+  border-radius: 3px;
+  transition: width .3s ease;
+}
 
-    nav.open { transform: translateX(0); }
+/* ============ WORK TIMETABLE ============ */
+.work-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+.work-card.overdue { border-color: var(--red); background: var(--red-soft); }
+.work-top { display: flex; align-items: flex-start; gap: 10px; }
+.work-main { flex: 1; min-width: 0; }
+.work-name { font-size: .9rem; font-weight: 600; margin: 0 0 4px; }
+.work-meta { font-size: .75rem; color: var(--text-soft); margin: 0 0 2px; }
+.work-due { font-size: .78rem; font-weight: 600; margin: 4px 0 0; }
+.work-card.overdue .work-due { color: var(--red); }
+.work-card:not(.overdue) .work-due { color: var(--green); }
+.badge-code {
+  display: inline-block;
+  font-size: .65rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 6px;
+  background: var(--navy-soft);
+  color: var(--navy);
+  margin-right: 6px;
+}
 
-    nav a {
-      display: block;
-      padding: 12px;
-      border-radius: 12px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
+/* ============ SCORE TEST ============ */
+.score-group {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.score-head { margin-bottom: 12px; }
+.score-name { font-family: 'Kanit', sans-serif; font-size: 1rem; font-weight: 600; color: var(--navy); margin: 0 0 2px; }
+.score-meta { font-size: .78rem; color: var(--text-soft); margin: 0; }
+.score-subject {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: .85rem;
+}
+.score-val { font-weight: 600; color: var(--gold); white-space: nowrap; }
+.score-imgs {
+  display: flex; gap: 8px; overflow-x: auto;
+  margin-top: 12px; padding-bottom: 4px;
+  scroll-snap-type: x mandatory;
+}
+.score-imgs img {
+  height: 110px; border-radius: 8px;
+  border: 1px solid var(--border);
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
 
-    nav a.active, nav a:hover {
-      background: var(--blue-soft);
-      color: var(--navy);
-    }
+/* ============ MODAL ============ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(10,15,25,.6);
+  display: none; align-items: flex-start; justify-content: center;
+  overflow-y: auto; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: min(520px, 100%);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-lg);
+  margin: auto;
+}
+.modal h3 {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1rem; font-weight: 600;
+  color: var(--navy);
+  margin: 0 0 16px;
+}
+.modal .field { margin-bottom: 12px; }
+.modal .field input, .modal .field select, .modal .field textarea {
+  width: 100%; padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: .85rem;
+  font-family: inherit;
+}
+.modal .field textarea { resize: vertical; min-height: 60px; }
+.modal .field input:focus, .modal .field select:focus, .modal .field textarea:focus {
+  outline: 2px solid var(--navy-border); outline-offset: -1px;
+}
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.modal-actions .btn { width: auto; flex: 1; }
+.modal-actions .btn.ghost { flex: 0 0 auto; }
+.upload-zone {
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  font-size: .78rem; color: var(--text-mute);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.upload-zone.has { border-color: var(--green); color: var(--green); }
+.modal-err { color: var(--red); font-size: .76rem; margin: 8px 0 0; min-height: 1em; }
 
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: #0007;
-      display: none;
-      z-index: 90;
-    }
+/* ============ TOAST ============ */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--navy); color: #fff;
+  padding: 10px 20px; border-radius: 999px;
+  font-size: .8rem; font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 400;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+  max-width: 90vw; text-align: center;
+}
+.toast.show { opacity: 1; }
+.toast.err { background: var(--red); }
 
-    .overlay.show { display: block; }
+/* ============ FOOTER ============ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 16px 20px 24px;
+  text-align: center;
+  background: var(--bg-soft);
+}
+footer p {
+  font-size: .72rem; color: var(--text-mute);
+  margin: 0; letter-spacing: .3px;
+}
 
-    main {
-      max-width: 1100px;
-      margin: auto;
-      padding: 18px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 14px #0000000d;
-    }
-
-    .profile {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 18px;
-    }
-
-    .profile img {
-      width: 100%;
-      border-radius: 16px;
-      border: 3px solid var(--gold);
-    }
-
-    h1, h2, h3 { color: var(--navy); margin: 0 0 10px; }
-    body.dark h1, body.dark h2, body.dark h3 { color: var(--gold); }
-
-    .motto {
-      background: var(--blue-soft);
-      border-left: 5px solid var(--navy2);
-      padding: 12px;
-      border-radius: 10px;
-    }
-
-    .edu {
-      background: var(--blue-soft);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
-
-    .edu img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      background: #fff;
-      border-radius: 12px;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 12px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid var(--gold);
-      margin: 2px;
-    }
-
-    .badge.green { border-color: #2e7d32; color: #2e7d32; }
-    .badge.gold { border-color: #c9a227; color: #8a6d10; }
-    .badge.silver { border-color: #8d99ae; color: #55606d; }
-    .badge.bronze { border-color: #a5622d; color: #7c4a20; }
-    .badge.white { border-color: #90a4ae; color: #546e7a; }
-
-    .award-images {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-    }
-
-    .award-images img {
-      height: 160px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-
-    .schedule-row {
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .schedule-row.active {
-      border-color: var(--gold);
-      background: var(--blue-soft);
-      font-weight: 700;
-    }
-
-    .overdue { color: #d32f2f; font-weight: 700; }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    label { font-size: 13px; color: var(--muted); font-weight: 700; }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      margin-top: 4px;
-    }
-
-    .btn {
-      background: var(--navy);
-      color: #fff;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn.gold { background: var(--gold); color: #202020; }
-
-    .gear {
-      float: right;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: var(--navy);
-    }
-
-    body.dark .gear { color: var(--gold); }
-
-    dialog {
-      border: none;
-      border-radius: 18px;
-      padding: 0;
-      max-width: 92vw;
-      width: 620px;
-    }
-
-    dialog::backdrop { background: #0008; }
-
-    .dialog-body { padding: 20px; background: var(--card); color: var(--text); }
-
-    footer {
-      text-align: center;
-      padding: 22px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 700px) {
-      .profile { grid-template-columns: 1fr; }
-      .profile img { max-width: 240px; margin: auto; }
-      main { padding: 12px; }
-    }
-  </style>
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-photo-wrap { width: 140px; height: 175px; }
+  .hero-text { text-align: left; }
+  .award-top { grid-template-columns: 1fr; }
+  .award-imgs { width: 100%; height: 140px; }
+  .edu-item { grid-template-columns: 44px 1fr; }
+  .edu-logo { width: 44px; height: 44px; }
+  .container { padding: 14px 12px 32px; }
+  .page-title { font-size: 1.15rem; }
+  .sched-table th, .sched-table td { padding: 8px 8px; font-size: .78rem; }
+  .brand { font-size: .88rem; }
+}
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hero { grid-template-columns: 180px 1fr; }
+  .hero-photo-wrap { width: 180px; height: 225px; }
+}
+</style>
 </head>
-<body>
+<body data-theme="light">
 
 <header>
-  <button class="icon-btn menu-btn" onclick="toggleMenu()">☰</button>
-  <div class="brand">Portfolio Chissanucha Fadsura</div>
-  <div class="top-actions">
-    <button class="icon-btn" onclick="toggleLang()" title="ภาษา">🌐</button>
-    <button class="icon-btn" onclick="toggleTheme()" title="ธีม">🌙</button>
-    <button class="icon-btn" onclick="openLogin()" title="ล็อกอิน">🔑</button>
+  <div class="header-inner">
+    <button class="hamburger" id="btnMenu" aria-label="เมนู">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <div class="brand">Portfolio Chissanucha Fadsura</div>
+    <div class="header-actions">
+      <button class="lang-btn" id="btnLang" data-lang="th">TH</button>
+      <button class="icon-btn" id="btnTheme" aria-label="สลับโหมด">
+        <svg id="icoMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icoSun" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <span class="login-chip" id="loginChip" style="display:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 12c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5z"/></svg>
+        <span id="loginUser"></span>
+      </span>
+    </div>
   </div>
 </header>
 
-<div class="overlay" onclick="toggleMenu()"></div>
-
-<nav id="sideMenu">
-  <a class="active" onclick="showPage('portfolio')">Portfolio</a>
-  <a onclick="showPage('reading')">Reading schedule</a>
-  <a onclick="showPage('list')">List Reading</a>
-  <a onclick="showPage('work')">Work timetable</a>
-  <a onclick="showPage('score')">ScoreTest</a>
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<nav class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-title">Portfolio<br>Chissanucha Fadsura</div>
+    <div class="drawer-sub" data-i18n="menuSub">ระบบแฟ้มสะสมผลงาน</div>
+  </div>
+  <div class="drawer-nav">
+    <button class="nav-item active" data-page="portfolio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-6 9 6v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9z"/><path d="M9 21V12h6v9"/></svg>
+      <span data-i18n="nav.portfolio">Portfolio</span>
+    </button>
+    <button class="nav-item" data-page="reading">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+      <span data-i18n="nav.reading">Reading schedule</span>
+      <span class="lock" data-i18n="lock">🔒</span>
+    </button>
+    <button class="nav-item" data-page="listreading">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      <span data-i18n="nav.listreading">List Reading</span>
+      <span class="lock" data-i18n="lock">🔒</span>
+    </button>
+    <button class="nav-item" data-page="work">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4M2 13h20"/></svg>
+      <span data-i18n="nav.work">Work timetable</span>
+      <span class="lock" data-i18n="lock">🔒</span>
+    </button>
+    <button class="nav-item" data-page="scoretest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 21l5-3 5 3-1.5-8.5"/></svg>
+      <span data-i18n="nav.scoretest">ScoreTest</span>
+      <span class="lock" data-i18n="lock">🔒</span>
+    </button>
+  </div>
+  <div class="drawer-foot">©Portfolio Chissanucha Fadsura<br>ALLRIGHT RESERVED</div>
 </nav>
 
 <main>
-  <section id="page-portfolio"></section>
-  <section id="page-reading" style="display:none"></section>
-  <section id="page-list" style="display:none"></section>
-  <section id="page-work" style="display:none"></section>
-  <section id="page-score" style="display:none"></section>
-</main>
+  <!-- ============ PAGE: PORTFOLIO ============ -->
+  <section class="page active" id="page-portfolio">
+    <div class="container">
+      <div class="section-head" style="margin-bottom:6px">
+        <button class="btn ghost" id="gearHero" style="width:auto;padding:6px 14px;font-size:.78rem" title="เพิ่มภาพ/ข้อความ">⚙ เพิ่มภาพ/ข้อความ</button>
+        <span style="margin-left:auto"></span>
+        <button class="btn ghost btn-logout" style="width:auto;padding:6px 14px;font-size:.78rem">ออกจากระบบ</button>
+      </div>
+      <div class="hero" id="hero"></div>
 
-<dialog id="loginDialog">
-  <div class="dialog-body">
-    <h2>เข้าสู่ระบบ</h2>
-    <label>USERNAME<input id="loginUser"></label>
-    <label>PASSWORD<input id="loginPass" type="password"></label>
-    <p id="loginMsg" style="color:#d32f2f"></p>
-    <button class="btn" onclick="doLogin()">เข้าสู่ระบบ</button>
-    <button class="btn gold" onclick="closeDialog('loginDialog')">ปิด</button>
-  </div>
-</dialog>
+      <div class="section">
+        <div class="section-head">
+          <h2 data-i18n="sec.info"></h2>
+          <button class="gear-btn" id="gearInfo" title="แก้ไขข้อมูลส่วนตัว" style="display:none">⚙</button>
+        </div>
+        <div class="card" id="infoCard">
+          <div class="info-grid" id="infoGrid"></div>
+          <div id="talentWrap" style="margin-top:12px"></div>
+          <div id="mottoWrap" style="margin-top:12px"></div>
+        </div>
+      </div>
 
-<dialog id="formDialog">
-  <div class="dialog-body">
-    <h2 id="formTitle">เพิ่มข้อมูล</h2>
-    <div id="formFields" class="form-grid"></div>
-    <p id="formMsg"></p>
-    <button class="btn" onclick="submitForm()">บันทึก</button>
-    <button class="btn gold" onclick="closeDialog('formDialog')">ปิด</button>
-  </div>
-</dialog>
+      <div class="section">
+        <div class="section-head">
+          <h2 data-i18n="sec.family"></h2>
+          <button class="gear-btn" id="gearFamily" title="แก้ไขข้อมูลครอบครัว" style="display:none">⚙</button>
+        </div>
+        <div class="card" id="familyCard"></div>
+      </div>
 
-<footer>©Portfolio Chissanucha Fadsura ALLRIGHT RESERVED</footer>
+      <div class="section">
+        <div class="section-head">
+          <h2 data-i18n="sec.contact"></h2>
+          <button class="gear-btn" id="gearContact" title="แก้ไขการติดต่อ" style="display:none">⚙</button>
+        </div>
+        <div class="card"><div class="contact-grid" id="contactGrid"></div></div>
+      </div>
 
-<script>
-let token = localStorage.getItem('portfolio_token') || '';
-let lang = localStorage.getItem('portfolio_lang') || 'th';
-let currentForm = null;
+      <div class="section">
+        <div class="section-head">
+          <h2 data-i18n="sec.edu"></h2>
+          <button class="gear-btn" id="gearEdu" title="เพิ่มการศึกษา" style="display:none">⚙</button>
+        </div>
+        <div id="eduList"></div>
+      </div>
 
-const T = {
-  th: {
-    portfolio: 'Portfolio', reading: 'Reading schedule',
-    list: 'List Reading', work: 'Work timetable', score: 'ScoreTest',
-    login: 'เข้าสู่ระบบ', logout: 'ออกจากระบบ', save: 'บันทึก',
-    add: 'เพิ่มข้อมูล', requiredLogin: 'หน้านี้ต้องเข้าสู่ระบบ'
-  },
-  en: {
-    portfolio: 'Portfolio', reading: 'Reading schedule',
-    list: 'List Reading', work: 'Work timetable', score: 'ScoreTest',
-    login: 'Login', logout: 'Logout', save: 'Save',
-    add: 'Add data', requiredLogin: 'Login required'
-  }
-};
+      <div class="section">
+        <div class="section-head">
+          <h2 data-i18n="sec.award"></h2>
+          <button class="gear-btn" id="gearAward" title="เพิ่มรางวัล" style="display:none">⚙</button>
+        </div>
+        <div id="awardList"></div>
+      </div>
+    </div>
+  </section>
 
-function t(key) { return T[lang][key] || key; }
-
-function toggleTheme() {
-  document.body.classList.toggle('dark');
-  localStorage.setItem('portfolio_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-}
-
-function toggleLang() {
-  lang = lang === 'th' ? 'en' : 'th';
-  localStorage.setItem('portfolio_lang', lang);
-  location.reload();
-}
-
-function toggleMenu() {
-  document.getElementById('sideMenu').classList.toggle('open');
-  document.querySelector('.overlay').classList.toggle('show');
-}
-
-function showPage(page) {
-  ['portfolio','reading','list','work','score'].forEach(p => {
-    document.getElementById('page-' + p).style.display = p === page ? 'block' : 'none';
-  });
-  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-  event.target.classList.add('active');
-  toggleMenu();
-  loadPage(page);
-}
-
-function openDialog(id) { document.getElementById(id).showModal(); }
-function closeDialog(id) { document.getElementById(id).close(); }
-
-function openLogin() { openDialog('loginDialog'); }
-
-function doLogin() {
-  const user = document.getElementById('loginUser').value;
-  const pass = document.getElementById('loginPass').value;
-
-  google.script.run
-    .withSuccessHandler(res => {
-      if (res.ok) {
-        token = res.token;
-        localStorage.setItem('portfolio_token', token);
-        closeDialog('loginDialog');
-        loadPage(currentPage);
-      } else {
-        document.getElementById('loginMsg').textContent = res.message;
-      }
-    })
-    .login(user, pass);
-}
-
-function gear(onclick) {
-  return token ? `<button class="gear" onclick="${onclick}">⚙️</button>` : '';
-}
-
-let currentPage = 'portfolio';
-
-function loadPage(page) {
-  currentPage = page;
-
-  if (page === 'portfolio') google.script.run.withSuccessHandler(renderPortfolio).getPortfolio();
-  if (page === 'reading') requireLoginThen(() => google.script.run.withSuccessHandler(renderReading).getReadingSchedule());
-  if (page === 'list') requireLoginThen(() => google.script.run.withSuccessHandler(renderSubjects).getSubjects());
-  if (page === 'work') requireLoginThen(() => google.script.run.withSuccessHandler(renderWork).getWork());
-  if (page === 'score') google.script.run.withSuccessHandler(renderScores).getScores();
-}
-
-function requireLoginThen(fn) {
-  if (!token) {
-    document.getElementById('page-' + currentPage).innerHTML =
-      `<div class="card"><h2>${t('requiredLogin')}</h2><button class="btn" onclick="openLogin()">${t('login')}</button></div>`;
-    return;
-  }
-  fn();
-}
-
-function renderPortfolio(d) {
-  const contacts = Object.entries(d.contacts).map(([k, v]) =>
-    v.text ? `<p><a href="${v.url}" target="_blank">${k.toUpperCase()}: ${v.text}</a></p>` : ''
-  ).join('');
-
-  document.getElementById('page-portfolio').innerHTML = `
-    <div class="card">
-      ${gear("openForm('record')")}
-      <div class="profile">
-        ${d.image ? `<img src="${d.image}">` : ''}
-        <div>
-          <h1>${d.title}</h1>
-          <h3>${d.subtitle}</h3>
-          ${d.intro.map(x => `<p>${x}</p>`).join('')}
+  <!-- ============ PAGE: READING SCHEDULE ============ -->
+  <section class="page" id="page-reading">
+    <div class="container">
+      <h1 class="page-title" data-i18n="nav.reading">Reading schedule</h1>
+      <p class="page-sub" data-i18n="reading.sub">ตารางเวลาการอ่านหนังสือรายวัน</p>
+      <div class="login-gate" id="readingGate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <h2 data-i18n="login.title">เข้าสู่ระบบ</h2>
+        <p data-i18n="login.required">ต้องเข้าสู่ระบบก่อนจึงจะดูหน้านี้ได้</p>
+        <div class="field">
+          <label data-i18n="login.user">ชื่อผู้ใช้</label>
+          <input type="text" id="rdUser">
+        </div>
+        <div class="field">
+          <label data-i18n="login.pass">รหัสผ่าน</label>
+          <input type="password" id="rdPass">
+        </div>
+        <button class="btn" id="rdLogin" data-i18n="login.btn">เข้าสู่ระบบ</button>
+        <p class="login-err" id="rdErr"></p>
+      </div>
+      <div id="readingContent" style="display:none">
+        <div class="clock-panel">
+          <div class="clock-date" id="clockDate"></div>
+          <div class="clock-time" id="clockTime"></div>
+        </div>
+        <div class="section-head" style="margin-bottom:10px">
+          <button class="btn ghost" id="gearReading" style="width:auto;padding:6px 14px;font-size:.78rem" title="เพิ่มกิจกรรม">⚙ เพิ่มกิจกรรม</button>
+          <span style="margin-left:auto"></span>
+          <button class="btn ghost btn-logout" data-i18n="logout" style="width:auto;padding:6px 14px;font-size:.78rem">ออกจากระบบ</button>
+        </div>
+        <div class="card" style="overflow-x:auto">
+          <table class="sched-table">
+            <thead>
+              <tr><th data-i18n="reading.time">ช่วงเวลา</th><th data-i18n="reading.activity">กิจกรรม</th></tr>
+            </thead>
+            <tbody id="schedBody"></tbody>
+          </table>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="card">
-      ${gear("openForm('personal')")}
-      <p><b>วันเกิด:</b> ${d.birth}</p>
-      <p><b>อายุ:</b> ${d.age}</p>
-      <p><b>เชื้อชาติ:</b> ${d.ethnicity}</p>
-      <p><b>สัญชาติ:</b> ${d.nationality}</p>
-      <p><b>ศาสนา:</b> ${d.religion}</p>
-      <p><b>ความสามารถพิเศษ:</b></p>
-      <ul>${d.abilities.map(a => `<li>${a}</li>`).join('')}</ul>
-      <div class="motto"><b>คติประจำใจ:</b> ${d.motto}</div>
-    </div>
-
-    <div class="card">
-      ${gear("openForm('family')")}
-      <h2>ประวัติครอบครัว</h2>
-      <p><b>บิดา:</b> ${d.father}</p>
-      <p><b>มารดา:</b> ${d.mother}</p>
-      <p><b>ที่อยู่:</b> ${d.address}</p>
-    </div>
-
-    <div class="card">
-      ${gear("openForm('contact')")}
-      <h2>การติดต่อ</h2>
-      ${contacts}
-    </div>
-
-    <div class="card">
-      ${gear("openForm('education')")}
-      <h2>ประวัติการศึกษา</h2>
-      <div id="eduList">กำลังโหลด...</div>
-    </div>
-
-    <div class="card">
-      ${gear("openForm('award')")}
-      <h2>ผลงาน</h2>
-      <div id="awardList">กำลังโหลด...</div>
-    </div>
-  `;
-
-  google.script.run.withSuccessHandler(renderEducation).getEducation();
-  google.script.run.withSuccessHandler(renderAwards).getAwards();
-}
-
-function renderEducation(rows) {
-  document.getElementById('eduList').innerHTML = rows.map(r => `
-    <div class="edu">
-      ${r.logo ? `<img src="${r.logo}">` : ''}
-      <div>
-        <h3>${r.school}</h3>
-        <p>${r.affiliation}</p>
-        <p><small>${r.address}</small></p>
-        <p><b>GPA:</b> ${r.gpa}</p>
+  <!-- ============ PAGE: LIST READING ============ -->
+  <section class="page" id="page-listreading">
+    <div class="container">
+      <h1 class="page-title" data-i18n="nav.listreading">List Reading</h1>
+      <p class="page-sub" data-i18n="listreading.sub">รายการหน่วยการเรียนรู้และเนื้อหาย่อย</p>
+      <div class="login-gate" id="lrGate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <h2 data-i18n="login.title">เข้าสู่ระบบ</h2>
+        <p data-i18n="login.required">ต้องเข้าสู่ระบบก่อนจึงจะดูหน้านี้ได้</p>
+        <div class="field"><label data-i18n="login.user">ชื่อผู้ใช้</label><input type="text" id="lrUser"></div>
+        <div class="field"><label data-i18n="login.pass">รหัสผ่าน</label><input type="password" id="lrPass"></div>
+        <button class="btn" id="lrLogin" data-i18n="login.btn">เข้าสู่ระบบ</button>
+        <p class="login-err" id="lrErr"></p>
+      </div>
+      <div id="lrContent" style="display:none">
+        <div class="section-head" style="margin-bottom:10px">
+          <button class="btn ghost" id="gearSubject" style="width:auto;padding:6px 14px;font-size:.78rem">⚙ เพิ่มหน่วยการเรียนรู้</button>
+          <span style="margin-left:auto"></span>
+          <button class="btn ghost btn-logout" data-i18n="logout" style="width:auto;padding:6px 14px;font-size:.78rem">ออกจากระบบ</button>
+        </div>
+        <div id="lrTree"></div>
       </div>
     </div>
-  `).join('');
-}
+  </section>
 
-function renderAwards(rows) {
-  document.getElementById('awardList').innerHTML = rows.map(r => `
-    <div class="edu" style="display:block">
-      <div class="award-images">
-        ${r.images.map(i => `<img src="${i}">`).join('')}
+  <!-- ============ PAGE: WORK TIMETABLE ============ -->
+  <section class="page" id="page-work">
+    <div class="container">
+      <h1 class="page-title" data-i18n="nav.work">Work timetable</h1>
+      <p class="page-sub" data-i18n="work.sub">ตารางงานและการส่งงาน</p>
+      <div class="login-gate" id="wkGate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <h2 data-i18n="login.title">เข้าสู่ระบบ</h2>
+        <p data-i18n="login.required">ต้องเข้าสู่ระบบก่อนจึงจะดูหน้านี้ได้</p>
+        <div class="field"><label data-i18n="login.user">ชื่อผู้ใช้</label><input type="text" id="wkUser"></div>
+        <div class="field"><label data-i18n="login.pass">รหัสผ่าน</label><input type="password" id="wkPass"></div>
+        <button class="btn" id="wkLogin" data-i18n="login.btn">เข้าสู่ระบบ</button>
+        <p class="login-err" id="wkErr"></p>
       </div>
-      <span class="badge gold">${r.awardLevel}</span>
-      <span class="badge ${medalClass(r.medalType)}">${r.medalType}</span>
-      <span class="badge green">${r.medalCategory}</span>
-      <h3>${r.title}</h3>
-      <p><small>${r.organization}</small></p>
-      <p><small>${r.date} | ${r.grade}</small></p>
-      <ul>${r.winners.map(w => `<li>${w}</li>`).join('')}</ul>
-      <ul>${r.teachers.map(w => `<li>${w}</li>`).join('')}</ul>
-      <p>${r.description}</p>
+      <div id="wkContent" style="display:none">
+        <div class="section-head" style="margin-bottom:10px">
+          <button class="btn ghost" id="gearWork" style="width:auto;padding:6px 14px;font-size:.78rem">⚙ เพิ่มงาน</button>
+          <span style="margin-left:auto"></span>
+          <button class="btn ghost btn-logout" data-i18n="logout" style="width:auto;padding:6px 14px;font-size:.78rem">ออกจากระบบ</button>
+        </div>
+        <div id="workList"></div>
+      </div>
     </div>
-  `).join('');
+  </section>
+
+  <!-- ============ PAGE: SCORE TEST ============ -->
+  <section class="page" id="page-scoretest">
+    <div class="container">
+      <h1 class="page-title" data-i18n="nav.scoretest">ScoreTest</h1>
+      <p class="page-sub" data-i18n="scoretest.sub">ผลการทดสอบและคะแนน</p>
+      <div class="login-gate" id="stGate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <h2 data-i18n="login.title">เข้าสู่ระบบ</h2>
+        <p data-i18n="login.required">ต้องเข้าสู่ระบบก่อนจึงจะดูหน้านี้ได้</p>
+        <div class="field"><label data-i18n="login.user">ชื่อผู้ใช้</label><input type="text" id="stUser"></div>
+        <div class="field"><label data-i18n="login.pass">รหัสผ่าน</label><input type="password" id="stPass"></div>
+        <button class="btn" id="stLogin" data-i18n="login.btn">เข้าสู่ระบบ</button>
+        <p class="login-err" id="stErr"></p>
+      </div>
+      <div id="stContent" style="display:none">
+        <div class="section-head" style="margin-bottom:10px">
+          <button class="btn ghost" id="gearScore" style="width:auto;padding:6px 14px;font-size:.78rem">⚙ เพิ่มผลสอบ</button>
+          <span style="margin-left:auto"></span>
+          <button class="btn ghost btn-logout" data-i18n="logout" style="width:auto;padding:6px 14px;font-size:.78rem">ออกจากระบบ</button>
+        </div>
+        <div id="scoreList"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>©Portfolio Chissanucha Fadsura ALLRIGHT RESERVED</p>
+</footer>
+
+<!-- Modal สำหรับฟอร์มแก้ไข/เพิ่มข้อมูล (แสดงเมื่อล็อกอิน) -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <div id="modalBody"></div>
+    <p class="modal-err" id="modalErr"></p>
+    <div class="modal-actions">
+      <button class="btn ghost" id="modalCancel" data-i18n="cancel">ยกเลิก</button>
+      <button class="btn" id="modalSave" data-i18n="save">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+ *  CONFIG — เปลี่ยนค่านี้ให้เป็น URL ของ Apps Script Web app ที่ Deploy แล้ว
+ *  ตัวอย่าง: https://script.google.com/macros/s/AKfy.../exec
+ * ===================================================================== */
+var CONFIG = {
+  // ถ้าใช้กับ Apps Script ให้ตั้งเป็น null จะใช้ google.script.run อัตโนมัติ
+  // ถ้าใช้กับ GitHub Pages ให้ใส่ URL ของ Web app เช่น
+  // apiUrl: 'https://script.google.com/macros/s/AKfy.../exec'
+  apiUrl: null
+};
+
+/* ============ STATE ============ */
+var state = {
+  lang: 'th',
+  theme: 'light',
+  token: sessionStorage.getItem('pf_token') || '',
+  user: sessionStorage.getItem('pf_user') || '',
+  page: 'portfolio',
+  portfolio: null,
+  awards: [],
+  reading: null,
+  subjects: [],
+  works: [],
+  scores: [],
+  subjectCodes: [],
+  awardDD: null,
+  clockTimer: null,
+  modalAction: null,
+  heroIdx: 0
+};
+
+/* ============ I18N ============ */
+var I18N = {
+  th: {
+    'menuSub': 'ระบบแฟ้มสะสมผลงาน',
+    'lock': '🔒',
+    'nav.portfolio': 'Portfolio',
+    'nav.reading': 'Reading schedule',
+    'nav.listreading': 'List Reading',
+    'nav.work': 'Work timetable',
+    'nav.scoretest': 'ScoreTest',
+    'sec.info': '',
+    'sec.family': 'ประวัติครอบครัว',
+    'sec.contact': 'การติดต่อ',
+    'sec.edu': 'ประวัติการศึกษา',
+    'sec.award': 'ผลงาน',
+    'login.title': 'เข้าสู่ระบบ',
+    'login.required': 'ต้องเข้าสู่ระบบก่อนจึงจะดูหน้านี้ได้',
+    'login.user': 'ชื่อผู้ใช้',
+    'login.pass': 'รหัสผ่าน',
+    'login.btn': 'เข้าสู่ระบบ',
+    'cancel': 'ยกเลิก',
+    'save': 'บันทึก',
+    'reading.sub': 'ตารางเวลาการอ่านหนังสือรายวัน',
+    'reading.time': 'ช่วงเวลา',
+    'reading.activity': 'กิจกรรม',
+    'listreading.sub': 'รายการหน่วยการเรียนรู้และเนื้อหาย่อย',
+    'work.sub': 'ตารางงานและการส่งงาน',
+    'scoretest.sub': 'ผลการทดสอบและคะแนน',
+    'lbl.birthday': 'วันเกิด',
+    'lbl.age': 'อายุ',
+    'lbl.ethnicity': 'เชื้อชาติ',
+    'lbl.nationality': 'สัญชาติ',
+    'lbl.religion': 'ศาสนา',
+    'lbl.talents': 'ความสามารถพิเศษ',
+    'lbl.father': 'บิดา',
+    'lbl.mother': 'มารดา',
+    'lbl.address': 'ที่อยู่',
+    'lbl.gpa': 'ผลการเรียนเฉลี่ย',
+    'toast.saved': 'บันทึกเรียบร้อยแล้ว',
+    'toast.err': 'เกิดข้อผิดพลาด',
+    'toast.login.ok': 'เข้าสู่ระบบสำเร็จ',
+    'toast.login.fail': 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+    'logout': 'ออกจากระบบ',
+    'reading.noToday': 'ไม่มีตารางสำหรับวันนี้'
+  },
+  en: {
+    'menuSub': 'Portfolio Management System',
+    'lock': '🔒',
+    'nav.portfolio': 'Portfolio',
+    'nav.reading': 'Reading schedule',
+    'nav.listreading': 'List Reading',
+    'nav.work': 'Work timetable',
+    'nav.scoretest': 'ScoreTest',
+    'sec.info': '',
+    'sec.family': 'Family Background',
+    'sec.contact': 'Contact',
+    'sec.edu': 'Education',
+    'sec.award': 'Awards',
+    'login.title': 'Sign In',
+    'login.required': 'Please sign in to view this page',
+    'login.user': 'Username',
+    'login.pass': 'Password',
+    'login.btn': 'Sign In',
+    'cancel': 'Cancel',
+    'save': 'Save',
+    'reading.sub': 'Daily reading schedule',
+    'reading.time': 'Time',
+    'reading.activity': 'Activity',
+    'listreading.sub': 'Learning units and subtopics',
+    'work.sub': 'Work and submission timetable',
+    'scoretest.sub': 'Test results and scores',
+    'lbl.birthday': 'Date of Birth',
+    'lbl.age': 'Age',
+    'lbl.ethnicity': 'Ethnicity',
+    'lbl.nationality': 'Nationality',
+    'lbl.religion': 'Religion',
+    'lbl.talents': 'Special Skills',
+    'lbl.father': 'Father',
+    'lbl.mother': 'Mother',
+    'lbl.address': 'Address',
+    'lbl.gpa': 'GPA',
+    'toast.saved': 'Saved successfully',
+    'toast.err': 'An error occurred',
+    'toast.login.ok': 'Signed in successfully',
+    'toast.login.fail': 'Invalid username or password',
+    'logout': 'Sign Out',
+    'reading.noToday': 'No schedule for today'
+  }
+};
+function t(key) {
+  var lang = state.lang;
+  return (I18N[lang] && I18N[lang][key]) || (I18N.th[key] !== undefined ? I18N.th[key] : key);
 }
 
-function medalClass(v) {
-  v = String(v).toLowerCase();
-  if (v.includes('ทอง') && !v.includes('ทองแดง')) return 'gold';
-  if (v.includes('เงิน')) return 'silver';
-  if (v.includes('ทองแดง')) return 'bronze';
+/* ============ TRANSPORT LAYER ============ */
+/**
+ * เรียก API ของ backend
+ * - ถ้า CONFIG.apiUrl เป็น null และอยู่ใน Apps Script จะใช้ google.script.run
+ * - ถ้ามี CONFIG.apiUrl (GitHub Pages) จะ fetch ผ่าน URL
+ */
+function api(action, payload, opts) {
+  opts = opts || {};
+  return new Promise(function (resolve, reject) {
+    if (CONFIG.apiUrl) {
+      // โหมด GitHub Pages — ส่งเป็น POST ทั้งหมด (ทั้ง read และ write)
+      // เพื่อหลีกเลี่ยงปัญหา doGet คืน HTML และ CORS preflight
+      var body = Object.assign({ action: action, token: state.token }, payload || {});
+      if (action === 'login') {
+        body.username = opts.username;
+        body.password = opts.password;
+      }
+      // ตามเอกสาร Google Apps Script: ต้องใช้ text/plain (หรือ x-www-form-urlencoded)
+      // เพื่อไม่ให้ browser ส่ง CORS preflight (OPTIONS)
+      // และ redirect: 'follow' เพราะ GAS จะ 302 redirect ไปยัง script.googleusercontent.com
+      // ดู: https://developers.google.com/apps-script/guides/content#redirects
+      fetch(CONFIG.apiUrl, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      }).then(function (r) {
+        // ถ้า response ไม่ ok อาจเป็น 405 จาก token หมดอายุ หรือปัญหา deployment
+        if (!r.ok) {
+          return r.text().then(function (t) {
+            throw new Error('HTTP ' + r.status + (t ? ': ' + t.slice(0, 100) : ''));
+          });
+        }
+        return r.text();
+      }).then(function (txt) {
+        try { resolve(JSON.parse(txt)); } catch (e) { reject(e); }
+      }).catch(reject);
+    } else if (typeof google !== 'undefined' && google.script && google.script.run) {
+      // โหมด Apps Script — ใช้ google.script.run
+      var args = [];
+      if (action === 'login') args = [opts.username, opts.password];
+      else if (action === 'logout') args = [state.token];
+      else if (action === 'uploadFile') args = [state.token, payload.fileName, payload.base64Data, payload.mimeType];
+      else if (action === 'saveChecklist' || action === 'saveWorkChecklist') {
+        args = [state.token, payload.row, payload.checked];
+      }
+      else if (payload && payload.data) args = [state.token, payload.data];
+      else if (payload) args = [state.token].concat(payload);
+      else args = [state.token];
+
+      var runner = google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(reject);
+      runner[mapGasFn(action)].apply(runner, args);
+    } else {
+      reject(new Error('ไม่พบ backend — ตั้งค่า CONFIG.apiUrl หรือใช้ใน Apps Script'));
+    }
+  });
+}
+
+/** แม็ป action ไปยังชื่อฟังก์ชันใน GAS */
+function mapGasFn(action) {
+  var map = {
+    'portfolio': 'getPublicPortfolio',
+    'awards': 'getAwards',
+    'login': 'login',
+    'logout': 'logout',
+    'readingSchedule': 'getReadingSchedule',
+    'subjectList': 'getSubjectList',
+    'scoreTests': 'getScoreTests',
+    'workList': 'getWorkList',
+    'subjectCodes': 'getSubjectCodes',
+    'awardDropdowns': 'getAwardDropdowns',
+    'saveProfileSection': 'saveProfileSection',
+    'saveAward': 'saveAward',
+    'saveReadingSchedule': 'saveReadingSchedule',
+    'saveWorkItem': 'saveWorkItem',
+    'saveScoreTest': 'saveScoreTest',
+    'saveSubjectItem': 'saveSubjectItem',
+    'saveChecklist': 'saveChecklist',
+    'saveWorkChecklist': 'saveWorkChecklist',
+    'uploadFile': 'uploadFile'
+  };
+  return map[action] || action;
+}
+
+/** สร้าง query string จาก object (ไม่ใช้แล้วเพราะเปลี่ยนเป็น POST ทั้งหมด) */
+
+/* ============ UTILITIES ============ */
+function esc(s) {
+  if (s === null || s === undefined) return '';
+  var map = { 38: '&'+'amp;', 60: '&'+'lt;', 62: '&'+'gt;', 34: '&'+'quot;', 39: '&'+'#39;' };
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return map[c.charCodeAt(0)];
+  });
+}
+function toast(msg, isErr) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.toggle('err', !!isErr);
+  el.classList.add('show');
+  setTimeout(function () { el.classList.remove('show'); }, 2600);
+}
+function $(id) { return document.getElementById(id); }
+
+/* วันที่แบบไทย — ใช้ timezone Asia/Bangkok จริง */
+var THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+var THAI_MONTHS_SHORT = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+/** แปลง timestamp เป็นเวลา Asia/Bangkok (UTC+7) แบบรับประกันว่าไม่ขึ้นกับ timezone ของเครื่องผู้ใช้ */
+function bangkokParts(date) {
+  // แปลงเป็น UTC แล้วบวก 7 ชั่วโมง เพื่อให้ได้วัน/เดือน/ปี/เวลาของประเทศไทยเสมอ
+  var utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+                     date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+  var bk = new Date(utc + 7 * 3600 * 1000);
+  return {
+    year: bk.getUTCFullYear(), month: bk.getUTCMonth(), date: bk.getUTCDate(),
+    hours: bk.getUTCHours(), minutes: bk.getUTCMinutes(), seconds: bk.getUTCSeconds()
+  };
+}
+
+/** สร้าง Date ที่แสดงเวลาไทย (Asia/Bangkok) จาก date ที่กำหนด */
+function bkDate(date) {
+  var p = bangkokParts(date);
+  // สร้าง Date ใน local time ที่มีค่าเท่ากับเวลาไทย เพื่อใช้กับฟังก์ชัน format ที่ใช้ getter ปกติ
+  return new Date(p.year, p.month, p.date, p.hours, p.minutes, p.seconds);
+}
+
+/** คืน "วันที่" ปัจจุบันของประเทศไทย (Asia/Bangkok) */
+function nowBKK() {
+  return bkDate(new Date());
+}
+
+function fmtThaiDate(d) {
+  if (!(d instanceof Date)) return '';
+  return d.getDate() + ' ' + THAI_MONTHS[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+}
+function fmtThaiDateShort(d) {
+  if (!(d instanceof Date)) return '';
+  return d.getDate() + ' ' + THAI_MONTHS_SHORT[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+}
+function fmtThaiTime(d) {
+  if (!(d instanceof Date)) return '';
+  var h = d.getHours(), m = d.getMinutes();
+  return String(h).padStart(2, '0') + '.' + String(m).padStart(2, '0') + ' น.';
+}
+function fmtThaiDateTime(d) {
+  return fmtThaiDateShort(d) + ' ' + fmtThaiTime(d);
+}
+
+/** แปลงวันที่จาก sheet (อาจเป็น Date object ที่ serialize เป็น ISO string) */
+function parseSheetDate(v) {
+  if (!v) return null;
+  if (v instanceof Date) return v;
+  var s = String(v);
+  // รูปแบบ "yyyy-MM-dd HH:mm:ss" จาก toSafe()
+  var m = s.match(/^(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}):(\d{2}))?/);
+  if (m) {
+    return new Date(+m[1], +m[2] - 1, +m[3], m[4] ? +m[4] : 0, m[5] ? +m[5] : 0, m[6] ? +m[6] : 0);
+  }
+  // รูปแบบไทย ## มกราคม ####
+  var m2 = s.match(/(\d{1,2})\s*([^\s\d]+)\s*(\d{4})/);
+  if (m2) {
+    var mi = THAI_MONTHS.indexOf(m2[2]);
+    if (mi === -1) mi = THAI_MONTHS_SHORT.indexOf(m2[2]);
+    if (mi > -1) {
+      var y = +m2[3]; if (y > 2400) y -= 543;
+      return new Date(y, mi, +m2[1]);
+    }
+  }
+  var d = new Date(s);
+  return isNaN(d) ? null : d;
+}
+
+/** คำนวณอายุแบบ ปี เดือน วัน (ใช้ calendar arithmetic ที่ถูกต้องแม้วันสิ้นเดือน) */
+function calcAge(birth) {
+  var b = parseSheetDate(birth);
+  if (!b) return '';
+  // ใช้เวลาไทย (Asia/Bangkok) แทนเวลาเครื่องผู้ใช้
+  var now = nowBKK();
+  var y = now.getFullYear() - b.getFullYear();
+  var m = now.getMonth() - b.getMonth();
+  var d = now.getDate() - b.getDate();
+  if (d < 0) {
+    m--;
+    // วันสุดท้ายของเดือนก่อนหน้า (ของเดือนปัจจุบัน)
+    d += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+  }
+  if (m < 0) { y--; m += 12; }
+  var parts = [];
+  if (y > 0) parts.push(y + ' ปี');
+  if (m > 0) parts.push(m + ' เดือน');
+  if (d > 0 || parts.length === 0) parts.push(d + ' วัน');
+  return parts.join(' ');
+}
+
+/** แปลงช่วงเวลา "08.30 น. – 10.00 น." เป็น {start:Date, end:Date} ในวันปัจจุบัน (เวลาไทย Asia/Bangkok) */
+function parseTimeSlot(text) {
+  if (!text) return null;
+  var s = String(text).replace(/\u00a0/g, ' ').trim();
+  // รองรับทั้ง "08.30 น. – 10.00 น." และ "08:30 - 10:00"
+  var m2 = s.match(/(\d{1,2})[.:](\d{2})\s*(?:น\.)?\s*(?:[–\u2014\-])\s*(\d{1,2})[.:](\d{2})/);
+  var now = nowBKK();
+  function mk(h, mi) {
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    d.setHours(+h, +mi, 0, 0);
+    return d;
+  }
+  if (m2) return { start: mk(m2[1], m2[2]), end: mk(m2[3], m2[4]) };
+  var m = s.match(/(\d{1,2})[.:](\d{2})/);
+  if (!m) return null;
+  return { start: mk(m[1], m[2]), end: null };
+}
+
+/* ============ THEME ============ */
+function initTheme() {
+  // default เป็น light เสมอ เว้นแต่ผู้ใช้เลือก dark ไว้ชัดเจน
+  var saved = localStorage.getItem('pf_theme');
+  if (saved === 'dark') setTheme('dark');
+  else setTheme('light');
+}
+function setTheme(mode) {
+  state.theme = mode;
+  document.body.setAttribute('data-theme', mode);
+  localStorage.setItem('pf_theme', mode);
+  $('icoMoon').style.display = mode === 'light' ? '' : 'none';
+  $('icoSun').style.display = mode === 'dark' ? '' : 'none';
+}
+
+/* ============ LANGUAGE ============ */
+function initLang() {
+  var saved = localStorage.getItem('pf_lang');
+  state.lang = saved || 'th';
+  applyLang();
+}
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    var k = el.getAttribute('data-i18n');
+    el.textContent = t(k);
+  });
+  $('btnLang').textContent = state.lang === 'th' ? 'TH' : 'EN';
+  $('btnLang').setAttribute('data-lang', state.lang);
+}
+
+/* ============ ROUTING ============ */
+function goto(page) {
+  state.page = page;
+  document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+  var el = $('page-' + page);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function (n) {
+    n.classList.toggle('active', n.getAttribute('data-page') === page);
+  });
+  closeDrawer();
+  // โหลดข้อมูลของหน้านั้น
+  if (page === 'portfolio') loadPortfolio();
+  if (page === 'reading' && isLoggedIn()) loadReading();
+  if (page === 'listreading' && isLoggedIn()) loadSubjects();
+  if (page === 'work' && isLoggedIn()) loadWorks();
+  if (page === 'scoretest' && isLoggedIn()) loadScores();
+  // เลื่อนขึ้นบนสุด
+  window.scrollTo({ top: 0 });
+}
+
+function isLoggedIn() { return !!state.token; }
+function updateAuthUI() {
+  var show = isLoggedIn();
+  $('loginChip').style.display = show ? '' : 'none';
+  $('loginUser').textContent = state.user || '';
+  // แสดง/ซ่อนปุ่มฟันเฟืองทั้งหมด
+  ['gearInfo','gearFamily','gearContact','gearEdu','gearAward'].forEach(function (id) {
+    $(id).style.display = show ? '' : 'none';
+  });
+  // แสดง/ซ่อนปุ่มเพิ่มข้อมูลในหน้า private (เมื่อล็อกอินแล้วเท่านั้น)
+  ['gearHero','gearReading','gearSubject','gearWork','gearScore'].forEach(function (id) {
+    var b = $(id);
+    if (b) b.style.display = show ? '' : 'none';
+  });
+  document.querySelectorAll('.btn-logout').forEach(function (b) {
+    b.style.display = show ? '' : 'none';
+  });
+  // แสดง/ซ่อน login gate
+  ['readingGate','lrGate','wkGate','stGate'].forEach(function (id) {
+    $(id).style.display = show ? 'none' : '';
+  });
+  ['readingContent','lrContent','wkContent','stContent'].forEach(function (id) {
+    $(id).style.display = show ? '' : 'none';
+  });
+}
+
+/* ============ LOGIN ============ */
+function doLogin(username, password) {
+  // ส่ง username/password ใน opts เพื่อให้ api() ส่งไปยัง backend ทั้งสองโหมด
+  return api('login', null, { username: username, password: password }).then(function (res) {
+    if (res && res.ok) {
+      state.token = res.token;
+      state.user = res.user;
+      sessionStorage.setItem('pf_token', res.token);
+      sessionStorage.setItem('pf_user', res.user);
+      updateAuthUI();
+      toast(t('toast.login.ok'));
+      goto(state.page);
+    } else {
+      toast(t('toast.login.fail'), true);
+      throw new Error(res && res.msg);
+    }
+  });
+}
+function doLogout() {
+  api('logout').catch(function () {}).then(function () {
+    state.token = '';
+    state.user = '';
+    sessionStorage.removeItem('pf_token');
+    sessionStorage.removeItem('pf_user');
+    updateAuthUI();
+    goto('portfolio');
+  });
+}
+
+/* ============ DRAWER ============ */
+function openDrawer() { $('drawer').classList.add('open'); $('drawerOverlay').classList.add('open'); }
+function closeDrawer() { $('drawer').classList.remove('open'); $('drawerOverlay').classList.remove('open'); }
+
+/* ============ PORTFOLIO RENDER ============ */
+function loadPortfolio() {
+  Promise.all([api('portfolio'), api('awards')]).then(function (res) {
+    if (res[0] && res[0].ok) { state.portfolio = res[0].data; renderHero(); renderInfo(); renderFamily(); renderContact(); renderEdu(); }
+    if (res[1] && res[1].ok) { state.awards = res[1].data || []; renderAwards(); }
+  }).catch(function (e) {
+    console.error(e);
+    toast(t('toast.err'), true);
+  });
+}
+
+function renderHero() {
+  var d = state.portfolio;
+  if (!d) return;
+  var photos = (d.photos || []).filter(Boolean);
+  var h = $('hero');
+  if (!photos.length && !d.headline && !d.description.length) {
+    h.innerHTML = '';
+    return;
+  }
+  var imgHtml = photos.length
+    ? '<div class="hero-photo-wrap"><img id="heroImg" src="' + esc(photos[0]) + '" alt="">' +
+      (photos.length > 1 ? '<div class="hero-photo-nav" id="heroNav">' +
+        photos.map(function (_, i) { return '<button class="hero-dot' + (i === 0 ? ' on' : '') + '" data-i="' + i + '"></button>'; }).join('') +
+        '</div>' : '') + '</div>'
+    : '';
+  var txtHtml = '<div class="hero-text">' +
+    (d.headline ? '<h1>' + esc(d.headline) + '</h1>' : '') +
+    (d.subheadline ? '<div class="hero-sub">' + esc(d.subheadline) + '</div>' : '') +
+    (d.description && d.description.length ? '<p class="hero-desc">' + d.description.map(esc).join('<br>') + '</p>' : '') +
+    '</div>';
+  h.innerHTML = imgHtml + txtHtml;
+
+  // สไลด์ภาพ hero
+  if (photos.length > 1) {
+    var idx = 0;
+    var dots = h.querySelectorAll('.hero-dot');
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        idx = +dot.getAttribute('data-i');
+        $('heroImg').src = photos[idx];
+        dots.forEach(function (d2) { d2.classList.toggle('on', +d2.getAttribute('data-i') === idx); });
+      });
+    });
+    // สไลด์อัตโนมัติทุก 4 วินาที
+    setInterval(function () {
+      if (!$('heroImg')) return;
+      idx = (idx + 1) % photos.length;
+      $('heroImg').src = photos[idx];
+      h.querySelectorAll('.hero-dot').forEach(function (d2) { d2.classList.toggle('on', +d2.getAttribute('data-i') === idx); });
+    }, 4000);
+  }
+}
+
+function renderInfo() {
+  var d = state.portfolio;
+  if (!d) return;
+  var rows = [
+    [t('lbl.birthday'), parseSheetDate(d.birthdate) ? fmtThaiDate(parseSheetDate(d.birthdate)) : esc(d.birthdate)],
+    [t('lbl.age'), calcAge(d.birthdate)],
+    [t('lbl.ethnicity'), esc(d.ethnicity)],
+    [t('lbl.nationality'), esc(d.nationality)],
+    [t('lbl.religion'), esc(d.religion)]
+  ];
+  $('infoGrid').innerHTML = rows.map(function (r) {
+    return '<div class="info-item"><div class="lbl">' + r[0] + '</div><div class="val">' + r[1] + '</div></div>';
+  }).join('');
+  // ความสามารถพิเศษ
+  var tw = $('talentWrap');
+  if (d.talents && d.talents.length) {
+    tw.innerHTML = '<div class="lbl" style="font-size:.72rem;color:var(--text-mute);font-weight:600;margin-bottom:4px">' +
+      t('lbl.talents') + '</div><ul class="talent-list">' +
+      d.talents.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+  } else tw.innerHTML = '';
+  // คติประจำใจ
+  var mw = $('mottoWrap');
+  mw.innerHTML = d.motto ? '<div class="motto-box">“' + esc(d.motto) + '”</div>' : '';
+}
+
+function renderFamily() {
+  var d = state.portfolio;
+  if (!d) return;
+  var rows = [
+    [t('lbl.father'), esc(d.father)],
+    [t('lbl.mother'), esc(d.mother)],
+    [t('lbl.address'), esc(d.address)]
+  ];
+  $('familyCard').innerHTML = '<div class="info-grid">' + rows.map(function (r) {
+    return '<div class="info-item"><div class="lbl">' + r[0] + '</div><div class="val">' + r[1] + '</div></div>';
+  }).join('') + '</div>';
+}
+
+function renderContact() {
+  var d = state.portfolio;
+  if (!d) return;
+  var c = d.contacts || {};
+  var items = [
+    ['Tel', c.tel], ['Instagram', c.instagram], ['Facebook', c.facebook],
+    ['Threads', c.threads], ['LINE', c.line]
+  ];
+  var html = items.map(function (it) {
+    var key = it[0].toLowerCase();
+    var v = it[1] || {};
+    if (!v.label && !v.link) return '';
+    var ico = key === 'tel' ? '☎' : key === 'instagram' ? 'IG' : key === 'facebook' ? 'FB' : key === 'threads' ? 'TH' : 'LN';
+    var label = v.label || it[0];
+    return '<a class="contact-pill" href="' + esc(v.link || '#') + '" target="_blank" rel="noopener">' +
+      '<span class="c-ico">' + ico + '</span><span>' + esc(label) + '</span></a>';
+  }).join('');
+  $('contactGrid').innerHTML = html || '<span style="font-size:.8rem;color:var(--text-mute)">—</span>';
+}
+
+function renderEdu() {
+  var d = state.portfolio;
+  if (!d || !d.education) { $('eduList').innerHTML = ''; return; }
+  $('eduList').innerHTML = d.education.map(function (e) {
+    var logo = e.logo ? '<div class="edu-logo"><img src="' + esc(e.logo) + '" alt=""></div>' : '';
+    return '<div class="edu-item">' + logo +
+      '<div><div class="edu-name">' + esc(e.name) + '</div>' +
+      (e.affiliation ? '<div class="edu-aff">' + esc(e.affiliation) + '</div>' : '') +
+      (e.address ? '<div class="edu-addr">' + esc(e.address) + '</div>' : '') +
+      (e.gpa ? '<div class="edu-gpa">' + t('lbl.gpa') + ' <span>' + esc(e.gpa) + '</span></div>' : '') +
+      '</div></div>';
+  }).join('') || '';
+}
+
+function medalTagClass(v) {
+  var s = String(v || '').toLowerCase();
+  // ตรวจ 'ทองแดง'/'bronze' ก่อน 'ทอง'/'gold' เพื่อไม่ให้ทองแดงถูกจัดเป็นทอง
+  if (s.indexOf('ทองแดง') > -1 || s.indexOf('bronze') > -1) return 'bronze';
+  if (s.indexOf('ทอง') > -1 || s.indexOf('gold') > -1) return 'gold';
+  if (s.indexOf('เงิน') > -1 || s.indexOf('silver') > -1) return 'silver';
   return 'white';
 }
 
-function renderReading(d) {
-  const now = new Date();
-  const timeText = now.toTimeString().slice(0, 8);
-
-  document.getElementById('page-reading').innerHTML = `
-    <div class="card">
-      <h2>${d.today}</h2>
-      <h3 id="clock">${timeText}</h3>
-      ${d.times.map((time, i) => `
-        <div class="schedule-row ${isNow(time) ? 'active' : ''}">
-          <b>${time}</b>
-          <div>${d.activities[i] || ''}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-function isNow(range) {
-  const m = range.match(/(\d{1,2})[.:](\d{2}).*?(\d{1,2})[.:](\d{2})/);
-  if (!m) return false;
-
-  const now = new Date();
-  const start = new Date(); start.setHours(+m[1], +m[2], 0);
-  const end = new Date(); end.setHours(+m[3], +m[4], 0);
-  return now >= start && now <= end;
-}
-
-function renderSubjects(data) {
-  document.getElementById('page-list').innerHTML = data.map(g => `
-    <div class="card">
-      <h2>${g.grade}</h2>
-      ${g.subjects.map(s => `
-        <details>
-          <summary><b>${s.subject}</b></summary>
-          ${s.units.map(u => `
-            <div class="schedule-row">
-              <label>
-                <input type="checkbox" ${u.allDone ? 'checked' : ''}
-                  onchange="toggleUnit(${JSON.stringify(u.items.map(i => i.row))}, this.checked)">
-                <b>${u.unit}</b>
-              </label>
-              ${u.items.map(i => `
-                <label style="display:block">
-                  <input type="checkbox" ${i.done ? 'checked' : ''}
-                    onchange="toggleSubtopic(${i.row}, this.checked)">
-                  ${i.sub}
-                </label>
-              `).join('')}
-            </div>
-          `).join('')}
-        </details>
-      `).join('')}
-    </div>
-  `).join('');
-}
-
-function toggleSubtopic(row, done) {
-  google.script.run.withSuccessHandler(() => loadPage('list')).toggleSubtopic(token, row, done);
-}
-
-function toggleUnit(rows, done) {
-  google.script.run.withSuccessHandler(() => loadPage('list')).toggleUnit(token, rows, done);
-}
-
-function renderWork(rows) {
-  document.getElementById('page-work').innerHTML = `
-    <div class="card">
-      ${gear("openForm('work')")}
-      <h2>Work timetable</h2>
-      ${rows.map(r => `
-        <div class="schedule-row">
-          <label>
-            <input type="checkbox" ${r.done ? 'checked' : ''}
-              onchange="toggleWork(${r.row}, this.checked)">
-            <b>${r.work}</b>
-          </label>
-          <p>${r.code} | ${r.subject} | ${r.teacher}</p>
-          <p class="${r.overdue ? 'overdue' : ''}">กำหนดส่ง: ${r.dueAt}</p>
-          <p><small>สั่ง: ${r.assignedAt} | บันทึก: ${r.savedAt}</small></p>
-          <p><small>ที่มา: ${r.source}</small></p>
-          <p><small>สถานที่ส่ง: ${r.place}</small></p>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-function toggleWork(row, done) {
-  google.script.run.withSuccessHandler(() => loadPage('work')).toggleWork(token, row, done);
-}
-
-function renderScores(rows) {
-  document.getElementById('page-score').innerHTML = `
-    <div class="card">
-      ${gear("openForm('score')")}
-      <h2>ScoreTest</h2>
-      ${rows.map(r => `
-        <div class="card">
-          <h3>${r.title}</h3>
-          <p><small>${r.center} ${r.round ? '| ' + r.round : ''}</small></p>
-          ${r.subjects.map(s => `
-            <div class="schedule-row">
-              <b>${s.subject}</b>
-              <p>${s.score} / ${s.full}</p>
-              <div class="award-images">
-                ${s.images.map(i => `<img src="${i}">`).join('')}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-function openForm(type) {
-  currentForm = type;
-
-  const forms = {
-    record: ['image|รูปภาพ|file', 'title|ข้อความใหญ่', 'subtitle|ข้อความรอง', 'intro|ข้อความเล็ก|textarea'],
-    personal: ['birth|วันเกิด|date', 'ethnicity|เชื้อชาติ', 'nationality|สัญชาติ', 'religion|ศาสนา', 'motto|คติประจำใจ', 'abilities|ความสามารถพิเศษ|textarea'],
-    family: ['father|บิดา', 'mother|มารดา', 'address|ที่อยู่|textarea'],
-    contact: ['tel|Tel', 'instagram|Instagram', 'facebook|Facebook', 'threads|Threads', 'line|LINE'],
-    education: ['logo|โลโก้|file', 'school|ชื่อโรงเรียน', 'affiliation|สังกัด', 'address|ที่อยู่', 'gpa|GPA'],
-    award: ['date|วันที่ได้รับ|date', 'grade|ระดับชั้น|select', 'awardLevel|ระดับรางวัล|select', 'medalType|ประเภทสิทธิ์เหรียญ|select', 'medalCategory|ประเภทเหรียญ', 'title|ชื่อผลงาน', 'organization|หน่วยงาน', 'images|รูปภาพ|file', 'winners|ผู้ได้รับรางวัล|textarea', 'teachers|ครูที่ปรึกษา|textarea', 'description|ความรู้สึก/อธิบาย|textarea'],
-    work: ['code|รหัสวิชา|subjectCode', 'subject|ชื่อรายวิชา', 'teacher|ครูผู้สอน', 'work|ชื่องาน', 'source|ที่มา|textarea', 'assignedAt|วันเวลาสั่ง|datetime', 'dueAt|วันเวลากำหนดส่ง|datetime', 'place|สถานที่ส่ง'],
-    score: ['title|ชื่อการทดสอบ', 'center|ศูนย์การทดสอบ', 'round|รอบที่', 'subject|วิชา', 'score|คะแนนที่ได้', 'full|คะแนนเต็ม', 'images|ภาพประกอบ|file']
-  };
-
-  document.getElementById('formTitle').textContent = t('add');
-  document.getElementById('formFields').innerHTML = forms[type].map(f => {
-    const [name, label, kind] = f.split('|');
-
-    if (kind === 'textarea') {
-      return `<label>${label}<textarea id="f_${name}" rows="3"></textarea></label>`;
-    }
-    if (kind === 'date') {
-      return `<label>${label}<input type="date" id="f_${name}"></label>`;
-    }
-    if (kind === 'datetime') {
-      return `<label>${label}<input type="datetime-local" id="f_${name}"></label>`;
-    }
-    if (kind === 'file') {
-      return `<label>${label}<input type="file" id="f_${name}" accept="image/*"></label>`;
-    }
-    if (kind === 'select') {
-      return `<label>${label}<input id="f_${name}" list="${name}_list"></label>`;
-    }
-    if (kind === 'subjectCode') {
-      return `<label>${label}<input id="f_code" oninput="fillSubject(this.value)"></label>`;
-    }
-    return `<label>${label}<input id="f_${name}"></label>`;
+function renderAwards() {
+  var list = state.awards;
+  var el = $('awardList');
+  if (!list || !list.length) { el.innerHTML = '<div class="card" style="font-size:.8rem;color:var(--text-mute)">—</div>'; return; }
+  el.innerHTML = list.map(function (a, ai) {
+    var imgs = (a.images || []).filter(Boolean);
+    var imgHtml = imgs.length
+      ? '<div class="award-imgs" data-ai="' + ai + '"><img src="' + esc(imgs[0]) + '" alt="">' +
+        (imgs.length > 1 ? '<div class="nav">' + imgs.map(function (_, i) {
+          return '<button class="' + (i === 0 ? 'on' : '') + '" data-i="' + i + '"></button>';
+        }).join('') + '</div>' : '') + '</div>'
+      : '<div class="award-imgs" style="display:grid;place-items:center;color:var(--text-mute);font-size:1.4rem">🏆</div>';
+    return '<div class="award-item">' +
+      '<div class="award-top">' + imgHtml +
+      '<div>' +
+      '<div class="tag-row">' +
+        (a.awardLevel ? '<span class="tag gold">' + esc(a.awardLevel) + '</span>' : '') +
+        (a.medalType ? '<span class="tag ' + medalTagClass(a.medalType) + '">' + esc(a.medalType) + '</span>' : '') +
+        (a.awardType ? '<span class="tag green">' + esc(a.awardType) + '</span>' : '') +
+      '</div>' +
+      '<h3 class="award-title">' + esc(a.title) + '</h3>' +
+      (a.agency ? '<div class="award-meta">🏛 ' + esc(a.agency) + '</div>' : '') +
+      (a.date ? '<div class="award-meta">📅 ' + esc(fmtThaiDate(parseSheetDate(a.date)) || a.date) + '</div>' : '') +
+      (a.levelClass ? '<div class="award-meta">🎓 ' + esc(a.levelClass) + '</div>' : '') +
+      '</div></div>' +
+      (a.recipients && a.recipients.length ? '<div class="award-people">👤 <ul style="margin:2px 0;padding-left:16px">' + a.recipients.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' : '') +
+      (a.advisors && a.advisors.length ? '<div class="award-people">👩‍🏫 <ul style="margin:2px 0;padding-left:16px">' + a.advisors.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' : '') +
+      (a.description ? '<p class="award-desc">' + esc(a.description) + '</p>' : '') +
+      '</div>';
   }).join('');
 
-  if (type === 'award') {
-    google.script.run.withSuccessHandler(opts => {
-      fillDatalist('grade_list', opts.grades);
-      fillDatalist('awardLevel_list', opts.levels);
-      fillDatalist('medalType_list', opts.medals);
-    }).getAwardOptions();
-  }
-
-  openDialog('formDialog');
+  // ผูก event สไลด์ภาพในแต่ละการ์ด
+  el.querySelectorAll('.award-imgs').forEach(function (box) {
+    var ai = +box.getAttribute('data-ai');
+    var imgs = (state.awards[ai].images || []).filter(Boolean);
+    if (imgs.length < 2) return;
+    var dots = box.querySelectorAll('.nav button');
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var i = +dot.getAttribute('data-i');
+        box.querySelector('img').src = imgs[i];
+        dots.forEach(function (d2) { d2.classList.toggle('on', +d2.getAttribute('data-i') === i); });
+      });
+    });
+  });
 }
 
-function fillDatalist(id, items) {
-  let el = document.getElementById(id);
-  if (!el) {
-    el = document.createElement('datalist');
-    el.id = id;
-    document.body.appendChild(el);
-  }
-  el.innerHTML = items.map(x => `<option value="${x}">`).join('');
-}
-
-function fillSubject(code) {
-  google.script.run.withSuccessHandler(rows => {
-    const found = rows.find(r => String(r.values[0]) === code);
-    if (found) {
-      document.getElementById('f_subject').value = found.values[1];
-      document.getElementById('f_teacher').value = found.values[2];
+/* ============ READING SCHEDULE ============ */
+function loadReading() {
+  api('readingSchedule').then(function (res) {
+    if (res && res.ok) {
+      state.reading = res.data;
+      renderReading();
+    } else {
+      toast((res && res.msg) || t('toast.err'), true);
     }
-  }).getSubjectsRaw();
+  }).catch(function (e) { toast(e.message || t('toast.err'), true); });
 }
 
-function submitForm() {
-  const data = {};
-  document.querySelectorAll('#formFields [id^="f_"]').forEach(input => {
-    const key = input.id.replace('f_', '');
-    data[key] = input.value;
+function renderReading() {
+  var d = state.reading;
+  if (!d) return;
+  // หาคอลัมน์ที่ตรงกับวันปัจจุบัน (เทียบ headers ที่ดึงมาจากแถว 2 ของ sheet)
+  // normalize วันที่ให้เทียบกันได้แม้เป็น Date จาก sheet
+  // ใช้เวลาไทย (Asia/Bangkok)
+  var now = nowBKK();
+  var todayKey = parseSheetDate(fmtThaiDate(now));
+  var targetCol = -1;
+  (d.headers || []).forEach(function (h, i) {
+    if (!h) return;
+    var hs = parseSheetDate(String(h).trim());
+    if (hs && todayKey && hs.toDateString() === todayKey.toDateString()) targetCol = i;
+  });
+  if (targetCol < 1) {
+    // ไม่มีตารางของวันนี้ — แสดงข้อความชัดเจน ไม่ fallback ไปวันอื่น
+    $('schedBody').innerHTML = '<tr><td colspan="2" style="color:var(--text-mute);text-align:center;padding:24px 0">' + t('reading.noToday') + ' ( ' + fmtThaiDate(now) + ' )</td></tr>';
+    startClock();
+    return;
+  }
+  var body = $('schedBody');
+  var html = '';
+  (d.rows || []).forEach(function (r) {
+    var time = r.A;
+    // คำนวณ column letter (รองรับ AA, AB, ...)
+    function colLetter(idx) {
+      var s = '';
+      idx = idx + 1;
+      while (idx > 0) {
+        var m = (idx - 1) % 26;
+        s = String.fromCharCode(65 + m) + s;
+        idx = Math.floor((idx - 1) / 26);
+      }
+      return s;
+    }
+    var targetKey = colLetter(targetCol);
+    var act = r[targetKey] || '';
+    if (!time && !act) return;
+    var slot = parseTimeSlot(time);
+    var isNow = false;
+    if (slot) {
+      var end = slot.end || new Date(slot.start.getTime() + 90 * 60000);
+      isNow = now >= slot.start && now < end;
+    }
+    html += '<tr class="' + (isNow ? 'slot-now' : '') + '">' +
+      '<td class="sched-time">' + esc(time) + '</td>' +
+      '<td class="sched-act">' + esc(act) + '</td></tr>';
+  });
+  body.innerHTML = html || '<tr><td colspan="2" style="color:var(--text-mute)">—</td></tr>';
+  startClock();
+}
+
+/** เริ่มนาฬิกาแบบเรียลไทม์ (ประเทศไทย Asia/Bangkok) */
+function startClock() {
+  if (state.clockTimer) clearInterval(state.clockTimer);
+  function tick() {
+    var now = nowBKK();
+    $('clockDate').textContent = fmtThaiDate(now);
+    var h = String(now.getHours()).padStart(2, '0');
+    var m = String(now.getMinutes()).padStart(2, '0');
+    var s = String(now.getSeconds()).padStart(2, '0');
+    $('clockTime').textContent = h + ':' + m + ':' + s;
+    // ไฮไลต์แถวที่เวลาตรง
+    document.querySelectorAll('#schedBody tr').forEach(function (tr) {
+      tr.classList.remove('slot-now');
+    });
+    document.querySelectorAll('#schedBody tr').forEach(function (tr) {
+      var timeEl = tr.querySelector('.sched-time');
+      if (!timeEl) return;
+      var slot = parseTimeSlot(timeEl.textContent);
+      if (!slot) return;
+      var end = slot.end || new Date(slot.start.getTime() + 90 * 60000);
+      if (now >= slot.start && now < end) tr.classList.add('slot-now');
+    });
+  }
+  tick();
+  state.clockTimer = setInterval(tick, 1000);
+}
+
+/* ============ LIST READING (SUBJECT TREE) ============ */
+function loadSubjects() {
+  api('subjectList').then(function (res) {
+    if (res && res.ok) {
+      state.subjects = res.data || [];
+      renderSubjectTree();
+    }
+  }).catch(function (e) { toast(e.message || t('toast.err'), true); });
+}
+
+function renderSubjectTree() {
+  var rows = state.subjects;
+  var el = $('lrTree');
+  if (!rows.length) { el.innerHTML = '<div class="card" style="color:var(--text-mute);font-size:.8rem">—</div>'; return; }
+
+  // จัดกลุ่ม: level -> subject -> unit -> [subtopics]
+  var levels = {};
+  rows.forEach(function (r) {
+    var lv = r.level || '—';
+    var sb = r.subject || '—';
+    var un = r.unit || '—';
+    if (!levels[lv]) levels[lv] = {};
+    if (!levels[lv][sb]) levels[lv][sb] = {};
+    if (!levels[lv][sb][un]) levels[lv][sb][un] = [];
+    levels[lv][sb][un].push(r);
   });
 
-  const fileInput = document.querySelector('#formFields input[type=file]');
+  function rowHtml(cls, label, open, extra) {
+    // โครงสร้าง: label (order 1) -> checkbox (order 2, ถ้ามี) -> caret (order 3, ขวาสุด)
+    return '<div class="tree-row ' + cls + (open ? ' open' : '') + '" ' + (extra || '') + '>' +
+      '<span class="tree-label">' + esc(label) + '</span>' +
+      '<svg class="tree-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>' +
+      '</div>';
+  }
 
-  const save = imageUrls => {
-    if (imageUrls) data.images = imageUrls;
+  var html = '';
+  Object.keys(levels).forEach(function (lv) {
+    html += '<div class="tree-node">' + rowHtml('lv1', lv, false);
+    html += '<div class="tree-children">';
+    Object.keys(levels[lv]).forEach(function (sb) {
+      html += '<div class="tree-node">' + rowHtml('lv2', sb, false);
+      html += '<div class="tree-children">';
+      Object.keys(levels[lv][sb]).forEach(function (un) {
+        var subs = levels[lv][sb][un];
+        // dedupe subtopic ที่ซ้ำกัน โดยรวบ _row ของทุกแถวที่เป็น subtopic เดียวกัน
+        var byTopic = {};
+        subs.forEach(function (s) {
+          var key = s.subtopic || '';
+          if (!byTopic[key]) byTopic[key] = { subtopic: key, rows: [] };
+          byTopic[key].rows.push(s._row);
+        });
+        var topics = Object.values(byTopic);
+        var allChecked = subs.every(function (s) { return s.checked; });
+        // แถวหน่วย + checkbox ควบคุมทั้งหน่วย (ครอบคลุม _row ทุกแถว) — caret ขวา
+        html += '<div class="tree-node">' +
+          '<div class="tree-row lv3">' +
+          '<span class="tree-label">' + esc(un) + '</span>' +
+          '<span class="chk unit-chk' + (allChecked ? ' on' : '') + '" data-rows="' + subs.map(function (s) { return s._row; }).join(',') + '">✓</span>' +
+          '<svg class="tree-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>' +
+          '</div><div class="tree-children">';
+        topics.forEach(function (tp) {
+          // สถานะ checked จะเป็น on เฉพาะเมื่อทุกแถวของ subtopic นั้นถูกเช็ค
+          var allRowsChecked = tp.rows.every(function (r) {
+            var found = state.subjects.find(function (s) { return s._row === r; });
+            return found && found.checked;
+          });
+          html += '<div class="tree-node">' +
+            '<div class="tree-row lv4">' +
+            '<span class="tree-label">' + esc(tp.subtopic) + '</span>' +
+            '<span class="chk sub-chk' + (allRowsChecked ? ' on' : '') + '" data-row="' + tp.rows.join(',') + '">✓</span>' +
+            '</div></div>';
+        });
+        html += '</div></div>'; // ปิด unit node
+      });
+      html += '</div></div>'; // ปิด subject node
+    });
+    html += '</div></div>'; // ปิด level node
+  });
+  el.innerHTML = html;
 
-    const actions = {
-      record: 'saveRecordField',
-      education: 'addEducation',
-      award: 'addAward',
-      work: 'addWork',
-      score: 'addScore'
+  // ผูก event toggle เปิด/ปิด
+  el.querySelectorAll('.tree-row').forEach(function (row) {
+    if (row.querySelector('.chk')) {
+      // แถวที่มี checkbox — กดที่ label เพื่อ toggle children, กด checkbox เพื่อเช็ค
+      var chk = row.querySelector('.chk');
+      if (chk) {
+        chk.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggleCheck(chk);
+        });
+      }
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.chk')) return;
+        var node = row.parentElement;
+        var ch = node.querySelector(':scope > .tree-children');
+        if (ch) ch.classList.toggle('open');
+        row.classList.toggle('open');
+      });
+    } else {
+      row.addEventListener('click', function () {
+        var node = row.parentElement;
+        var ch = node.querySelector(':scope > .tree-children');
+        if (ch) ch.classList.toggle('open');
+        row.classList.toggle('open');
+      });
+    }
+  });
+}
+
+/** สลับสถานะ checkbox (รองรับทั้งแบบเดี่ยวและแบบกลุ่ม) — ตรวจ response ก่อนแสดงสถานะ */
+function toggleCheck(chk) {
+  var isOn = chk.classList.contains('on');
+  var rows = chk.getAttribute('data-rows');
+  var row = chk.getAttribute('data-row');
+  // data-row อาจเป็นหลายค่า (comma-separated) สำหรับ subtopic ที่ซ้ำกัน
+  var targets = (rows || row || '').split(',').map(Number).filter(function (n) { return !isNaN(n); });
+  if (!targets.length) return;
+  var newVal = !isOn;
+
+  // เก็บสถานะเดิมของแต่ละแถวไว้ก่อน (สำหรับ rollback กรณี mixed state)
+  var origStates = {};
+  if (state.subjects) {
+    targets.forEach(function (r) {
+      var found = state.subjects.find(function (s) { return s._row === r; });
+      origStates[r] = found ? found.checked : false;
+    });
+  }
+
+  // อัปเดต UI ทันที (optimistic) แล้วย้อนกลับถ้า backend ตอบ fail
+  chk.classList.toggle('on', newVal);
+  if (rows) {
+    var unitNode = chk.closest('.tree-node');
+    if (unitNode) {
+      unitNode.querySelectorAll(':scope > .tree-children .sub-chk').forEach(function (c) {
+        c.classList.toggle('on', newVal);
+      });
+    }
+  }
+
+  // ส่งไปบันทึกทีละแถว — ตรวจ ok ใน response แต่ละแถวแยกกัน
+  var promises = targets.map(function (r) {
+    return api('saveChecklist', { row: r, checked: newVal }).then(function (res) {
+      return { row: r, res: res, newVal: newVal };
+    });
+  });
+  Promise.all(promises).then(function (results) {
+    // sync state.subjects ตามผลลัพธ์ของแต่ละแถว (ไม่ใช่ทั้งหมดพร้อมกัน)
+    var anyFail = false;
+    results.forEach(function (r) {
+      var ok = r.res && r.res.ok;
+      if (!ok) anyFail = true;
+      if (state.subjects) {
+        var found = state.subjects.find(function (s) { return s._row === r.row; });
+        if (found) found.checked = ok ? r.newVal : origStates[r.row];
+      }
+    });
+    if (anyFail) toast(t('toast.err'), true);
+
+    // รีโหลดสถานะ UI จาก state.subjects (source of truth) แทนการคิดเอง
+    // อัปเดต sub-chk ของแต่ละแถวตามสถานะจริง
+    if (state.subjects) {
+      // หา unit node ที่เกี่ยวข้อง
+      var parentNode = chk.closest('.tree-node');
+      while (parentNode && !parentNode.querySelector('.unit-chk')) {
+        parentNode = parentNode.parentElement ? parentNode.parentElement.closest('.tree-node') : null;
+      }
+      if (parentNode) {
+        // อัปเดต sub-chk แต่ละตัวตามสถานะจริงของแถวที่เกี่ยวข้อง
+        var allSubChks = parentNode.querySelectorAll(':scope > .tree-children .tree-node .sub-chk');
+        allSubChks.forEach(function (c) {
+          var cRows = (c.getAttribute('data-row') || '').split(',').map(Number).filter(function (n) { return !isNaN(n); });
+          var allChecked = cRows.every(function (r) {
+            var found = state.subjects.find(function (s) { return s._row === r; });
+            return found && found.checked;
+          });
+          c.classList.toggle('on', allChecked);
+        });
+        // อัปเดต unit-chk ตามสถานะรวม
+        var unitChk2 = parentNode.querySelector(':scope > .tree-row .unit-chk');
+        if (unitChk2) {
+          var unitRows2 = (unitChk2.getAttribute('data-rows') || '').split(',').map(Number).filter(function (n) { return !isNaN(n); });
+          var allUnitChecked = unitRows2.every(function (r) {
+            var found = state.subjects.find(function (s) { return s._row === r; });
+            return found && found.checked;
+          });
+          unitChk2.classList.toggle('on', allUnitChecked);
+        }
+      }
+    }
+  }).catch(function (e) {
+    // network error — รีโหลดสถานะทั้งหมดจาก state.subjects
+    toast(e.message || t('toast.err'), true);
+    loadSubjects(); // รีโหลดจาก backend เพื่อให้สถานะถูกต้อง
+  });
+}
+
+/* ============ WORK TIMETABLE ============ */
+function loadWorks() {
+  Promise.all([api('workList'), api('subjectCodes')]).then(function (res) {
+    if (res[0] && res[0].ok) { state.works = res[0].data || []; renderWorks(); }
+    if (res[1] && res[1].ok) state.subjectCodes = res[1].data || [];
+  }).catch(function (e) { toast(e.message || t('toast.err'), true); });
+}
+
+function renderWorks() {
+  var list = state.works;
+  var el = $('workList');
+  var now = new Date();
+  if (!list.length) { el.innerHTML = '<div class="card" style="color:var(--text-mute);font-size:.8rem">—</div>'; return; }
+  el.innerHTML = list.map(function (w, i) {
+    var due = parseSheetDate(w.dueAt);
+    var assigned = parseSheetDate(w.assignedAt);
+    var saved = parseSheetDate(w.savedAt);
+    var overdue = due && due < now;
+    return '<div class="work-card' + (overdue ? ' overdue' : '') + '">' +
+      '<div class="work-top">' +
+      '<span class="chk wk-chk' + (w.checked ? ' on' : '') + '" data-row="' + w._row + '">✓</span>' +
+      '<div class="work-main">' +
+      '<div class="work-name"><span class="badge-code">' + esc(w.subjectCode || '') + '</span>' + esc(w.taskName || '') + '</div>' +
+      '<div class="work-meta">📘 ' + esc(w.subjectName || '') + (w.teacher ? ' · 👩‍🏫 ' + esc(w.teacher) : '') + '</div>' +
+      (w.source ? '<div class="work-meta">📄 ' + esc(w.source) + '</div>' : '') +
+      '<div class="work-meta">📍 ' + esc(w.place || '') + '</div>' +
+      (assigned ? '<div class="work-meta">🕒 สั่ง: ' + fmtThaiDateTime(assigned) + '</div>' : '') +
+      (saved ? '<div class="work-meta">💾 บันทึก: ' + fmtThaiDateTime(saved) + '</div>' : '') +
+      '<div class="work-due">⏰ ' + (due ? fmtThaiDateTime(due) : esc(w.dueAt)) + (overdue ? ' (เลยกำหนด)' : '') + '</div>' +
+      '</div></div></div>';
+  }).join('');
+
+  el.querySelectorAll('.wk-chk').forEach(function (chk) {
+    chk.addEventListener('click', function () {
+      var row = +chk.getAttribute('data-row');
+      var newVal = !chk.classList.contains('on');
+      chk.classList.toggle('on', newVal);
+      api('saveWorkChecklist', { row: row, checked: newVal }).then(function (res) {
+        if (!res || !res.ok) {
+          chk.classList.toggle('on', !newVal);
+          toast(t('toast.err'), true);
+        }
+      }).catch(function (e) {
+        chk.classList.toggle('on', !newVal);
+        toast(e.message || t('toast.err'), true);
+      });
+    });
+  });
+  // ตั้ง timer อัปเดต overdue เมื่อเวลาผ่านไป (ไม่ต้องรอ re-render)
+  if (state.workTimer) clearInterval(state.workTimer);
+  state.workTimer = setInterval(function () {
+    var now2 = new Date();
+    el.querySelectorAll('.work-card').forEach(function (card) {
+      var dueText = card.querySelector('.work-due');
+      // อ่าน due จาก state.works ตามลำดับ index
+      var idx = Array.from(el.querySelectorAll('.work-card')).indexOf(card);
+      var w = state.works[idx];
+      if (!w) return;
+      var due = parseSheetDate(w.dueAt);
+      var overdue = due && due < now2;
+      card.classList.toggle('overdue', !!overdue);
+    });
+  }, 30000);
+}
+
+/* ============ SCORE TEST ============ */
+function loadScores() {
+  api('scoreTests').then(function (res) {
+    if (res && res.ok) {
+      state.scores = res.data || [];
+      renderScores();
+    }
+  }).catch(function (e) { toast(e.message || t('toast.err'), true); });
+}
+
+function renderScores() {
+  var list = state.scores;
+  var el = $('scoreList');
+  if (!list.length) { el.innerHTML = '<div class="card" style="color:var(--text-mute);font-size:.8rem">—</div>'; return; }
+  // จัดกลุ่มตามชื่อการทดสอบ + ศูนย์ + รอบ
+  var groups = {};
+  list.forEach(function (s) {
+    var key = (s.testName || '') + '|' + (s.center || '') + '|' + (s.round || '');
+    if (!groups[key]) groups[key] = { name: s.testName, center: s.center, round: s.round, subs: [], images: [] };
+    groups[key].subs.push(s);
+    (s.images || []).forEach(function (img) { groups[key].images.push(img); });
+  });
+  el.innerHTML = Object.values(groups).map(function (g) {
+    var subs = g.subs.map(function (s) {
+      return '<div class="score-subject"><span>' + esc(s.subject) + '</span>' +
+        '<span class="score-val">' + esc(s.score) + ' / ' + esc(s.fullScore) + '</span></div>';
+    }).join('');
+    var imgs = g.images.length
+      ? '<div class="score-imgs">' + g.images.map(function (u) { return '<img src="' + esc(u) + '" alt="">'; }).join('') + '</div>'
+      : '';
+    return '<div class="score-group">' +
+      '<div class="score-head">' +
+      '<h3 class="score-name">' + esc(g.name || '') + '</h3>' +
+      '<p class="score-meta">🏛 ' + esc(g.center || '') + (g.round ? ' · รอบที่ ' + esc(g.round) : '') + '</p>' +
+      '</div>' + subs + imgs + '</div>';
+  }).join('');
+}
+
+/* ============ MODAL FORMS ============ */
+function openModal(title, bodyHtml, action) {
+  $('modalTitle').textContent = title;
+  $('modalBody').innerHTML = bodyHtml;
+  $('modalErr').textContent = '';
+  $('modalOverlay').classList.add('open');
+  state.modalAction = action;
+}
+function closeModal() {
+  $('modalOverlay').classList.remove('open');
+  state.modalAction = null;
+}
+
+/** อัปโหลดไฟล์ไปยัง Drive ผ่าน API แล้วคืน URL (รองรับกำหนด fileType: public/private) */
+function uploadToDrive(file, fileType) {
+  return new Promise(function (resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var base64 = reader.result.split(',')[1];
+      api('uploadFile', { fileName: file.name, base64Data: base64, mimeType: file.type, fileType: fileType || 'public' })
+        .then(function (res) {
+          if (res && res.ok) resolve(res);
+          else reject(new Error(res && res.msg || 'Upload failed'));
+        }).catch(reject);
     };
+    reader.onerror = function () { reject(new Error('อ่านไฟล์ไม่ได้')); };
+    reader.readAsDataURL(file);
+  });
+}
 
-    google.script.run
-      .withSuccessHandler(() => {
-        closeDialog('formDialog');
-        loadPage(currentPage);
-      })
-      .withFailureHandler(e => document.getElementById('formMsg').textContent = e.message)
-      [actions[currentForm]](token, data);
+/* ฟอร์มแก้ไขข้อมูลส่วนตัว */
+$('gearInfo').addEventListener('click', function () {
+  var d = state.portfolio || {};
+  openModal('แก้ไขข้อมูลส่วนตัว', [
+    fieldHtml('birthdate', 'วันเกิด', 'date', parseSheetDate(d.birthdate) ? toInputDate(parseSheetDate(d.birthdate)) : ''),
+    fieldHtml('ethnicity', 'เชื้อชาติ', 'text', d.ethnicity || ''),
+    fieldHtml('nationality', 'สัญชาติ', 'text', d.nationality || ''),
+    fieldHtml('religion', 'ศาสนา', 'text', d.religion || ''),
+    fieldHtml('motto', 'คติประจำใจ', 'text', d.motto || ''),
+    fieldHtml('talents', 'ความสามารถพิเศษ (คั่นด้วย , )', 'text', (d.talents || []).join(', '))
+  ].join(''), 'saveProfileSection:personal');
+});
+
+/* ฟอร์มแก้ไขข้อมูลครอบครัว */
+$('gearFamily').addEventListener('click', function () {
+  var d = state.portfolio || {};
+  openModal('แก้ไขประวัติครอบครัว', [
+    fieldHtml('father', 'บิดา', 'text', d.father || ''),
+    fieldHtml('mother', 'มารดา', 'text', d.mother || ''),
+    fieldHtml('address', 'ที่อยู่', 'textarea', d.address || '')
+  ].join(''), 'saveProfileSection:family');
+});
+
+/* ฟอร์มแก้ไขการติดต่อ */
+$('gearContact').addEventListener('click', function () {
+  var d = (state.portfolio || {}).contacts || {};
+  var c = { tel: d.tel || {}, instagram: d.instagram || {}, facebook: d.facebook || {}, threads: d.threads || {}, line: d.line || {} };
+  openModal('แก้ไขการติดต่อ', Object.keys(c).map(function (k) {
+    return '<div class="field"><label>' + k.toUpperCase() + ' (ชื่อที่แสดง)</label>' +
+      '<input id="f_ct_' + k + '_l" type="text" value="' + esc(c[k].label || '') + '"></div>' +
+      '<div class="field"><label>' + k.toUpperCase() + ' (ลิงก์)</label>' +
+      '<input id="f_ct_' + k + '_u" type="text" value="' + esc(c[k].link || '') + '"></div>';
+  }).join(''), 'saveProfileSection:contact');
+});
+
+/* ฟอร์มเพิ่มการศึกษา */
+$('gearEdu').addEventListener('click', function () {
+  openModal('เพิ่มประวัติการศึกษา', [
+    uploadFieldHtml('eduLogo', 'โลโก้ (อัปโหลดไฟล์ภาพ)'),
+    fieldHtml('eduName', 'ชื่อโรงเรียน', 'text'),
+    fieldHtml('eduAff', 'สังกัด', 'text'),
+    fieldHtml('eduAddr', 'ที่อยู่', 'textarea'),
+    fieldHtml('eduGpa', 'ผลการเรียนเฉลี่ย', 'text')
+  ].join(''), 'saveProfileSection:education');
+});
+
+/* ฟอร์มเพิ่มรางวัล */
+$('gearAward').addEventListener('click', function () {
+  api('awardDropdowns').then(function (res) {
+    var dd = (res && res.ok) ? res.data : { gradeLevels: [], awardLevels: [], medalTypes: [] };
+    openModal('เพิ่มรางวัล', [
+      fieldHtml('awDate', 'วันที่ได้รับ', 'date'),
+      selectHtml('awLevelClass', 'ขณะอยู่ระดับชั้น', dd.gradeLevels || []),
+      selectHtml('awAwardLevel', 'ระดับรางวัล', dd.awardLevels || []),
+      selectHtml('awMedalType', 'ประเภทสิทธิ์เหรียญรางวัล', dd.medalTypes || []),
+      fieldHtml('awType', 'ประเภทเหรียญรางวัล', 'text'),
+      fieldHtml('awTitle', 'ชื่อผลงาน', 'text'),
+      fieldHtml('awAgency', 'หน่วยงานที่รับผิดชอบ', 'text'),
+      uploadFieldHtml('awImg', 'รูปกิจกรรม (เลือกได้หลายไฟล์)', true),
+      fieldHtml('awRecipients', 'ผู้ที่ได้รับรางวัล (คั่นด้วย , )', 'text'),
+      fieldHtml('awAdvisors', 'ครูที่ปรึกษา (คั่นด้วย , )', 'text'),
+      fieldHtml('awDesc', 'ความรู้สึก/อธิบาย', 'textarea')
+    ].join(''), 'saveAward');
+  });
+});
+
+/* ฟอร์มเพิ่มภาพ/ข้อความ hero */
+$('gearHero').addEventListener('click', function () {
+  var d = state.portfolio || {};
+  openModal('เพิ่มภาพ/ข้อความโปรไฟล์', [
+    uploadFieldHtml('heroPhoto', 'ภาพโปรไฟล์ (อัปโหลดไฟล์ภาพ)'),
+    fieldHtml('hlHeadline', 'ข้อความใหญ่ (H3)', 'text', d.headline || ''),
+    fieldHtml('hlSub', 'ข้อความรอง (I3)', 'text', d.subheadline || '')
+  ].join(''), 'saveProfileSection:photo');
+});
+
+/* ฟอร์มเพิ่มกิจกรรม Reading schedule */
+$('gearReading').addEventListener('click', function () {
+  openModal('เพิ่มกิจกรรมในตาราง', [
+    fieldHtml('rsTime', 'ช่วงเวลา (เช่น 08.30 น. – 10.00 น.)', 'text'),
+    fieldHtml('rsActivity', 'กิจกรรม', 'text')
+  ].join(''), 'saveReadingSchedule');
+});
+
+/* ฟอร์มเพิ่มหน่วยการเรียนรู้ */
+$('gearSubject').addEventListener('click', function () {
+  openModal('เพิ่มหน่วยการเรียนรู้', [
+    fieldHtml('sbLevel', 'ระดับชั้น', 'text'),
+    fieldHtml('sbSubject', 'วิชา', 'text'),
+    fieldHtml('sbUnit', 'หน่วยการเรียนรู้', 'text'),
+    fieldHtml('sbSubtopic', 'เนื้อหาย่อย', 'text')
+  ].join(''), 'saveSubjectItem');
+});
+
+/* ฟอร์มเพิ่มงาน (Work) */
+$('gearWork').addEventListener('click', function () {
+  openModal('เพิ่มงาน', [
+    selectHtml('wkCode', 'รหัสวิชา (เลือกแล้วจะเติมชื่อวิชาและครูอัตโนมัติ)', state.subjectCodes.map(function (s) { return s.code; })),
+    fieldHtml('wkName', 'ชื่อรายวิชา (เติมอัตโนมัติ)', 'text', '', true),
+    fieldHtml('wkTeacher', 'ครูผู้สอน (เติมอัตโนมัติ)', 'text', '', true),
+    fieldHtml('wkTask', 'ชื่องาน', 'text'),
+    fieldHtml('wkSource', 'ที่มา (ข้อความ)', 'text'),
+    uploadFieldHtml('wkFile', 'ที่มา (ไฟล์แนบ)', false, '*/*'),
+    fieldHtml('wkAssignedAt', 'วันที่ - เวลา สั่ง', 'datetime-local'),
+    fieldHtml('wkDueAt', 'วันที่ - เวลา กำหนดส่ง', 'datetime-local'),
+    fieldHtml('wkSavedAt', 'วันที่ - เวลา บันทึก', 'datetime-local', toInputDateTime(new Date())),
+    fieldHtml('wkPlace', 'สถานที่ส่ง', 'text')
+  ].join(''), 'saveWorkItem');
+  // เมื่อเลือกรหัสวิชา ให้เติมชื่อวิชาและครูอัตโนมัติจาก List!A:C
+  var codeSel = $('f_wkCode');
+  if (codeSel) {
+    codeSel.addEventListener('change', function () {
+      var code = codeSel.value;
+      var match = state.subjectCodes.find(function (s) { return s.code === code; });
+      if (match) {
+        $('f_wkName').value = match.name || '';
+        $('f_wkTeacher').value = match.teacher || '';
+      }
+    });
+  }
+});
+
+/* ฟอร์มเพิ่มผลสอบ */
+$('gearScore').addEventListener('click', function () {
+  openModal('เพิ่มผลสอบ', [
+    fieldHtml('scTestName', 'ชื่อการทดสอบ', 'text'),
+    fieldHtml('scCenter', 'ศูนย์การทดสอบ', 'text'),
+    fieldHtml('scRound', 'รอบที่', 'text'),
+    fieldHtml('scSubject', 'ประกอบด้วยคะแนนวิชา', 'text'),
+    fieldHtml('scScore', 'คะแนนที่ได้', 'number'),
+    fieldHtml('scFull', 'คะแนนเต็ม', 'number'),
+    uploadFieldHtml('scImg', 'ภาพประกอบ (เลือกได้หลายไฟล์)', true)
+  ].join(''), 'saveScoreTest');
+});
+
+/* ปุ่ม Logout (มีหลายจุด — ใช้ class .btn-logout สำหรับทุกปุ่ม รวมถึงปุ่มบนหน้า Portfolio) */
+document.querySelectorAll('.btn-logout').forEach(function (b) {
+  b.addEventListener('click', doLogout);
+});
+
+/* ปุ่มบันทึกใน modal */
+$('modalSave').addEventListener('click', function () {
+  var action = state.modalAction;
+  if (!action) return;
+  $('modalErr').textContent = '';
+  var v = function (id) {
+    var el = $('f_' + id);
+    if (!el) return '';
+    // คงค่า 0 (ตัวเลข) ไว้ ไม่เปลี่ยนเป็น '' ด้วย trim ถ้าเป็นค่าว่างจริงเท่านั้น
+    var raw = el.value;
+    if (typeof raw === 'number') return raw;
+    var trimmed = String(raw).trim();
+    return trimmed === '' ? '' : raw;
   };
 
-  if (fileInput && fileInput.files[0]) {
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-
-    reader.onload = e => {
-      google.script.run
-        .withSuccessHandler(res => save([res.url]))
-        .withFailureHandler(e => document.getElementById('formMsg').textContent = e.message)
-        .uploadFile(token, e.target.result.split(',')[1], file.name, file.type);
-    };
-
-    reader.readAsDataURL(file);
-  } else {
-    save(null);
+  if (action === 'saveProfileSection:personal') {
+    var talents = v('talents').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    api('saveProfileSection', { data: { section: 'personal', data: {
+      birthdate: v('birthdate'), ethnicity: v('ethnicity'), nationality: v('nationality'),
+      religion: v('religion'), motto: v('motto'), talents: talents
+    } } }).then(onSaved).catch(showModalErr);
+  } else if (action === 'saveProfileSection:family') {
+    api('saveProfileSection', { data: { section: 'family', data: {
+      father: v('father'), mother: v('mother'), address: v('address')
+    } } }).then(onSaved).catch(showModalErr);
+  } else if (action === 'saveProfileSection:contact') {
+    var contactData = {};
+    ['tel','instagram','facebook','threads','line'].forEach(function (k) {
+      var l = $('f_ct_' + k + '_l'), u = $('f_ct_' + k + '_u');
+      if (l && u && (l.value.trim() || u.value.trim())) {
+        contactData[k] = { label: l.value.trim(), link: u.value.trim() };
+      }
+    });
+    api('saveProfileSection', { data: { section: 'contact', data: contactData } }).then(onSaved).catch(showModalErr);
+  } else if (action === 'saveProfileSection:education') {
+    handleUploadThen(function (logoUrl) {
+      api('saveProfileSection', { data: { section: 'education', data: {
+        logo: logoUrl, name: v('eduName'), affiliation: v('eduAff'),
+        address: v('eduAddr'), gpa: v('eduGpa')
+      } } }).then(onSaved).catch(showModalErr);
+    });
+  } else if (action === 'saveAward') {
+    handleMultiUploadThen(function (imgUrls) {
+      api('saveAward', { data: {
+        date: v('awDate'), levelClass: v('awLevelClass'), awardLevel: v('awAwardLevel'),
+        medalType: v('awMedalType'), awardType: v('awType'), title: v('awTitle'),
+        agency: v('awAgency'), images: imgUrls,
+        recipients: v('awRecipients').split(',').map(function (s) { return s.trim(); }).filter(Boolean),
+        advisors: v('awAdvisors').split(',').map(function (s) { return s.trim(); }).filter(Boolean),
+        description: v('awDesc')
+      } }).then(onSaved).catch(showModalErr);
+    });
+  } else if (action === 'saveProfileSection:photo') {
+    // เพิ่มภาพ/ข้อความ hero — ตรวจ ok ของแต่ละขั้น
+    handleUploadThen(function (photoRes) {
+      var photoUrl = photoRes ? photoRes.url : '';
+      if (photoUrl) {
+        // บันทึกภาพก่อน ถ้า fail ให้หยุดและแสดง error
+        api('saveProfileSection', { data: { section: 'photo', data: { photo: photoUrl } } }).then(function (r1) {
+          if (!r1 || !r1.ok) {
+            showModalErr(new Error(r1 && r1.msg || 'บันทึกภาพไม่สำเร็จ'));
+            return;
+          }
+          // ภาพสำเร็จแล้วจึงบันทึกข้อความ hero
+          return api('saveProfileSection', { data: { section: 'headline', data: {
+            headline: v('hlHeadline'), subheadline: v('hlSub')
+          } } }).then(onSaved).catch(showModalErr);
+        }).catch(showModalErr);
+      } else {
+        // ไม่มีภาพ บันทึกข้อความอย่างเดียว
+        api('saveProfileSection', { data: { section: 'headline', data: {
+          headline: v('hlHeadline'), subheadline: v('hlSub')
+        } } }).then(onSaved).catch(showModalErr);
+      }
+    });
+  } else if (action === 'saveReadingSchedule') {
+    api('saveReadingSchedule', { data: {
+      timeSlot: v('rsTime'),
+      activities: [v('rsActivity')]
+    } }).then(onSaved).catch(showModalErr);
+  } else if (action === 'saveSubjectItem') {
+    api('saveSubjectItem', { data: {
+      level: v('sbLevel'), subject: v('sbSubject'),
+      unit: v('sbUnit'), subtopic: v('sbSubtopic')
+    } }).then(onSaved).catch(showModalErr);
+  } else if (action === 'saveWorkItem') {
+    // ไฟล์แนบ Work เป็นไฟล์ส่วนตัว (private)
+    handleUploadThen(function (sourceRes) {
+      var sourceUrl = sourceRes ? sourceRes.url : '';
+      api('saveWorkItem', { data: {
+        savedAt: v('wkSavedAt') || new Date().toISOString(),
+        subjectCode: v('wkCode'), subjectName: v('wkName'),
+        teacher: v('wkTeacher'),
+        taskName: v('wkTask'), source: sourceUrl || v('wkSource'),
+        assignedAt: v('wkAssignedAt'), dueAt: v('wkDueAt'), place: v('wkPlace'),
+        sourceFileId: sourceRes ? sourceRes.fileId : ''
+      } }).then(onSaved).catch(showModalErr);
+    }, 'private');
+  } else if (action === 'saveScoreTest') {
+    // ไฟล์ ScoreTest เป็นไฟล์ส่วนตัว (private)
+    handleMultiUploadThen(function (imgResults) {
+      api('saveScoreTest', { data: {
+        testName: v('scTestName'), center: v('scCenter'), round: v('scRound'),
+        subject: v('scSubject'), score: v('scScore'), fullScore: v('scFull'),
+        images: imgResults.map(function (r) { return r.url; })
+      } }).then(onSaved).catch(showModalErr);
+    }, 'private');
   }
+});
+
+/** จัดการอัปโหลดไฟล์เดี่ยวก่อนเรียก callback (รองรับหลาย id และ fileType) */
+function handleUploadThen(cb, fileType) {
+  var ids = ['eduLogo', 'heroPhoto', 'wkFile'];
+  var file = null;
+  for (var i = 0; i < ids.length; i++) {
+    var input = $('f_file_' + ids[i]);
+    if (input && input.files && input.files[0]) { file = input.files[0]; break; }
+  }
+  if (!file) { cb(null); return; }
+  uploadToDrive(file, fileType).then(cb).catch(function (e) { showModalErr(e); });
 }
 
-if (localStorage.getItem('portfolio_theme') === 'dark') {
-  document.body.classList.add('dark');
+/** จัดการอัปโหลดหลายไฟล์ (รองรับ fileType) */
+function handleMultiUploadThen(cb, fileType) {
+  var input = $('f_file_awImg') || $('f_file_scImg');
+  var files = input && input.files ? Array.from(input.files) : [];
+  if (!files.length) { cb([]); return; }
+  Promise.all(files.map(function (f) { return uploadToDrive(f, fileType); }))
+    .then(cb).catch(function (e) { showModalErr(e); });
 }
 
-loadPage('portfolio');
+function onSaved(res) {
+  if (res && res.ok) {
+    closeModal();
+    toast(t('toast.saved'));
+    // รีเฟรชข้อมูลของหน้าปัจจุบัน (ไม่ใช่ Portfolio เสมอ)
+    var p = state.page;
+    if (p === 'portfolio') loadPortfolio();
+    else if (p === 'reading') loadReading();
+    else if (p === 'listreading') loadSubjects();
+    else if (p === 'work') loadWorks();
+    else if (p === 'scoretest') loadScores();
+  } else showModalErr(new Error(res && res.msg));
+}
+function showModalErr(e) {
+  $('modalErr').textContent = (e && e.message) || t('toast.err');
+}
+
+/* ตัวช่วยสร้างฟิลด์ฟอร์ม (รองรับ readOnly และแปลงค่าว่างให้แสดง 0 ได้) */
+function fieldHtml(id, label, type, value, readOnly) {
+  var v = value === undefined || value === null ? '' : value;
+  var ro = readOnly ? ' readonly style="background:var(--border);opacity:.8;cursor:not-allowed"' : '';
+  if (type === 'textarea') {
+    return '<div class="field"><label>' + label + '</label><textarea id="f_' + id + '"' + ro + '>' + esc(v) + '</textarea></div>';
+  }
+  return '<div class="field"><label>' + label + '</label><input id="f_' + id + '" type="' + type + '" value="' + esc(v) + '"' + ro + '></div>';
+}
+function toInputDateTime(d) {
+  if (!(d instanceof Date)) return '';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') +
+    'T' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function selectHtml(id, label, options) {
+  var opts = (options || []).filter(Boolean).map(function (o) {
+    return '<option value="' + esc(o) + '">' + esc(o) + '</option>';
+  }).join('');
+  return '<div class="field"><label>' + label + '</label><select id="f_' + id + '">' +
+    '<option value="">— เลือก —</option>' + opts + '</select></div>';
+}
+/** สร้างฟิลด์อัปโหลดไฟล์ (รองรับกำหนดชนิดไฟล์) */
+function uploadFieldHtml(id, label, multiple, accept) {
+  return '<div class="field"><label>' + label + '</label>' +
+    '<div class="upload-zone" id="f_zone_' + id + '">📎 แตะเพื่อเลือกไฟล์</div>' +
+    '<input type="file" id="f_file_' + id + '" accept="' + (accept || 'image/*') + '"' + (multiple ? ' multiple' : '') + ' style="display:none">' +
+    '</div>';
+}
+function toInputDate(d) {
+  if (!(d instanceof Date)) return '';
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+// ผูก upload zone ให้คลิกแล้วเปิด file picker
+document.addEventListener('click', function (e) {
+  var zone = e.target.closest('.upload-zone');
+  if (!zone) return;
+  var id = zone.id.replace('f_zone_', '');
+  var input = $('f_file_' + id);
+  if (input) input.click();
+});
+document.addEventListener('change', function (e) {
+  if (e.target.tagName === 'INPUT' && e.target.type === 'file' && e.target.id.startsWith('f_file_')) {
+    var zone = $('f_zone_' + e.target.id.replace('f_file_', ''));
+    if (zone) {
+      var n = e.target.files.length;
+      if (n) {
+        zone.classList.add('has');
+        zone.textContent = '✓ เลือกแล้ว ' + n + ' ไฟล์';
+      }
+    }
+  }
+});
+
+/* ============ EVENT BINDINGS ============ */
+$('btnMenu').addEventListener('click', openDrawer);
+$('drawerOverlay').addEventListener('click', closeDrawer);
+$('btnTheme').addEventListener('click', function () {
+  setTheme(state.theme === 'light' ? 'dark' : 'light');
+});
+$('btnLang').addEventListener('click', function () {
+  state.lang = state.lang === 'th' ? 'en' : 'th';
+  localStorage.setItem('pf_lang', state.lang);
+  applyLang();
+  // รีเรนเดอร์หน้าปัจจุบัน
+  goto(state.page);
+});
+
+document.querySelectorAll('.nav-item').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    goto(btn.getAttribute('data-page'));
+  });
+});
+
+$('modalCancel').addEventListener('click', closeModal);
+$('modalOverlay').addEventListener('click', function (e) {
+  if (e.target === $('modalOverlay')) closeModal();
+});
+
+// Login ในแต่ละหน้า (ผูกปุ่มทั้ง 4 หน้า)
+[['rd','rdErr','rdUser','rdPass'],['lr','lrErr','lrUser','lrPass'],['wk','wkErr','wkUser','wkPass'],['st','stErr','stUser','stPass']].forEach(function (ids) {
+  var btn = document.getElementById(ids[0] + 'Login');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var u = document.getElementById(ids[2]);
+    var p = document.getElementById(ids[3]);
+    doLogin(u.value, p.value).catch(function (e) {
+      document.getElementById(ids[1]).textContent = (e && e.message) || t('toast.login.fail');
+    });
+  });
+});
+
+// Enter เพื่อล็อกอิน
+[['rdUser','rdPass'],['lrUser','lrPass'],['wkUser','wkPass'],['stUser','stPass']].forEach(function (g) {
+  var pass = document.getElementById(g[1]);
+  if (!pass) return;
+  pass.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      var btnId = g[0].replace('User','') + 'Login';
+      var b = document.getElementById(btnId);
+      if (b) b.click();
+    }
+  });
+});
+
+/* ============ INIT ============ */
+// กู้คืนสถานะล็อกอินจาก sessionStorage
+if (sessionStorage.getItem('pf_token')) {
+  state.token = sessionStorage.getItem('pf_token');
+  state.user = sessionStorage.getItem('pf_user') || '';
+}
+initTheme();
+initLang();
+updateAuthUI();
+loadPortfolio();
+// ตรวจ token ว่ายังใช้ได้ไหม
+if (isLoggedIn()) {
+  // ตรวจ token ยังใช้ได้ไหมโดยลองดึงข้อมูลหน้า private
+  api('readingSchedule').then(function (res) {
+    if (res && res.ok) {
+      state.reading = res.data;
+      renderReading();
+    } else {
+      // token หมดอายุ — ล็อกเอาท์
+      state.token = ''; state.user = '';
+      sessionStorage.removeItem('pf_token'); sessionStorage.removeItem('pf_user');
+      updateAuthUI();
+    }
+  }).catch(function () {});
+}
 </script>
+</body>
+</html>
