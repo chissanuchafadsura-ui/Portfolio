@@ -6,7 +6,7 @@
     <title>Portfolio Chissanucha Fadsura</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
@@ -271,6 +271,7 @@
         // ==========================================
         // CONSTANTS & STATE
         // ==========================================
+        // เปลี่ยน URL ด้านล่างนี้เป็น URL ที่ได้จากการ Deploy Google Apps Script ของคุณ
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec';
         
         let state = {
@@ -362,7 +363,14 @@
             const privatePages = ['reading', 'listReading', 'timetable', 'score'];
             
             if (privatePages.includes(pageId) && !state.isLoggedIn) {
-                Swal.fire({ icon: 'warning', title: 'Restricted Access', text: 'กรุณาเข้าสู่ระบบเพื่อดูหน้านี้', confirmButtonColor: '#1e3a8a' });
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Restricted Access',
+                    text: 'กรุณาเข้าสู่ระบบเพื่อดูหน้านี้',
+                    confirmButtonColor: '#1e3a8a',
+                    background: state.theme === 'dark' ? '#1f2937' : '#fff',
+                    color: state.theme === 'dark' ? '#fff' : '#1f2937'
+                });
                 showModal('modal-login');
                 return;
             }
@@ -512,37 +520,40 @@
         }
 
         function renderPortfolio() {
-            const recordData = state.data.public.record; // 2D array
-            if(recordData.length < 3) return; // Row 3 is index 2
+            const recordData = state.data.public.record; 
+            if(recordData.length < 3) return; 
 
-            // Mapping to Sheet Row 3 (Index 2)
             const row = recordData[2]; 
-            // Note: A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7, I=8, J=9, K=10, L=11, M=12, N=13, O=14, P=15, Q=16, R=17, S=18, T=19, U=20, V=21, W=22
+            
+            // Helper function to safely get data
+            const getVal = (index, defaultVal = '-') => row[index] || defaultVal;
+            const setVal = (id, val) => document.getElementById(id).innerText = val;
+            const setHtml = (id, html) => document.getElementById(id).innerHTML = html;
+            const setImg = (id, url, defaultUrl) => document.getElementById(id).src = url || defaultUrl;
 
             // Personal
-            document.getElementById('pf-image').src = row[6] || 'https://placehold.co/200x200/1e3a8a/ffd700?text=Profile';
-            document.getElementById('pf-name-h').innerText = row[7] || '';
-            document.getElementById('pf-name-i').innerText = row[8] || '';
-            document.getElementById('pf-desc-f').innerText = row[5] || '';
+            setImg('pf-image', row[6], 'https://placehold.co/200x200/1e3a8a/ffd700?text=Profile');
+            setVal('pf-name-h', getVal(7, ''));
+            setVal('pf-name-i', getVal(8, ''));
+            setVal('pf-desc-f', getVal(5, ''));
             
-            document.getElementById('pf-dob').innerText = row[14] ? new Date(row[14]).toLocaleDateString('th-TH') : '-';
-            document.getElementById('pf-age').innerText = calculateAge(row[14]);
-            document.getElementById('pf-race').innerText = row[9] || '-';
-            document.getElementById('pf-nat').innerText = row[10] || '-';
-            document.getElementById('pf-rel').innerText = row[11] || '-';
+            setVal('pf-dob', row[14] ? new Date(row[14]).toLocaleDateString('th-TH') : '-');
+            setVal('pf-age', calculateAge(row[14]));
+            setVal('pf-race', getVal(9));
+            setVal('pf-nat', getVal(10));
+            setVal('pf-rel', getVal(11));
             
-            // Talents N (split by newline or comma)
+            // Talents
             const talents = (row[13] || '').toString().split(/\r?\n|,/);
-            document.getElementById('pf-talents').innerHTML = talents.map(t => t.trim() ? `<li>${t.trim()}</li>` : '').join('');
-            
-            document.getElementById('pf-motto').innerText = row[12] || '-';
+            setHtml('pf-talents', talents.map(t => t.trim() ? `<li>${t.trim()}</li>` : '').join(''));
+            setVal('pf-motto', getVal(12));
 
             // Family & Address
-            document.getElementById('pf-father').innerText = row[15] || '-';
-            document.getElementById('pf-mother').innerText = row[16] || '-';
-            document.getElementById('pf-address').innerText = row[17] || '-';
+            setVal('pf-father', getVal(15));
+            setVal('pf-mother', getVal(16));
+            setVal('pf-address', getVal(17));
 
-            // Contact (S3, T3, U3, V3, W3 / Links in S4, T4, U4, V4, W4)
+            // Contact
             const linkRow = recordData[3] || [];
             const contactsHtml = `
                 ${buildContactRow('fas fa-phone-alt', 'Tel', row[18], linkRow[18])}
@@ -551,14 +562,14 @@
                 ${buildContactRow('fab fa-threads', 'Threads', row[21], linkRow[21])}
                 ${buildContactRow('fab fa-line text-green-500', 'LINE', row[22], linkRow[22])}
             `;
-            document.getElementById('pf-contacts').innerHTML = contactsHtml;
+            setHtml('pf-contacts', contactsHtml);
 
-            // Education (A-E)
-            document.getElementById('pf-edu-logo').src = row[0] || 'https://placehold.co/100x100/ffffff/1e3a8a?text=School';
-            document.getElementById('pf-edu-school').innerText = row[1] || '-';
-            document.getElementById('pf-edu-dept').innerText = row[2] || '-';
-            document.getElementById('pf-edu-addr').innerText = row[3] || '-';
-            document.getElementById('pf-edu-gpa').innerText = row[4] || '-';
+            // Education
+            setImg('pf-edu-logo', row[0], 'https://placehold.co/100x100/ffffff/1e3a8a?text=School');
+            setVal('pf-edu-school', getVal(1));
+            setVal('pf-edu-dept', getVal(2));
+            setVal('pf-edu-addr', getVal(3));
+            setVal('pf-edu-gpa', getVal(4));
 
             renderAwards();
         }
@@ -855,7 +866,7 @@
             let html = '';
             for(let i=1; i<data.length; i++) {
                 const row = data[i];
-                if(!row[0]) continue; // A:TestName, B:Center, C:Round, D:Subj, E:Score, F:Max, G:Img
+                if(!row[0]) continue; 
                 
                 const score = parseFloat(row[4]) || 0;
                 const max = parseFloat(row[5]) || 1;
@@ -865,26 +876,29 @@
                 if(pct >= 80) colorClass = 'bg-green-500';
                 else if(pct >= 50) colorClass = 'bg-yellow-500';
 
-                html += `<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col relative">
-                    ${row[6] ? `<div class="h-40 overflow-hidden"><img src="${row[6]}" class="w-full h-full object-cover"></div>` : ''}
-                    <div class="p-5 flex flex-col flex-grow">
+                // Added h-full and flex properties for responsive cards
+                html += `<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col relative h-full">
+                    ${row[6] ? `<div class="h-40 sm:h-48 overflow-hidden flex-shrink-0"><img src="${row[6]}" class="w-full h-full object-cover"></div>` : ''}
+                    <div class="p-4 sm:p-5 flex flex-col flex-grow">
                         <span class="absolute top-3 right-3 bg-white/90 text-navy-600 text-[10px] px-2 py-1 rounded-full font-bold shadow">รอบ: ${row[2]||'-'}</span>
-                        <h3 class="text-lg font-bold text-navy-600 dark:text-gold-400 mb-1 leading-tight">${row[0]}</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt"></i> ศูนย์: ${row[1]||'-'}</p>
+                        <h3 class="text-base sm:text-lg font-bold text-navy-600 dark:text-gold-400 mb-1 leading-tight line-clamp-2">${row[0]}</h3>
+                        <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt"></i> ศูนย์: ${row[1]||'-'}</p>
                         
-                        <div class="mt-auto">
-                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">${row[3]}</p>
+                        <div class="mt-auto pt-2 border-t border-gray-100 dark:border-gray-700">
+                            <p class="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 truncate">${row[3]}</p>
                             <div class="flex justify-between items-end mb-1">
-                                <span class="text-2xl font-bold ${colorClass.replace('bg-','text-')}">${score}</span>
-                                <span class="text-sm text-gray-500">/ ${max}</span>
+                                <span class="text-xl sm:text-2xl font-bold ${colorClass.replace('bg-','text-')}">${score}</span>
+                                <span class="text-xs sm:text-sm text-gray-500">/ ${max}</span>
                             </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                <div class="${colorClass} h-2.5 rounded-full" style="width: ${pct}%"></div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="${colorClass} h-2 rounded-full transition-all duration-1000" style="width: ${pct}%"></div>
                             </div>
                         </div>
                     </div>
                 </div>`;
             }
+            // Ensure container has grid responsive classes (already in HTML but reinforcing here for clarity if injected)
+            document.getElementById('score-container').className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6";
             document.getElementById('score-container').innerHTML = html;
         }
 
@@ -1202,16 +1216,20 @@
                 reader.readAsDataURL(file);
                 reader.onload = async () => {
                     try {
+                        // ตัดส่วน header (เช่น data:image/png;base64,) ออก เอาเฉพาะข้อมูลล้วนๆ
+                        const base64Data = reader.result.split(',')[1]; 
+                        
                         const res = await callAPI({
                             action: 'uploadFile',
                             filename: file.name,
                             mimeType: file.type,
-                            base64: reader.result
+                            base64: base64Data
                         });
                         
-                        if (res.status === 'error') {
-                            reject(new Error(res.message));
+                        if (res.status === 'error' || (res.data && res.data.success === false)) {
+                            reject(new Error(res.message || 'Upload failed from server'));
                         } else {
+                            // สมมติว่าเซิร์ฟเวอร์ตอบกลับมาเป็น { status: 'success', data: { url: '...' } }
                             resolve(res.data.url);
                         }
                     } catch(e) { reject(e); }
