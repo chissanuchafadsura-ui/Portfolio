@@ -130,7 +130,7 @@
         // นำ URL Web App ของคุณมาใส่ที่นี่
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec"; 
         
-        let globalData = {};
+        let globalData = { record: [], award: [], read: [], subject: [], work: [], scoreTest: [], list: [] };
         let isLoggedIn = false;
         let isEng = false;
 
@@ -185,20 +185,28 @@
 
         async function fetchData() {
             showLoader();
+            // ตั้งเวลา Timeout 3.5 วินาที หากนานกว่านี้ให้ตัดจบเพื่อไม่ให้ระบบค้าง
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3500); 
+
             try {
                 // If using GitHub, use POST. If CORS fails, consider setting up a proxy or using JSONP. 
                 // Using POST based on the provided GAS script.
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'getData' })
+                    body: JSON.stringify({ action: 'getData' }),
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
                 const res = await response.json();
                 if(res.status === 'success') {
-                    globalData = res.data;
+                    globalData = { ...globalData, ...res.data };
+                } else {
+                    throw new Error("Invalid response format");
                 }
             } catch (error) {
-                console.error("Error fetching data:", error);
-                // Mock data for display if API is not set yet
+                console.warn("API Data Error or Timeout. Loading Mock Data...", error);
+                // Mock data for display if API is not set yet or takes too long
                 mockData();
             }
             hideLoader();
@@ -325,7 +333,7 @@
                             ${renderGear('award', true)}
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            ${globalData.award.map(aw => renderAwardCard(aw)).join('')}
+                            ${(globalData.award || []).map(aw => renderAwardCard(aw)).join('')}
                         </div>
                     </div>
                 </div>
@@ -429,7 +437,7 @@
             // Grouping logic (Grade -> Subject -> Unit -> Sub)
             // Column Mapping (based on prompt): C=2 (Grade), B=1 (Subject), D=3 (Unit), E=4 (Sub)
             const grouped = {};
-            globalData.subject.forEach(row => {
+            (globalData.subject || []).forEach(row => {
                 const grade = row[2], subj = row[1], unit = row[3], sub = row[4];
                 if(!grouped[grade]) grouped[grade] = {};
                 if(!grouped[grade][subj]) grouped[grade][subj] = {};
@@ -493,7 +501,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${globalData.work.map(w => {
+                                ${(globalData.work || []).map(w => {
                                     // A=0(Check), I=8(Due), C=2(Code), D=3(Subj), E=4(Teach), F=5(Task), G=6(Src), J=9(Loc)
                                     const isOverdue = new Date(w[8]) < new Date();
                                     const dueClass = isOverdue ? 'text-red-500 font-bold' : '';
@@ -529,7 +537,7 @@
                         ${renderGear('scoreTest', true)}
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        ${globalData.scoreTest.map(s => {
+                        ${(globalData.scoreTest || []).map(s => {
                             // A=0(Name), B=1(Center), C=2(Round), D=3(Subj), E=4(Score), F=5(Max), G=6(Img)
                             return `
                             <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border-t-4 border-navy">
