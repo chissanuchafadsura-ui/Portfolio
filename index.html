@@ -946,29 +946,63 @@ footer p {
  *  CONFIG — เปลี่ยนค่านี้ให้เป็น URL ของ Apps Script Web app ที่ Deploy แล้ว
  *  ตัวอย่าง: https://script.google.com/macros/s/AKfy.../exec
  * ===================================================================== */
+/* =====================================================================
+ *  CONFIG — ตั้งค่า API URL
+ * =====================================================================
+ *  วิธีที่ 1: แก้ตรงนี้ (เร็วที่สุด) ใส่ URL ของ Web App ที่ได้จาก Apps Script
+ *           เช่น  https://script.google.com/macros/s/AKfy.../exec
+ *
+ *  วิธีที่ 2: ตั้งผ่าน URL ของหน้าเว็บ (ไม่ต้องแก้โค้ดเลย)
+ *           เพิ่ม ?api=YOUR_SCRIPT_URL ต่อท้าย URL เช่น
+ *           https://username.github.io/portfolio/?api=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfy...%2Fexec
+ *           แล้วระบบจะจำไว้ใน localStorage ใช้ครั้งถัดไปโดยอัตโนมัติ
+ *
+ *  วิธีที่ 3: ตั้งใน DevTools Console (ครั้งเดียว จำไว้ตลอด)
+ *           localStorage.setItem('pf_api_url', 'https://script.google.com/macros/s/.../exec')
+ *
+ *  หมายเหตุ: ถ้าไม่ตั้งค่าอะไรเลย และไม่ได้อยู่ใน Apps Script → จะแสดง
+ *           คำแนะนำให้ตั้งค่า (หรือใช้โหมด Apps Script โดยตรง)
+ * ===================================================================== */
 var CONFIG = {
-  // ถ้าใช้กับ Apps Script ให้ตั้งเป็น null จะใช้ google.script.run อัตโนมัติ
-  // ถ้าใช้กับ GitHub Pages ให้ใส่ URL ของ Web app เช่น
-  // apiUrl: 'https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec'
-  //
-  // ===== อัตโนมัติ: ถ้าไม่ตั้งค่า ระบบจะตรวจจาก URL ปัจจุบัน =====
-  // - ถ้าเปิดจาก script.google.com (โหมด Apps Script) → ใช้ google.script.run
-  // - ถ้าเปิดจาก origin อื่น (เช่น github.io) → ต้องตั้ง apiUrl เอง
-  apiUrl: null
+  // ===== URL ของ Web App ที่ Deploy แล้ว (ตั้งค่าไว้แล้ว) =====
+  // ถ้าใช้กับ Apps Script โดยตรง สามารถเปลี่ยนเป็น null ได้ (ระบบจะใช้ google.script.run อัตโนมัติ)
+  apiUrl: 'https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec'
 };
 
-// ตรวจอัตโนมัติว่าอยู่ในโหมด Apps Script หรือไม่ (script.google.com)
-(function autoDetectMode() {
+/* ตั้งค่า apiUrl อัตโนมัติ ตามลำดับความสำคัญ:
+ *   1. URL parameter  ?api=...   (แล้วจำลง localStorage เพื่อใช้ครั้งถัดไป)
+ *   2. localStorage    pf_api_url
+ *   3. CONFIG.apiUrl  (แก้ตรงในโค้ด)
+ *   4. ถ้าไม่มีและไม่อยู่ใน Apps Script → แจ้งเตือนให้ตั้งค่า
+ */
+(function resolveApiUrl() {
   try {
-    var host = (typeof window !== 'undefined' && window.location && window.location.hostname) || '';
-    if (CONFIG.apiUrl === null && host.indexOf('script.google.com') > -1) {
-      // เปิดจาก Apps Script ใช้ google.script.run
-      CONFIG.apiUrl = 'https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec';
-    } else if (CONFIG.apiUrl === null && host && host !== '' &&
-               typeof google !== 'undefined' && google.script && google.script.run) {
-      // มี google.script.run อยู่ (ใน iframe ของ Apps Script)
+    // 1) อ่านจาก URL parameter
+    var params = new URLSearchParams(window.location.search);
+    var fromUrl = params.get('api') || params.get('apiUrl');
+    if (fromUrl) {
+      // จำลง localStorage ให้ใช้ครั้งถัดไปโดยไม่ต้องมี ?api= ใน URL
+      try { localStorage.setItem('pf_api_url', fromUrl); } catch (e) {}
+      CONFIG.apiUrl = fromUrl;
+      return;
+    }
+
+    // 2) อ่านจาก localStorage (จำจากครั้งก่อน)
+    var fromLS = null;
+    try { fromLS = localStorage.getItem('pf_api_url'); } catch (e) {}
+    if (fromLS) { CONFIG.apiUrl = fromLS; return; }
+
+    // 3) ใช้ค่าจากโค้ด (อาจเป็น null ถ้าผู้ใช้ยังไม่แก้)
+    if (CONFIG.apiUrl) return;
+
+    // 4) ตรวจว่าอยู่ใน Apps Script หรือไม่
+    var inAppsScript = (typeof google !== 'undefined' && google.script && google.script.run) ||
+                       (window.location.hostname.indexOf('script.google.com') > -1);
+    if (inAppsScript) {
+      // ใช้ google.script.run
       CONFIG.apiUrl = null;
     }
+    // else: คงเป็น null → api() จะแจ้งเตือนให้ตั้งค่า
   } catch (e) { /* ignore */ }
 })();
 
@@ -1144,18 +1178,17 @@ function api(action, payload, opts) {
       // แสดงข้อความชัดเจนว่าต้องทำอะไรต่อ
       var host = (typeof window !== 'undefined' && window.location && window.location.hostname) || '';
       var isLocal = !host || host === 'localhost' || host === '127.0.0.1' || window.location.protocol === 'file:';
-      var msg = 'ไม่พบ backend — ต้องเลือก 1 ใน 2 วิธี:\n\n' +
-        '① โหมด Apps Script (ง่ายที่สุด):\n' +
-        '   ใน Apps Script กด + (เพิ่มไฟล์) > HTML ตั้งชื่อ index\n' +
-        '   วางโค้ด index.html ทั้งหมดแล้วบันทึก\n' +
-        '   จากนั้น Deploy เป็น Web app แล้วเปิด URL ที่ได้\n\n' +
-        '② โหมด GitHub Pages:\n' +
-        '   อัปโหลด index.html ไปที่ GitHub repository\n' +
-        '   เปิด Settings > Pages เลือก branch main\n' +
-        '   แล้วแก้ CONFIG.apiUrl ในบรรทัดที่มี "apiUrl:" ให้เป็น URL ของ Web app เช่น\n' +
-        "   apiUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'";
+      var msg = 'ไม่พบ backend — ตั้งค่าได้ 3 วิธี (เร็วที่สุดคือวิธีที่ 2):\n\n' +
+        '① แก้ในโค้ด: ใน index.html หาบรรทัด "apiUrl:" แล้วใส่ URL ของ Web App\n' +
+        "   เช่น apiUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'" + '\n\n' +
+        '② ผ่าน URL ของหน้าเว็บ (ไม่ต้องแก้โค้ด): เพิ่ม ?api=... ต่อท้าย URL\n' +
+        '   ตัวอย่าง: https://username.github.io/portfolio/?api=' +
+        encodeURIComponent('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec') + '\n' +
+        '   แล้วระบบจะจำไว้ใช้ครั้งถัดไปอัตโนมัติ\n\n' +
+        '③ ใน DevTools Console: localStorage.setItem(\'pf_api_url\', \'URL ของ Web App\')\n\n' +
+        '   หากใช้โหมด Apps Script โดยตรง ไม่ต้องตั้งค่าอะไรเลย (ใช้ google.script.run อัตโนมัติ)';
       if (isLocal) {
-        msg += '\n\n⚠ คุณกำลังเปิดไฟล์แบบ local (file:// หรือ localhost) — ต้องเปิดผ่าน URL ของ Web app หรือ GitHub Pages เท่านั้น';
+        msg += '\n\n⚠ คุณกำลังเปิดไฟล์แบบ local (file:// หรือ localhost) — ต้องเปิดผ่าน URL ของ GitHub Pages หรือ Web App เท่านั้น';
       }
       reject(new Error(msg));
     }
