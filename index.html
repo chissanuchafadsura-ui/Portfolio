@@ -1,933 +1,769 @@
 <!DOCTYPE html>
-<html lang="th" class="light">
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Chissanucha Fadsura</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
-                    colors: {
-                        navy: { 500: '#1e3a8a', 600: '#1e3a5f', 900: '#0f172a' },
-                        gold: { 400: '#facc15', 500: '#eab308', 600: '#ca8a04' },
-                        lightblue: { 50: '#f0f9ff', 100: '#e0f2fe', 800: '#075985' }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { transition: background-color 0.3s, color 0.3s; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
-        .dark .glass { background: rgba(15, 23, 42, 0.8); }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .edit-gear { display: none; cursor: pointer; transition: transform 0.2s; }
-        .edit-gear:hover { transform: rotate(90deg) scale(1.1); }
-        .is-admin .edit-gear { display: inline-block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio Chissanucha Fadsura</title>
+  <style>
+    :root {
+      --navy: #16324f;
+      --navy2: #1f4e79;
+      --gold: #c9a227;
+      --bg: #f7f9fc;
+      --card: #ffffff;
+      --text: #17222e;
+      --muted: #5f6f7f;
+      --blue-soft: #e8f2ff;
+      --border: #dbe5f0;
+    }
+
+    body.dark {
+      --bg: #0e1520;
+      --card: #16202c;
+      --text: #e8eef5;
+      --muted: #9fb0c0;
+      --blue-soft: #17293d;
+      --border: #26384b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Sarabun", "Noto Sans Thai", sans-serif;
+      transition: .25s;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--card);
+      border-bottom: 2px solid var(--gold);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      font-weight: 800;
+      color: var(--navy);
+      font-size: 18px;
+    }
+
+    body.dark .brand { color: var(--gold); }
+
+    .top-actions { display: flex; gap: 8px; }
+
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .menu-btn { font-size: 22px; }
+
+    nav {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 280px;
+      max-width: 85vw;
+      background: var(--card);
+      border-right: 2px solid var(--gold);
+      padding: 18px;
+      transform: translateX(-105%);
+      transition: .25s;
+      z-index: 100;
+    }
+
+    nav.open { transform: translateX(0); }
+
+    nav a {
+      display: block;
+      padding: 12px;
+      border-radius: 12px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    nav a.active, nav a:hover {
+      background: var(--blue-soft);
+      color: var(--navy);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: #0007;
+      display: none;
+      z-index: 90;
+    }
+
+    .overlay.show { display: block; }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px #0000000d;
+    }
+
+    .profile {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 18px;
+    }
+
+    .profile img {
+      width: 100%;
+      border-radius: 16px;
+      border: 3px solid var(--gold);
+    }
+
+    h1, h2, h3 { color: var(--navy); margin: 0 0 10px; }
+    body.dark h1, body.dark h2, body.dark h3 { color: var(--gold); }
+
+    .motto {
+      background: var(--blue-soft);
+      border-left: 5px solid var(--navy2);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .edu {
+      background: var(--blue-soft);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .edu img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--gold);
+      margin: 2px;
+    }
+
+    .badge.green { border-color: #2e7d32; color: #2e7d32; }
+    .badge.gold { border-color: #c9a227; color: #8a6d10; }
+    .badge.silver { border-color: #8d99ae; color: #55606d; }
+    .badge.bronze { border-color: #a5622d; color: #7c4a20; }
+    .badge.white { border-color: #90a4ae; color: #546e7a; }
+
+    .award-images {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .award-images img {
+      height: 160px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .schedule-row {
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .schedule-row.active {
+      border-color: var(--gold);
+      background: var(--blue-soft);
+      font-weight: 700;
+    }
+
+    .overdue { color: #d32f2f; font-weight: 700; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    label { font-size: 13px; color: var(--muted); font-weight: 700; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      margin-top: 4px;
+    }
+
+    .btn {
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.gold { background: var(--gold); color: #202020; }
+
+    .gear {
+      float: right;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--navy);
+    }
+
+    body.dark .gear { color: var(--gold); }
+
+    dialog {
+      border: none;
+      border-radius: 18px;
+      padding: 0;
+      max-width: 92vw;
+      width: 620px;
+    }
+
+    dialog::backdrop { background: #0008; }
+
+    .dialog-body { padding: 20px; background: var(--card); color: var(--text); }
+
+    footer {
+      text-align: center;
+      padding: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .profile { grid-template-columns: 1fr; }
+      .profile img { max-width: 240px; margin: auto; }
+      main { padding: 12px; }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen flex flex-col">
+<body>
 
-    <header class="glass fixed w-full z-50 border-b border-gray-200 dark:border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <button id="menuBtn" class="text-2xl text-navy-600 dark:text-gold-400 focus:outline-none">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-navy-600 to-gold-500 dark:from-gold-400 dark:to-yellow-200">
-                    Portfolio Chissanucha Fadsura
-                </h1>
-            </div>
-            <div class="flex items-center gap-3">
-                <button id="langToggle" class="px-2 py-1 text-sm font-semibold rounded border border-navy-500 text-navy-600 dark:border-gold-500 dark:text-gold-400">TH</button>
-                <button id="themeToggle" class="text-xl text-navy-600 dark:text-gold-400 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button id="loginBtn" class="bg-navy-600 hover:bg-navy-500 text-white dark:bg-gold-500 dark:hover:bg-gold-400 dark:text-gray-900 px-4 py-2 rounded-full text-sm font-medium transition shadow-md">
-                    Login
-                </button>
-            </div>
+<header>
+  <button class="icon-btn menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="brand">Portfolio Chissanucha Fadsura</div>
+  <div class="top-actions">
+    <button class="icon-btn" onclick="toggleLang()" title="ภาษา">🌐</button>
+    <button class="icon-btn" onclick="toggleTheme()" title="ธีม">🌙</button>
+    <button class="icon-btn" onclick="openLogin()" title="ล็อกอิน">🔑</button>
+  </div>
+</header>
+
+<div class="overlay" onclick="toggleMenu()"></div>
+
+<nav id="sideMenu">
+  <a class="active" onclick="showPage('portfolio')">Portfolio</a>
+  <a onclick="showPage('reading')">Reading schedule</a>
+  <a onclick="showPage('list')">List Reading</a>
+  <a onclick="showPage('work')">Work timetable</a>
+  <a onclick="showPage('score')">ScoreTest</a>
+</nav>
+
+<main>
+  <section id="page-portfolio"></section>
+  <section id="page-reading" style="display:none"></section>
+  <section id="page-list" style="display:none"></section>
+  <section id="page-work" style="display:none"></section>
+  <section id="page-score" style="display:none"></section>
+</main>
+
+<dialog id="loginDialog">
+  <div class="dialog-body">
+    <h2>เข้าสู่ระบบ</h2>
+    <label>USERNAME<input id="loginUser"></label>
+    <label>PASSWORD<input id="loginPass" type="password"></label>
+    <p id="loginMsg" style="color:#d32f2f"></p>
+    <button class="btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <button class="btn gold" onclick="closeDialog('loginDialog')">ปิด</button>
+  </div>
+</dialog>
+
+<dialog id="formDialog">
+  <div class="dialog-body">
+    <h2 id="formTitle">เพิ่มข้อมูล</h2>
+    <div id="formFields" class="form-grid"></div>
+    <p id="formMsg"></p>
+    <button class="btn" onclick="submitForm()">บันทึก</button>
+    <button class="btn gold" onclick="closeDialog('formDialog')">ปิด</button>
+  </div>
+</dialog>
+
+<footer>©Portfolio Chissanucha Fadsura ALLRIGHT RESERVED</footer>
+
+<script>
+let token = localStorage.getItem('portfolio_token') || '';
+let lang = localStorage.getItem('portfolio_lang') || 'th';
+let currentForm = null;
+
+const T = {
+  th: {
+    portfolio: 'Portfolio', reading: 'Reading schedule',
+    list: 'List Reading', work: 'Work timetable', score: 'ScoreTest',
+    login: 'เข้าสู่ระบบ', logout: 'ออกจากระบบ', save: 'บันทึก',
+    add: 'เพิ่มข้อมูล', requiredLogin: 'หน้านี้ต้องเข้าสู่ระบบ'
+  },
+  en: {
+    portfolio: 'Portfolio', reading: 'Reading schedule',
+    list: 'List Reading', work: 'Work timetable', score: 'ScoreTest',
+    login: 'Login', logout: 'Logout', save: 'Save',
+    add: 'Add data', requiredLogin: 'Login required'
+  }
+};
+
+function t(key) { return T[lang][key] || key; }
+
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('portfolio_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+
+function toggleLang() {
+  lang = lang === 'th' ? 'en' : 'th';
+  localStorage.setItem('portfolio_lang', lang);
+  location.reload();
+}
+
+function toggleMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+  document.querySelector('.overlay').classList.toggle('show');
+}
+
+function showPage(page) {
+  ['portfolio','reading','list','work','score'].forEach(p => {
+    document.getElementById('page-' + p).style.display = p === page ? 'block' : 'none';
+  });
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+  toggleMenu();
+  loadPage(page);
+}
+
+function openDialog(id) { document.getElementById(id).showModal(); }
+function closeDialog(id) { document.getElementById(id).close(); }
+
+function openLogin() { openDialog('loginDialog'); }
+
+function doLogin() {
+  const user = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+
+  google.script.run
+    .withSuccessHandler(res => {
+      if (res.ok) {
+        token = res.token;
+        localStorage.setItem('portfolio_token', token);
+        closeDialog('loginDialog');
+        loadPage(currentPage);
+      } else {
+        document.getElementById('loginMsg').textContent = res.message;
+      }
+    })
+    .login(user, pass);
+}
+
+function gear(onclick) {
+  return token ? `<button class="gear" onclick="${onclick}">⚙️</button>` : '';
+}
+
+let currentPage = 'portfolio';
+
+function loadPage(page) {
+  currentPage = page;
+
+  if (page === 'portfolio') google.script.run.withSuccessHandler(renderPortfolio).getPortfolio();
+  if (page === 'reading') requireLoginThen(() => google.script.run.withSuccessHandler(renderReading).getReadingSchedule());
+  if (page === 'list') requireLoginThen(() => google.script.run.withSuccessHandler(renderSubjects).getSubjects());
+  if (page === 'work') requireLoginThen(() => google.script.run.withSuccessHandler(renderWork).getWork());
+  if (page === 'score') google.script.run.withSuccessHandler(renderScores).getScores();
+}
+
+function requireLoginThen(fn) {
+  if (!token) {
+    document.getElementById('page-' + currentPage).innerHTML =
+      `<div class="card"><h2>${t('requiredLogin')}</h2><button class="btn" onclick="openLogin()">${t('login')}</button></div>`;
+    return;
+  }
+  fn();
+}
+
+function renderPortfolio(d) {
+  const contacts = Object.entries(d.contacts).map(([k, v]) =>
+    v.text ? `<p><a href="${v.url}" target="_blank">${k.toUpperCase()}: ${v.text}</a></p>` : ''
+  ).join('');
+
+  document.getElementById('page-portfolio').innerHTML = `
+    <div class="card">
+      ${gear("openForm('record')")}
+      <div class="profile">
+        ${d.image ? `<img src="${d.image}">` : ''}
+        <div>
+          <h1>${d.title}</h1>
+          <h3>${d.subtitle}</h3>
+          ${d.intro.map(x => `<p>${x}</p>`).join('')}
         </div>
-    </header>
-
-    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full w-64 glass z-40 transition-transform duration-300 ease-in-out pt-20 border-r border-gray-200 dark:border-gray-700 shadow-xl">
-        <nav class="px-4 py-2 space-y-2">
-            <a href="#" data-page="portfolio" class="nav-link block px-4 py-3 rounded-lg bg-navy-50 dark:bg-navy-900 text-navy-600 dark:text-gold-400 font-medium">
-                <i class="fas fa-user-graduate w-6"></i> <span data-i18n="menu_portfolio">Portfolio</span>
-            </a>
-            <a href="#" data-page="reading" class="nav-link block px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                <i class="fas fa-book-reader w-6"></i> <span data-i18n="menu_reading">Reading Schedule</span> <i class="fas fa-lock text-xs ml-2 text-gray-400 auth-icon"></i>
-            </a>
-            <a href="#" data-page="listReading" class="nav-link block px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                <i class="fas fa-list w-6"></i> <span data-i18n="menu_list">List Reading</span> <i class="fas fa-lock text-xs ml-2 text-gray-400 auth-icon"></i>
-            </a>
-            <a href="#" data-page="timetable" class="nav-link block px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                <i class="fas fa-calendar-alt w-6"></i> <span data-i18n="menu_timetable">Work Timetable</span> <i class="fas fa-lock text-xs ml-2 text-gray-400 auth-icon"></i>
-            </a>
-            <a href="#" data-page="score" class="nav-link block px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                <i class="fas fa-award w-6"></i> <span data-i18n="menu_score">ScoreTest</span> <i class="fas fa-lock text-xs ml-2 text-gray-400 auth-icon"></i>
-            </a>
-        </nav>
-    </aside>
-
-    <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full transition-all duration-300">
-        
-        <!-- Page: Portfolio -->
-        <div id="page-portfolio" class="page-section space-y-8">
-            <div id="loading-portfolio" class="text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-navy-500"></i><p class="mt-2 text-gray-500">Loading Data...</p></div>
-            
-            <!-- Personal Info -->
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 relative overflow-hidden border border-gray-100 dark:border-gray-700 hidden" id="sec-personal">
-                <i class="fas fa-cog text-gold-500 text-xl absolute top-4 right-4 edit-gear" onclick="openForm('personal')"></i>
-                <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
-                    <div class="w-48 h-48 rounded-2xl overflow-hidden border-4 border-gold-400 shadow-md flex-shrink-0" id="pf-image-container">
-                        <img id="pf-image" src="" alt="Profile" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-grow text-center md:text-left">
-                        <h2 id="pf-name-h" class="text-3xl font-bold text-navy-600 dark:text-gold-400 mb-1"></h2>
-                        <h3 id="pf-name-i" class="text-xl text-gray-600 dark:text-gray-300 mb-4"></h3>
-                        <p id="pf-desc-f" class="text-sm text-gray-500 dark:text-gray-400 mb-4 whitespace-pre-line"></p>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-6 bg-lightblue-50 dark:bg-slate-700 p-4 rounded-xl border border-blue-100 dark:border-slate-600">
-                            <div><span class="font-semibold text-navy-500 dark:text-gold-300">วันเกิด:</span> <span id="pf-dob"></span></div>
-                            <div><span class="font-semibold text-navy-500 dark:text-gold-300">อายุ:</span> <span id="pf-age"></span></div>
-                            <div><span class="font-semibold text-navy-500 dark:text-gold-300">เชื้อชาติ:</span> <span id="pf-race"></span></div>
-                            <div><span class="font-semibold text-navy-500 dark:text-gold-300">สัญชาติ:</span> <span id="pf-nat"></span></div>
-                            <div><span class="font-semibold text-navy-500 dark:text-gold-300">ศาสนา:</span> <span id="pf-rel"></span></div>
-                        </div>
-                        
-                        <div class="mt-4">
-                            <h4 class="font-bold text-navy-600 dark:text-gold-400 mb-2">ความสามารถพิเศษ</h4>
-                            <ul id="pf-talents" class="list-disc list-inside text-sm text-gray-600 dark:text-gray-300 space-y-1"></ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-8 bg-lightblue-100/50 dark:bg-navy-900/50 p-4 rounded-xl text-center border border-lightblue-200 dark:border-navy-700">
-                    <p class="italic text-navy-600 dark:text-gold-200 font-medium text-lg">"<span id="pf-motto"></span>"</p>
-                </div>
-            </section>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 hidden" id="sec-family-contact">
-                <!-- Family & Address -->
-                <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 relative border border-gray-100 dark:border-gray-700">
-                    <i class="fas fa-cog text-gold-500 text-xl absolute top-4 right-4 edit-gear" onclick="openForm('family')"></i>
-                    <h3 class="text-xl font-bold text-navy-600 dark:text-gold-400 mb-4 border-b pb-2"><i class="fas fa-users mr-2"></i>ประวัติครอบครัว</h3>
-                    <div class="space-y-3 text-sm">
-                        <p><span class="font-semibold text-gray-700 dark:text-gray-300">บิดา:</span> <span id="pf-father" class="text-gray-600 dark:text-gray-400"></span></p>
-                        <p><span class="font-semibold text-gray-700 dark:text-gray-300">มารดา:</span> <span id="pf-mother" class="text-gray-600 dark:text-gray-400"></span></p>
-                        <p><span class="font-semibold text-gray-700 dark:text-gray-300">ที่อยู่:</span> <span id="pf-address" class="text-gray-600 dark:text-gray-400"></span></p>
-                    </div>
-                </section>
-
-                <!-- Contact -->
-                <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 relative border border-gray-100 dark:border-gray-700">
-                    <i class="fas fa-cog text-gold-500 text-xl absolute top-4 right-4 edit-gear" onclick="openForm('contact')"></i>
-                    <h3 class="text-xl font-bold text-navy-600 dark:text-gold-400 mb-4 border-b pb-2"><i class="fas fa-id-card mr-2"></i>การติดต่อ</h3>
-                    <div class="space-y-3 text-sm" id="pf-contacts">
-                        <!-- JS injected -->
-                    </div>
-                </section>
-            </div>
-
-            <!-- Education -->
-            <section class="bg-lightblue-50 dark:bg-slate-800 rounded-2xl shadow-lg p-6 relative border border-lightblue-200 dark:border-slate-700 hidden" id="sec-edu">
-                <i class="fas fa-cog text-gold-500 text-xl absolute top-4 right-4 edit-gear" onclick="openForm('edu')"></i>
-                <div class="flex items-center gap-6">
-                    <img id="pf-edu-logo" src="" alt="School Logo" class="w-24 h-24 object-contain drop-shadow-md bg-white rounded-full p-2">
-                    <div>
-                        <h2 id="pf-edu-school" class="text-2xl font-bold text-navy-600 dark:text-gold-400"></h2>
-                        <h3 id="pf-edu-dept" class="text-lg text-gray-700 dark:text-gray-300 font-medium"></h3>
-                        <p id="pf-edu-addr" class="text-xs text-gray-500 dark:text-gray-400 mt-1"></p>
-                        <div class="mt-2 inline-block bg-navy-600 text-white dark:bg-gold-500 dark:text-gray-900 px-3 py-1 rounded-full text-sm font-semibold shadow-sm">
-                            GPA: <span id="pf-edu-gpa"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Awards -->
-            <section class="hidden" id="sec-awards">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-navy-600 dark:text-gold-400"><i class="fas fa-trophy mr-2"></i>ผลงาน (Awards)</h3>
-                    <i class="fas fa-cog text-gold-500 text-xl edit-gear p-2 bg-white dark:bg-gray-800 rounded-full shadow" onclick="openForm('award')"></i>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="awards-container">
-                    <!-- Cards injected by JS -->
-                </div>
-            </section>
-        </div>
-
-        <div id="page-reading" class="page-section hidden space-y-6">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg text-center border-t-4 border-navy-500 dark:border-gold-500">
-                <h2 class="text-3xl font-bold text-navy-600 dark:text-gold-400 mb-2" id="realtime-date">--</h2>
-                <div class="text-5xl font-mono text-gray-800 dark:text-white tracking-wider" id="realtime-clock">--:--:--</div>
-            </div>
-            
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg overflow-x-auto">
-                <h3 class="text-xl font-bold mb-4 text-navy-600 dark:text-gold-400">ตารางอ่านหนังสือ</h3>
-                <div id="reading-table-container" class="min-w-[600px] w-full">
-                    <!-- Table injected by JS -->
-                </div>
-            </div>
-        </div>
-
-        <div id="page-listReading" class="page-section hidden space-y-6">
-             <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-                <h2 class="text-2xl font-bold text-navy-600 dark:text-gold-400">List Reading</h2>
-                <button onclick="saveChecklists()" class="bg-gold-500 hover:bg-gold-600 text-white px-4 py-2 rounded-lg font-medium shadow"><i class="fas fa-save mr-2"></i>บันทึกความคืบหน้า</button>
-            </div>
-            <div id="subject-accordion" class="space-y-4">
-                <!-- Accordion injected by JS -->
-            </div>
-        </div>
-
-        <div id="page-timetable" class="page-section hidden space-y-6">
-             <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-                <h2 class="text-2xl font-bold text-navy-600 dark:text-gold-400">Work Timetable</h2>
-                <i class="fas fa-plus-circle text-gold-500 text-2xl cursor-pointer hover:scale-110 transition edit-gear" onclick="openForm('work')"></i>
-            </div>
-            <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-navy-50 dark:bg-navy-900 text-navy-600 dark:text-gold-400">
-                        <tr>
-                            <th class="p-3 border-b dark:border-gray-700 w-12 text-center"><i class="fas fa-check"></i></th>
-                            <th class="p-3 border-b dark:border-gray-700">กำหนดส่ง</th>
-                            <th class="p-3 border-b dark:border-gray-700">วิชา</th>
-                            <th class="p-3 border-b dark:border-gray-700">ชื่องาน</th>
-                            <th class="p-3 border-b dark:border-gray-700">ที่มา/ไฟล์</th>
-                            <th class="p-3 border-b dark:border-gray-700">สถานที่ส่ง</th>
-                        </tr>
-                    </thead>
-                    <tbody id="work-table-body" class="divide-y divide-gray-100 dark:divide-gray-700">
-                        <!-- Rows injected by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="page-score" class="page-section hidden space-y-6">
-             <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-                <h2 class="text-2xl font-bold text-navy-600 dark:text-gold-400">ScoreTest</h2>
-                <i class="fas fa-plus-circle text-gold-500 text-2xl cursor-pointer hover:scale-110 transition edit-gear" onclick="openForm('score')"></i>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="score-container">
-                <!-- Score Cards injected by JS -->
-            </div>
-        </div>
-
-    </main>
-
-    <footer class="glass border-t border-gray-200 dark:border-gray-700 py-6 mt-auto">
-        <div class="text-center text-sm text-gray-500 dark:text-gray-400 font-medium">
-            &copy; Portfolio Chissanucha Fadsura ALL RIGHTS RESERVED
-        </div>
-    </footer>
-
-    <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center backdrop-blur-sm p-4">
-        
-        <!-- Login Modal -->
-        <div id="modal-login" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full hidden transform transition-all">
-            <h2 class="text-2xl font-bold text-center text-navy-600 dark:text-gold-400 mb-6">Admin Login</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
-                    <input type="text" id="login-user" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-navy-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                    <input type="password" id="login-pass" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-navy-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" onkeydown="if(event.key==='Enter') handleLogin()">
-                </div>
-                <button onclick="handleLogin()" class="w-full bg-navy-600 hover:bg-navy-700 text-white font-bold py-3 px-4 rounded-lg transition shadow-md mt-4">Login</button>
-                <button onclick="closeModal()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition mt-2">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Dynamic Form Modal -->
-        <div id="modal-form" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col hidden transform transition-all">
-            <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center">
-                <h2 id="form-title" class="text-xl font-bold text-navy-600 dark:text-gold-400">เพิ่ม/แก้ไขข้อมูล</h2>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 text-2xl">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4" id="form-body">
-                <!-- Inputs generated dynamically -->
-            </div>
-            <div class="p-6 border-t dark:border-gray-700 flex justify-end gap-3">
-                <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300">ยกเลิก</button>
-                <button id="form-submit-btn" onclick="submitForm()" class="px-6 py-2 bg-gold-500 text-white rounded-lg font-bold shadow-md hover:bg-gold-600">บันทึกข้อมูล</button>
-            </div>
-        </div>
-
+      </div>
     </div>
 
-    <script>
-        // ==========================================
-        // CONSTANTS & STATE
-        // ==========================================
-        // เปลี่ยน URL ด้านล่างนี้เป็น URL ที่ได้จากการ Deploy Google Apps Script ตัวใหม่
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec'; 
-        
-        let state = {
-            isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
-            lang: localStorage.getItem('lang') || 'th',
-            theme: localStorage.getItem('theme') || 'light',
-            data: { public: null, private: null, list: null },
-            pendingChecklists: [], // Store checked states temporarily
-            currentEditType: ''
-        };
+    <div class="card">
+      ${gear("openForm('personal')")}
+      <p><b>วันเกิด:</b> ${d.birth}</p>
+      <p><b>อายุ:</b> ${d.age}</p>
+      <p><b>เชื้อชาติ:</b> ${d.ethnicity}</p>
+      <p><b>สัญชาติ:</b> ${d.nationality}</p>
+      <p><b>ศาสนา:</b> ${d.religion}</p>
+      <p><b>ความสามารถพิเศษ:</b></p>
+      <ul>${d.abilities.map(a => `<li>${a}</li>`).join('')}</ul>
+      <div class="motto"><b>คติประจำใจ:</b> ${d.motto}</div>
+    </div>
 
-        const dict = {
-            th: { menu_portfolio: 'แฟ้มสะสมผลงาน', menu_reading: 'ตารางอ่านหนังสือ', menu_list: 'รายการเนื้อหา', menu_timetable: 'ตารางงาน', menu_score: 'ผลคะแนนสอบ' },
-            en: { menu_portfolio: 'Portfolio', menu_reading: 'Reading Schedule', menu_list: 'List Reading', menu_timetable: 'Work Timetable', menu_score: 'ScoreTest' }
-        };
+    <div class="card">
+      ${gear("openForm('family')")}
+      <h2>ประวัติครอบครัว</h2>
+      <p><b>บิดา:</b> ${d.father}</p>
+      <p><b>มารดา:</b> ${d.mother}</p>
+      <p><b>ที่อยู่:</b> ${d.address}</p>
+    </div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initTheme();
-            initLang();
-            updateAuthUI();
-            setupEventListeners();
-            loadPublicData();
-            startClock();
-        });
+    <div class="card">
+      ${gear("openForm('contact')")}
+      <h2>การติดต่อ</h2>
+      ${contacts}
+    </div>
 
-        function setupEventListeners() {
-            document.getElementById('menuBtn').addEventListener('click', toggleSidebar);
-            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-            document.getElementById('langToggle').addEventListener('click', toggleLang);
-            document.getElementById('loginBtn').addEventListener('click', () => {
-                if(state.isLoggedIn) logout(); else showModal('modal-login');
-            });
+    <div class="card">
+      ${gear("openForm('education')")}
+      <h2>ประวัติการศึกษา</h2>
+      <div id="eduList">กำลังโหลด...</div>
+    </div>
 
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const page = e.currentTarget.dataset.page;
-                    navigate(page);
-                    if(window.innerWidth < 768) toggleSidebar();
-                });
-            });
+    <div class="card">
+      ${gear("openForm('award')")}
+      <h2>ผลงาน</h2>
+      <div id="awardList">กำลังโหลด...</div>
+    </div>
+  `;
 
-            document.getElementById('modal-overlay').addEventListener('click', (e) => {
-                if(e.target.id === 'modal-overlay') closeModal();
-            });
-        }
+  google.script.run.withSuccessHandler(renderEducation).getEducation();
+  google.script.run.withSuccessHandler(renderAwards).getAwards();
+}
 
-        // ==========================================
-        // UI HELPERS
-        // ==========================================
-        function initTheme() {
-            if (state.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        }
+function renderEducation(rows) {
+  document.getElementById('eduList').innerHTML = rows.map(r => `
+    <div class="edu">
+      ${r.logo ? `<img src="${r.logo}">` : ''}
+      <div>
+        <h3>${r.school}</h3>
+        <p>${r.affiliation}</p>
+        <p><small>${r.address}</small></p>
+        <p><b>GPA:</b> ${r.gpa}</p>
+      </div>
+    </div>
+  `).join('');
+}
 
-        function toggleTheme() {
-            state.theme = state.theme === 'light' ? 'dark' : 'light';
-            localStorage.setItem('theme', state.theme);
-            initTheme();
-        }
+function renderAwards(rows) {
+  document.getElementById('awardList').innerHTML = rows.map(r => `
+    <div class="edu" style="display:block">
+      <div class="award-images">
+        ${r.images.map(i => `<img src="${i}">`).join('')}
+      </div>
+      <span class="badge gold">${r.awardLevel}</span>
+      <span class="badge ${medalClass(r.medalType)}">${r.medalType}</span>
+      <span class="badge green">${r.medalCategory}</span>
+      <h3>${r.title}</h3>
+      <p><small>${r.organization}</small></p>
+      <p><small>${r.date} | ${r.grade}</small></p>
+      <ul>${r.winners.map(w => `<li>${w}</li>`).join('')}</ul>
+      <ul>${r.teachers.map(w => `<li>${w}</li>`).join('')}</ul>
+      <p>${r.description}</p>
+    </div>
+  `).join('');
+}
 
-        function initLang() {
-            document.getElementById('langToggle').innerText = state.lang.toUpperCase();
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(dict[state.lang][key]) el.innerText = dict[state.lang][key];
-            });
-        }
+function medalClass(v) {
+  v = String(v).toLowerCase();
+  if (v.includes('ทอง') && !v.includes('ทองแดง')) return 'gold';
+  if (v.includes('เงิน')) return 'silver';
+  if (v.includes('ทองแดง')) return 'bronze';
+  return 'white';
+}
 
-        function toggleLang() {
-            state.lang = state.lang === 'th' ? 'en' : 'th';
-            localStorage.setItem('lang', state.lang);
-            initLang();
-        }
+function renderReading(d) {
+  const now = new Date();
+  const timeText = now.toTimeString().slice(0, 8);
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('-translate-x-full');
-        }
+  document.getElementById('page-reading').innerHTML = `
+    <div class="card">
+      <h2>${d.today}</h2>
+      <h3 id="clock">${timeText}</h3>
+      ${d.times.map((time, i) => `
+        <div class="schedule-row ${isNow(time) ? 'active' : ''}">
+          <b>${time}</b>
+          <div>${d.activities[i] || ''}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 
-        function navigate(pageId) {
-            const privatePages = ['reading', 'listReading', 'timetable', 'score'];
-            
-            if (privatePages.includes(pageId) && !state.isLoggedIn) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Restricted Access',
-                    text: 'กรุณาเข้าสู่ระบบเพื่อดูหน้านี้',
-                    confirmButtonColor: '#1e3a8a',
-                    background: state.theme === 'dark' ? '#1f2937' : '#fff',
-                    color: state.theme === 'dark' ? '#fff' : '#1f2937'
-                });
-                showModal('modal-login');
-                return;
-            }
+function isNow(range) {
+  const m = range.match(/(\d{1,2})[.:](\d{2}).*?(\d{1,2})[.:](\d{2})/);
+  if (!m) return false;
 
-            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+  const now = new Date();
+  const start = new Date(); start.setHours(+m[1], +m[2], 0);
+  const end = new Date(); end.setHours(+m[3], +m[4], 0);
+  return now >= start && now <= end;
+}
 
-            document.querySelectorAll('.nav-link').forEach(el => {
-                el.classList.remove('bg-navy-50', 'dark:bg-navy-900', 'text-navy-600', 'dark:text-gold-400', 'font-medium');
-                if(el.dataset.page === pageId) el.classList.add('bg-navy-50', 'dark:bg-navy-900', 'text-navy-600', 'dark:text-gold-400', 'font-medium');
-            });
+function renderSubjects(data) {
+  document.getElementById('page-list').innerHTML = data.map(g => `
+    <div class="card">
+      <h2>${g.grade}</h2>
+      ${g.subjects.map(s => `
+        <details>
+          <summary><b>${s.subject}</b></summary>
+          ${s.units.map(u => `
+            <div class="schedule-row">
+              <label>
+                <input type="checkbox" ${u.allDone ? 'checked' : ''}
+                  onchange="toggleUnit(${JSON.stringify(u.items.map(i => i.row))}, this.checked)">
+                <b>${u.unit}</b>
+              </label>
+              ${u.items.map(i => `
+                <label style="display:block">
+                  <input type="checkbox" ${i.done ? 'checked' : ''}
+                    onchange="toggleSubtopic(${i.row}, this.checked)">
+                  ${i.sub}
+                </label>
+              `).join('')}
+            </div>
+          `).join('')}
+        </details>
+      `).join('')}
+    </div>
+  `).join('');
+}
 
-            if(privatePages.includes(pageId) && !state.data.private) {
-                loadPrivateData(pageId);
-            } else {
-                refreshCurrentPage(pageId);
-            }
-        }
+function toggleSubtopic(row, done) {
+  google.script.run.withSuccessHandler(() => loadPage('list')).toggleSubtopic(token, row, done);
+}
 
-        function refreshCurrentPage(pageId) {
-            if (pageId === 'reading') renderReading();
-            else if (pageId === 'listReading') renderSubject();
-            else if (pageId === 'timetable') renderWork();
-            else if (pageId === 'score') renderScore();
-        }
+function toggleUnit(rows, done) {
+  google.script.run.withSuccessHandler(() => loadPage('list')).toggleUnit(token, rows, done);
+}
 
-        function showModal(modalId) {
-            document.getElementById('modal-overlay').classList.remove('hidden');
-            document.querySelectorAll('#modal-overlay > div').forEach(el => el.classList.add('hidden'));
-            document.getElementById(modalId).classList.remove('hidden');
-        }
+function renderWork(rows) {
+  document.getElementById('page-work').innerHTML = `
+    <div class="card">
+      ${gear("openForm('work')")}
+      <h2>Work timetable</h2>
+      ${rows.map(r => `
+        <div class="schedule-row">
+          <label>
+            <input type="checkbox" ${r.done ? 'checked' : ''}
+              onchange="toggleWork(${r.row}, this.checked)">
+            <b>${r.work}</b>
+          </label>
+          <p>${r.code} | ${r.subject} | ${r.teacher}</p>
+          <p class="${r.overdue ? 'overdue' : ''}">กำหนดส่ง: ${r.dueAt}</p>
+          <p><small>สั่ง: ${r.assignedAt} | บันทึก: ${r.savedAt}</small></p>
+          <p><small>ที่มา: ${r.source}</small></p>
+          <p><small>สถานที่ส่ง: ${r.place}</small></p>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 
-        function closeModal() {
-            document.getElementById('modal-overlay').classList.add('hidden');
-        }
+function toggleWork(row, done) {
+  google.script.run.withSuccessHandler(() => loadPage('work')).toggleWork(token, row, done);
+}
 
-        function updateAuthUI() {
-            const btn = document.getElementById('loginBtn');
-            if (state.isLoggedIn) {
-                btn.innerText = 'Logout';
-                btn.classList.replace('bg-navy-600', 'bg-red-500');
-                btn.classList.replace('hover:bg-navy-500', 'hover:bg-red-600');
-                document.body.classList.add('is-admin');
-                document.querySelectorAll('.auth-icon').forEach(el => el.classList.replace('fa-lock', 'fa-unlock-alt', 'text-green-500'));
-            } else {
-                btn.innerText = 'Login';
-                btn.classList.replace('bg-red-500', 'bg-navy-600');
-                btn.classList.replace('hover:bg-red-600', 'hover:bg-navy-500');
-                document.body.classList.remove('is-admin');
-                document.querySelectorAll('.auth-icon').forEach(el => el.classList.replace('fa-unlock-alt', 'fa-lock'));
-            }
-        }
+function renderScores(rows) {
+  document.getElementById('page-score').innerHTML = `
+    <div class="card">
+      ${gear("openForm('score')")}
+      <h2>ScoreTest</h2>
+      ${rows.map(r => `
+        <div class="card">
+          <h3>${r.title}</h3>
+          <p><small>${r.center} ${r.round ? '| ' + r.round : ''}</small></p>
+          ${r.subjects.map(s => `
+            <div class="schedule-row">
+              <b>${s.subject}</b>
+              <p>${s.score} / ${s.full}</p>
+              <div class="award-images">
+                ${s.images.map(i => `<img src="${i}">`).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 
-        async function handleLogin() {
-            const u = document.getElementById('login-user').value;
-            const p = document.getElementById('login-pass').value;
-            if(!u || !p) return Swal.fire('Error', 'กรุณากรอกข้อมูลให้ครบ', 'error');
+function openForm(type) {
+  currentForm = type;
 
-            const btn = document.querySelector('#modal-login button');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
-            btn.disabled = true;
+  const forms = {
+    record: ['image|รูปภาพ|file', 'title|ข้อความใหญ่', 'subtitle|ข้อความรอง', 'intro|ข้อความเล็ก|textarea'],
+    personal: ['birth|วันเกิด|date', 'ethnicity|เชื้อชาติ', 'nationality|สัญชาติ', 'religion|ศาสนา', 'motto|คติประจำใจ', 'abilities|ความสามารถพิเศษ|textarea'],
+    family: ['father|บิดา', 'mother|มารดา', 'address|ที่อยู่|textarea'],
+    contact: ['tel|Tel', 'instagram|Instagram', 'facebook|Facebook', 'threads|Threads', 'line|LINE'],
+    education: ['logo|โลโก้|file', 'school|ชื่อโรงเรียน', 'affiliation|สังกัด', 'address|ที่อยู่', 'gpa|GPA'],
+    award: ['date|วันที่ได้รับ|date', 'grade|ระดับชั้น|select', 'awardLevel|ระดับรางวัล|select', 'medalType|ประเภทสิทธิ์เหรียญ|select', 'medalCategory|ประเภทเหรียญ', 'title|ชื่อผลงาน', 'organization|หน่วยงาน', 'images|รูปภาพ|file', 'winners|ผู้ได้รับรางวัล|textarea', 'teachers|ครูที่ปรึกษา|textarea', 'description|ความรู้สึก/อธิบาย|textarea'],
+    work: ['code|รหัสวิชา|subjectCode', 'subject|ชื่อรายวิชา', 'teacher|ครูผู้สอน', 'work|ชื่องาน', 'source|ที่มา|textarea', 'assignedAt|วันเวลาสั่ง|datetime', 'dueAt|วันเวลากำหนดส่ง|datetime', 'place|สถานที่ส่ง'],
+    score: ['title|ชื่อการทดสอบ', 'center|ศูนย์การทดสอบ', 'round|รอบที่', 'subject|วิชา', 'score|คะแนนที่ได้', 'full|คะแนนเต็ม', 'images|ภาพประกอบ|file']
+  };
 
-            try {
-                const res = await callAPI({ action: 'login', username: u, password: p });
-                if (res.data && res.data.success) {
-                    state.isLoggedIn = true;
-                    localStorage.setItem('isLoggedIn', 'true');
-                    updateAuthUI();
-                    closeModal();
-                    Swal.fire({ icon: 'success', title: 'Logged In', timer: 1500, showConfirmButton: false });
-                    document.getElementById('login-pass').value = '';
-                } else {
-                    Swal.fire('Error', res.data?.message || 'Invalid Credentials', 'error');
-                }
-            } catch (err) {
-                Swal.fire('Error', err.message, 'error');
-            } finally {
-                btn.innerHTML = 'Login';
-                btn.disabled = false;
-            }
-        }
+  document.getElementById('formTitle').textContent = t('add');
+  document.getElementById('formFields').innerHTML = forms[type].map(f => {
+    const [name, label, kind] = f.split('|');
 
-        function logout() {
-            state.isLoggedIn = false;
-            state.data.private = null; 
-            localStorage.removeItem('isLoggedIn');
-            updateAuthUI();
-            navigate('portfolio');
-            Swal.fire({ icon: 'info', title: 'Logged Out', timer: 1500, showConfirmButton: false });
-        }
+    if (kind === 'textarea') {
+      return `<label>${label}<textarea id="f_${name}" rows="3"></textarea></label>`;
+    }
+    if (kind === 'date') {
+      return `<label>${label}<input type="date" id="f_${name}"></label>`;
+    }
+    if (kind === 'datetime') {
+      return `<label>${label}<input type="datetime-local" id="f_${name}"></label>`;
+    }
+    if (kind === 'file') {
+      return `<label>${label}<input type="file" id="f_${name}" accept="image/*"></label>`;
+    }
+    if (kind === 'select') {
+      return `<label>${label}<input id="f_${name}" list="${name}_list"></label>`;
+    }
+    if (kind === 'subjectCode') {
+      return `<label>${label}<input id="f_code" oninput="fillSubject(this.value)"></label>`;
+    }
+    return `<label>${label}<input id="f_${name}"></label>`;
+  }).join('');
 
-        async function callAPI(payload) {
-            if(GAS_URL.includes('ใส่_URL')) throw new Error('Please configure GAS_URL line 324');
-            const response = await fetch(GAS_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if(result.status === 'error') throw new Error(result.message);
-            return result;
-        }
+  if (type === 'award') {
+    google.script.run.withSuccessHandler(opts => {
+      fillDatalist('grade_list', opts.grades);
+      fillDatalist('awardLevel_list', opts.levels);
+      fillDatalist('medalType_list', opts.medals);
+    }).getAwardOptions();
+  }
 
-        async function loadPublicData() {
-            try {
-                const res = await callAPI({ action: 'getAllData' });
-                state.data.public = res.data;
-                state.data.list = res.data.list;
-                document.getElementById('loading-portfolio').classList.add('hidden');
-                document.getElementById('sec-personal').classList.remove('hidden');
-                document.getElementById('sec-family-contact').classList.remove('hidden');
-                document.getElementById('sec-edu').classList.remove('hidden');
-                document.getElementById('sec-awards').classList.remove('hidden');
-                renderPortfolio();
-            } catch (e) {
-                document.getElementById('loading-portfolio').innerHTML = `<p class="text-red-500"><i class="fas fa-exclamation-triangle"></i> ขัดข้อง: โปรดเช็ค GAS URL หรือการเชื่อมต่อ<br>${e.message}</p>`;
-            }
-        }
+  openDialog('formDialog');
+}
 
-        async function loadPrivateData(targetPage = null) {
-            try {
-                Swal.fire({ title: 'Loading Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
-                const res = await callAPI({ action: 'getPrivateData' });
-                state.data.private = res.data;
-                Swal.close();
-                if(targetPage) navigate(targetPage);
-            } catch (e) {
-                Swal.fire('Error', 'ไม่สามารถโหลดข้อมูลส่วนตัวได้: ' + e.message, 'error');
-                navigate('portfolio'); // fallback
-            }
-        }
+function fillDatalist(id, items) {
+  let el = document.getElementById(id);
+  if (!el) {
+    el = document.createElement('datalist');
+    el.id = id;
+    document.body.appendChild(el);
+  }
+  el.innerHTML = items.map(x => `<option value="${x}">`).join('');
+}
 
-        function calculateAge(dobString) {
-            if(!dobString) return '-';
-            const dob = new Date(dobString);
-            const now = new Date();
-            let y = now.getFullYear() - dob.getFullYear();
-            let m = now.getMonth() - dob.getMonth();
-            let d = now.getDate() - dob.getDate();
-            if (m < 0 || (m === 0 && d < 0)) { y--; m += 12; }
-            if (d < 0) {
-                const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-                d += lastMonth.getDate(); m--;
-            }
-            return `${y} ปี ${m} เดือน ${d} วัน`;
-        }
+function fillSubject(code) {
+  google.script.run.withSuccessHandler(rows => {
+    const found = rows.find(r => String(r.values[0]) === code);
+    if (found) {
+      document.getElementById('f_subject').value = found.values[1];
+      document.getElementById('f_teacher').value = found.values[2];
+    }
+  }).getSubjectsRaw();
+}
 
-        function renderPortfolio() {
-            const recordData = state.data.public.record; 
-            if(!recordData || recordData.length < 3) return; 
+function submitForm() {
+  const data = {};
+  document.querySelectorAll('#formFields [id^="f_"]').forEach(input => {
+    const key = input.id.replace('f_', '');
+    data[key] = input.value;
+  });
 
-            const row = recordData[2]; 
-            const linkRow = recordData[3] || [];
-            
-            const getVal = (index, defaultVal = '-') => row[index] || defaultVal;
-            const setVal = (id, val) => document.getElementById(id).innerText = val;
-            const setHtml = (id, html) => document.getElementById(id).innerHTML = html;
-            const setImg = (id, url, defaultUrl) => document.getElementById(id).src = url || defaultUrl;
+  const fileInput = document.querySelector('#formFields input[type=file]');
 
-            // Personal
-            setImg('pf-image', row[6], 'https://placehold.co/200x200/1e3a8a/ffd700?text=Profile');
-            setVal('pf-name-h', getVal(7, ''));
-            setVal('pf-name-i', getVal(8, ''));
-            setVal('pf-desc-f', getVal(5, ''));
-            
-            setVal('pf-dob', row[14] ? new Date(row[14]).toLocaleDateString('th-TH') : '-');
-            setVal('pf-age', calculateAge(row[14]));
-            setVal('pf-race', getVal(9));
-            setVal('pf-nat', getVal(10));
-            setVal('pf-rel', getVal(11));
-            
-            const talents = (row[13] || '').toString().split(/\r?\n|,/);
-            setHtml('pf-talents', talents.map(t => t.trim() ? `<li>${t.trim()}</li>` : '').join(''));
-            setVal('pf-motto', getVal(12));
+  const save = imageUrls => {
+    if (imageUrls) data.images = imageUrls;
 
-            // Family
-            setVal('pf-father', getVal(15));
-            setVal('pf-mother', getVal(16));
-            setVal('pf-address', getVal(17));
+    const actions = {
+      record: 'saveRecordField',
+      education: 'addEducation',
+      award: 'addAward',
+      work: 'addWork',
+      score: 'addScore'
+    };
 
-            // Contact
-            const contactIcons = ['fa-envelope', 'fa-phone-alt', 'fa-facebook', 'fa-line', 'fa-instagram'];
-            let contactsHtml = '';
-            for (let i = 0; i < 5; i++) {
-                const text = row[18 + i] || '';
-                const link = linkRow[18 + i] || '';
-                if (text && text !== '-') {
-                    contactsHtml += `
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                <i class="fas ${contactIcons[i] || 'fa-link'}"></i>
-                            </div>
-                            <a href="${link && link !== '-' ? link : '#'}" target="_blank" class="text-gray-600 dark:text-gray-300 hover:text-navy-600 dark:hover:text-gold-400 transition break-all">${text}</a>
-                        </div>
-                    `;
-                }
-            }
-            if(!contactsHtml) contactsHtml = '<p class="text-gray-400">ไม่มีข้อมูลติดต่อ</p>';
-            setHtml('pf-contacts', contactsHtml);
+    google.script.run
+      .withSuccessHandler(() => {
+        closeDialog('formDialog');
+        loadPage(currentPage);
+      })
+      .withFailureHandler(e => document.getElementById('formMsg').textContent = e.message)
+      [actions[currentForm]](token, data);
+  };
 
-            // Education
-            setImg('pf-edu-logo', row[0], 'https://placehold.co/100x100/e0f2fe/075985?text=Logo');
-            setVal('pf-edu-school', row[1] || 'ชื่อโรงเรียน');
-            setVal('pf-edu-dept', row[2] || 'แผนการเรียน');
-            setVal('pf-edu-addr', row[3] || 'ที่อยู่');
-            setVal('pf-edu-gpa', row[4] || '0.00');
+  if (fileInput && fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
 
-            // Awards
-            const awards = state.data.public.award;
-            let awardsHtml = '';
-            if(awards && awards.length > 1) { 
-                for(let i=1; i<awards.length; i++) {
-                    const aw = awards[i];
-                    if(!aw[0]) continue;
-                    awardsHtml += `
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition">
-                        <img src="${aw[2] || 'https://placehold.co/300x200?text=Award'}" class="w-full h-40 object-cover rounded-lg mb-3">
-                        <h4 class="font-bold text-navy-600 dark:text-gold-400 text-lg line-clamp-2">${aw[0]}</h4>
-                        <p class="text-sm text-gray-500 mt-1">${aw[1] || ''}</p>
-                    </div>`;
-                }
-            }
-            if(!awardsHtml) awardsHtml = '<p class="text-gray-500 col-span-full">ยังไม่มีข้อมูลผลงาน</p>';
-            setHtml('awards-container', awardsHtml);
-        }
+    reader.onload = e => {
+      google.script.run
+        .withSuccessHandler(res => save([res.url]))
+        .withFailureHandler(e => document.getElementById('formMsg').textContent = e.message)
+        .uploadFile(token, e.target.result.split(',')[1], file.name, file.type);
+    };
 
-        function renderReading() {
-            const data = state.data.private?.read || [];
-            if(data.length === 0) return;
-            
-            let html = '<table class="w-full text-left border-collapse text-sm sm:text-base"><thead class="bg-navy-50 dark:bg-navy-900 text-navy-600 dark:text-gold-400"><tr>';
-            data[0].forEach(th => html += `<th class="p-3 border-b dark:border-gray-700 whitespace-nowrap">${th}</th>`);
-            html += '</tr></thead><tbody class="divide-y divide-gray-100 dark:divide-gray-700">';
-            
-            for(let i=1; i<data.length; i++) {
-                if(!data[i][0]) continue;
-                html += '<tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">';
-                data[i].forEach(td => {
-                    let val = td;
-                    // Format Date if needed
-                    if(typeof td === 'string' && td.includes('T') && td.includes('Z')) {
-                        val = new Date(td).toLocaleDateString('th-TH');
-                    }
-                    html += `<td class="p-3">${val}</td>`;
-                });
-                html += '</tr>';
-            }
-            html += '</tbody></table>';
-            document.getElementById('reading-table-container').innerHTML = html;
-        }
+    reader.readAsDataURL(file);
+  } else {
+    save(null);
+  }
+}
 
-        function renderSubject() {
-            const data = state.data.private?.subject || [];
-            if(data.length <= 1) return;
-            
-            state.pendingChecklists = []; // reset
-            let html = '';
-            // Assuming col 0 is Checkbox (TRUE/FALSE), col 1 is Subject, col 2 is Topic
-            let currentSubj = '';
-            let isFirst = true;
+if (localStorage.getItem('portfolio_theme') === 'dark') {
+  document.body.classList.add('dark');
+}
 
-            for(let i=1; i<data.length; i++) {
-                const row = data[i];
-                if(!row[1] && !row[2]) continue; // Skip empty rows
-                
-                if(row[1] && row[1] !== currentSubj) {
-                    if(!isFirst) html += `</div></div>`;
-                    currentSubj = row[1];
-                    html += `
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 overflow-hidden">
-                        <div class="bg-navy-50 dark:bg-navy-900 p-4 font-bold text-navy-600 dark:text-gold-400 border-b dark:border-gray-700 flex justify-between items-center cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                            <span><i class="fas fa-book mr-2"></i>${currentSubj}</span>
-                            <i class="fas fa-chevron-down text-sm"></i>
-                        </div>
-                        <div class="p-4 space-y-2">
-                    `;
-                    isFirst = false;
-                }
-                
-                const isChecked = (row[0] === true || row[0] === 'TRUE');
-                html += `
-                    <label class="flex items-start gap-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition">
-                        <input type="checkbox" class="mt-1 w-4 h-4 text-navy-600 rounded border-gray-300 focus:ring-navy-500" 
-                               onchange="queueChecklist(${i+1}, this.checked)" ${isChecked ? 'checked' : ''}>
-                        <span class="text-gray-700 dark:text-gray-300 ${isChecked ? 'line-through opacity-60' : ''}">${row[2]}</span>
-                    </label>
-                `;
-            }
-            if(!isFirst) html += `</div></div>`;
-            document.getElementById('subject-accordion').innerHTML = html;
-        }
-
-        function queueChecklist(rowNum, value) {
-            // Find if already queued
-            const existing = state.pendingChecklists.find(c => c.row === rowNum);
-            if(existing) existing.value = value;
-            else state.pendingChecklists.push({ row: rowNum, value: value });
-        }
-
-        async function saveChecklists() {
-            if(state.pendingChecklists.length === 0) return Swal.fire('Info', 'ไม่มีการเปลี่ยนแปลง', 'info');
-            try {
-                Swal.fire({ title: 'Saving...', didOpen: () => Swal.showLoading() });
-                await callAPI({ 
-                    action: 'updateChecklists', 
-                    sheetName: 'Subject', 
-                    updates: state.pendingChecklists 
-                });
-                state.pendingChecklists = [];
-                // Reload private data silently to refresh local state
-                const res = await callAPI({ action: 'getPrivateData' });
-                state.data.private = res.data;
-                renderSubject();
-                Swal.fire({ icon: 'success', title: 'Saved!', timer: 1500, showConfirmButton: false });
-            } catch(e) {
-                Swal.fire('Error', 'บันทึกไม่สำเร็จ: ' + e.message, 'error');
-            }
-        }
-
-        function renderWork() {
-            const data = state.data.private?.work || [];
-            if(data.length <= 1) return;
-            
-            let html = '';
-            for(let i=1; i<data.length; i++) {
-                const w = data[i];
-                if(!w[1]) continue;
-                
-                const isDone = (w[0] === true || w[0] === 'TRUE');
-                let dateStr = w[1];
-                if(dateStr instanceof Date || (typeof dateStr === 'string' && dateStr.includes('T'))) {
-                    dateStr = new Date(dateStr).toLocaleDateString('th-TH');
-                }
-
-                html += `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm sm:text-base ${isDone ? 'opacity-50' : ''}">
-                    <td class="p-3 border-b dark:border-gray-700 text-center">
-                        ${isDone ? '<i class="fas fa-check-circle text-green-500 text-lg"></i>' : '<i class="far fa-circle text-gray-300 text-lg"></i>'}
-                    </td>
-                    <td class="p-3 border-b dark:border-gray-700 whitespace-nowrap ${isDone ? 'line-through' : ''}">${dateStr}</td>
-                    <td class="p-3 border-b dark:border-gray-700 font-semibold text-navy-600 dark:text-gold-300 ${isDone ? 'line-through' : ''}">${w[2] || '-'}</td>
-                    <td class="p-3 border-b dark:border-gray-700 ${isDone ? 'line-through' : ''}">${w[3] || '-'}</td>
-                    <td class="p-3 border-b dark:border-gray-700">
-                        ${w[4] ? `<a href="${w[4]}" target="_blank" class="text-blue-500 hover:underline"><i class="fas fa-external-link-alt"></i> Link</a>` : '-'}
-                    </td>
-                    <td class="p-3 border-b dark:border-gray-700">${w[5] || '-'}</td>
-                </tr>`;
-            }
-            document.getElementById('work-table-body').innerHTML = html;
-        }
-
-        function renderScore() {
-            const data = state.data.private?.scoreTest || [];
-            if(data.length <= 1) return;
-            
-            let html = '';
-            for(let i=1; i<data.length; i++) {
-                const s = data[i];
-                if(!s[0]) continue;
-                
-                const score = parseFloat(s[1]) || 0;
-                const fullScore = parseFloat(s[2]) || 100;
-                const percent = (score / fullScore) * 100;
-                
-                let colorClass = 'text-green-500';
-                if(percent < 50) colorClass = 'text-red-500';
-                else if(percent < 80) colorClass = 'text-yellow-500';
-
-                html += `
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 relative overflow-hidden group hover:scale-105 transition-transform">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-navy-50 dark:bg-navy-900 rounded-full opacity-50 group-hover:scale-150 transition-transform"></div>
-                    <h3 class="text-xl font-bold text-navy-600 dark:text-gold-400 mb-2 relative z-10">${s[0]}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 relative z-10">สอบวันที่: ${s[3] ? new Date(s[3]).toLocaleDateString('th-TH') : '-'}</p>
-                    
-                    <div class="flex items-end gap-2 relative z-10">
-                        <span class="text-4xl font-black ${colorClass}">${score}</span>
-                        <span class="text-gray-400 font-medium pb-1">/ ${fullScore}</span>
-                    </div>
-                    
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-4 relative z-10">
-                        <div class="bg-navy-500 dark:bg-gold-500 h-2.5 rounded-full" style="width: ${Math.min(percent, 100)}%"></div>
-                    </div>
-                </div>`;
-            }
-            document.getElementById('score-container').innerHTML = html;
-        }
-
-        function openForm(type) {
-            if(!state.isLoggedIn) return Swal.fire('Error', 'กรุณาเข้าสู่ระบบก่อนใช้ฟังก์ชันนี้', 'error');
-            state.currentEditType = type;
-            const titleEl = document.getElementById('form-title');
-            const bodyEl = document.getElementById('form-body');
-            bodyEl.innerHTML = ''; // clear
-
-            const createInput = (label, id, type='text', val='') => `
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">${label}</label>
-                    <input type="${type}" id="input-${id}" value="${val}" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-navy-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                </div>
-            `;
-            
-            const createTextarea = (label, id, val='') => `
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">${label}</label>
-                    <textarea id="input-${id}" rows="3" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-navy-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">${val}</textarea>
-                </div>
-            `;
-
-            if(type === 'personal') {
-                titleEl.innerText = 'แก้ไขข้อมูลส่วนตัว';
-                const row = state.data.public.record[2];
-                bodyEl.innerHTML = `
-                    <div class="text-sm text-gray-500 mb-2">เรียงตามโครงสร้าง Backend: NameTH, NameEN, Desc, Img, DOB, Race, Nat, Rel, Talents, Motto</div>
-                    ${createInput('ชื่อ-สกุล (TH)', '0', 'text', row[7]||'')}
-                    ${createInput('ชื่อ-สกุล (EN)', '1', 'text', row[8]||'')}
-                    ${createTextarea('รายละเอียด/คำอธิบาย', '2', row[5]||'')}
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">รูปโปรไฟล์ (เมื่อเลือกรูป ระบบจะอัปโหลดและบันทึกทันที)</label>
-                        <input type="file" accept="image/*" onchange="handleImageUpload(this, 'input-3')" class="w-full text-sm mb-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-navy-50 file:text-navy-700 hover:file:bg-navy-100 dark:file:bg-gray-700 dark:file:text-gray-300">
-                        <input type="text" id="input-3" value="${row[6]||''}" placeholder="หรือใส่ URL รูปภาพตรงนี้" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-navy-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                    ${createInput('วันเกิด (YYYY-MM-DD)', '4', 'date', row[14] ? new Date(row[14]).toISOString().split('T')[0] : '')}
-                    <div class="grid grid-cols-3 gap-2">
-                        ${createInput('เชื้อชาติ', '5', 'text', row[9]||'')}
-                        ${createInput('สัญชาติ', '6', 'text', row[10]||'')}
-                        ${createInput('ศาสนา', '7', 'text', row[11]||'')}
-                    </div>
-                    ${createTextarea('ความสามารถพิเศษ (ขึ้นบรรทัดใหม่เพื่อแยกข้อ)', '8', row[13]||'')}
-                    ${createInput('คติประจำใจ', '9', 'text', row[12]||'')}
-                `;
-            } else if (type === 'family') {
-                titleEl.innerText = 'แก้ไขประวัติครอบครัว';
-                const row = state.data.public.record[2];
-                bodyEl.innerHTML = `
-                    ${createInput('ชื่อบิดา', '0', 'text', row[15]||'')}
-                    ${createInput('ชื่อมารดา', '1', 'text', row[16]||'')}
-                    ${createTextarea('ที่อยู่', '2', row[17]||'')}
-                `;
-            } else if (type === 'edu') {
-                titleEl.innerText = 'แก้ไขข้อมูลการศึกษา';
-                const row = state.data.public.record[2];
-                bodyEl.innerHTML = `
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">โลโก้โรงเรียน (เมื่อเลือกรูป ระบบจะอัปโหลดและบันทึกทันที)</label>
-                        <input type="file" accept="image/*" onchange="handleImageUpload(this, 'input-0')" class="w-full text-sm mb-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-navy-50 file:text-navy-700 hover:file:bg-navy-100 dark:file:bg-gray-700 dark:file:text-gray-300">
-                        <input type="text" id="input-0" value="${row[0]||''}" placeholder="หรือใส่ URL โลโก้ตรงนี้" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-navy-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                    ${createInput('ชื่อโรงเรียน', '1', 'text', row[1]||'')}
-                    ${createInput('แผนการเรียน', '2', 'text', row[2]||'')}
-                    ${createTextarea('ที่อยู่โรงเรียน', '3', row[3]||'')}
-                    ${createInput('เกรดเฉลี่ย (GPA)', '4', 'text', row[4]||'')}
-                `;
-            } else {
-                // สำหรับ Award, Work, Score - ทำเป็นฟอร์มเพิ่มข้อมูลแถวใหม่ (Append Row) 
-                titleEl.innerText = `เพิ่มข้อมูล: ${type.toUpperCase()}`;
-                bodyEl.innerHTML = `
-                    <div class="p-4 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-lg text-sm border border-yellow-200 dark:border-yellow-700">
-                        <i class="fas fa-info-circle"></i> ฟังก์ชันการแก้ไขในส่วนนี้ กำลังอยู่ในระหว่างการพัฒนาโดยแอดมิน เพื่อความแม่นยำ กรุณาแก้ไขผ่าน <b>Google Sheets</b> โดยตรง
-                    </div>
-                `;
-                document.getElementById('form-submit-btn').style.display = 'none'; // hide submit
-            }
-
-            if(['personal', 'family', 'edu'].includes(type)) {
-                document.getElementById('form-submit-btn').style.display = 'block';
-            }
-
-            showModal('modal-form');
-        }
-
-        async function submitForm() {
-            const type = state.currentEditType;
-            let dataArr = [];
-            
-            // อ่านค่าจาก Input 
-            let idx = 0;
-            while(document.getElementById(`input-${idx}`)) {
-                dataArr.push(document.getElementById(`input-${idx}`).value);
-                idx++;
-            }
-
-            try {
-                const btn = document.getElementById('form-submit-btn');
-                const origText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-                btn.disabled = true;
-
-                await callAPI({
-                    action: 'updateRecord',
-                    type: type,
-                    data: dataArr
-                });
-
-                closeModal();
-                Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', text: 'กำลังโหลดข้อมูลใหม่...', timer: 1500, showConfirmButton: false });
-                
-                // Reload Public Data
-                await loadPublicData();
-                
-            } catch (e) {
-                Swal.fire('Error', e.message, 'error');
-            } finally {
-                const btn = document.getElementById('form-submit-btn');
-                if(btn) { btn.innerHTML = 'บันทึกข้อมูล'; btn.disabled = false; }
-            }
-        }
-
-        async function handleImageUpload(inputEle, targetId) {
-            const file = inputEle.files[0];
-            if (!file) return;
-
-            if (file.size > 5 * 1024 * 1024) { // จำกัดขนาดไฟล์ที่ 5MB
-                Swal.fire('Error', 'ไฟล์รูปภาพต้องมีขนาดไม่เกิน 5MB', 'error');
-                inputEle.value = '';
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const base64String = e.target.result.split(',')[1];
-                
-                try {
-                    Swal.fire({ 
-                        title: 'กำลังอัปโหลด...', 
-                        text: 'กรุณารอสักครู่ ระบบกำลังบันทึกรูปภาพลง Google Drive',
-                        allowOutsideClick: false, 
-                        didOpen: () => Swal.showLoading() 
-                    });
-                    
-                    const res = await callAPI({
-                        action: 'uploadFile',
-                        base64: base64String,
-                        mimeType: file.type,
-                        filename: file.name
-                    });
-
-                    if (res.status === 'success') {
-                        // อัปเดตช่อง URL ในฟอร์มด้วยลิงก์จาก Drive
-                        document.getElementById(targetId).value = res.data.url;
-                        
-                        // สั่งบันทึกฟอร์มทันทีเพื่อให้ข้อมูลอัปเดตลง Google Sheet อัตโนมัติ
-                        await submitForm();
-                    }
-                } catch (err) {
-                    Swal.fire('Error', 'อัปโหลดไม่สำเร็จ: ' + err.message, 'error');
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function startClock() {
-            setInterval(() => {
-                const now = new Date();
-                const clockEl = document.getElementById('realtime-clock');
-                const dateEl = document.getElementById('realtime-date');
-                if(clockEl) clockEl.innerText = now.toLocaleTimeString('th-TH');
-                if(dateEl) dateEl.innerText = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-            }, 1000);
-        }
-
-    </script>
-</body>
-</html>
+loadPage('portfolio');
+</script>
