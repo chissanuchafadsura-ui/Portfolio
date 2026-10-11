@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="th" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Chissanucha Fadsura</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Sarabun -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#1e3a8a', // Blue 900
+                            gold: '#d97706', // Amber 600
+                            lightBlue: '#e0f2fe', // Sky 100
+                            darkBg: '#0f172a', // Slate 900
+                            darkCard: '#1e293b' // Slate 800
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Sarabun', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #d97706;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dark mode overrides for specific elements */
+        .dark .bg-brand-lightBlue { background-color: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-brand-darkBg dark:text-gray-200">
+
+    <header class="fixed w-full top-0 z-50 bg-white dark:bg-brand-darkCard shadow-md border-b-2 border-brand-gold">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <!-- Hamburger Menu -->
+                <button id="menuBtn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6 text-brand-blue dark:text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <h1 class="text-xl md:text-2xl font-bold text-brand-blue dark:text-white" id="siteTitle">Portfolio<br><span class="text-sm md:text-base font-normal text-brand-gold">Chissanucha Fadsura</span></h1>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <!-- Translation Toggle -->
+                <button id="langToggle" class="px-3 py-1 rounded-full border border-brand-blue text-brand-blue dark:border-brand-gold dark:text-brand-gold text-sm font-medium hover:bg-brand-blue hover:text-white transition-colors">
+                    TH / EN
+                </button>
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <!-- Sun Icon -->
+                    <svg id="iconSun" class="w-6 h-6 text-yellow-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <!-- Moon Icon -->
+                    <svg id="iconMoon" class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+                <!-- Login/Logout Button -->
+                <button id="authBtn" class="bg-brand-blue text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-800 transition-colors text-sm" onclick="toggleAuth()">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full w-64 bg-white dark:bg-brand-darkCard shadow-xl z-40 transition-transform duration-300 ease-in-out pt-20">
+        <nav class="flex flex-col gap-2 p-4">
+            <button onclick="switchTab('portfolio')" class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-brand-lightBlue dark:hover:bg-gray-700 font-medium text-brand-blue dark:text-gray-200">Portfolio</button>
+            
+            <div id="authMenus" class="hidden flex-col gap-2">
+                <button onclick="switchTab('reading')" class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-brand-lightBlue dark:hover:bg-gray-700 font-medium text-brand-blue dark:text-gray-200">Reading schedule</button>
+                <button onclick="switchTab('list')" class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-brand-lightBlue dark:hover:bg-gray-700 font-medium text-brand-blue dark:text-gray-200">List Reading</button>
+                <button onclick="switchTab('work')" class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-brand-lightBlue dark:hover:bg-gray-700 font-medium text-brand-blue dark:text-gray-200">Work timetable</button>
+                <button onclick="switchTab('score')" class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-brand-lightBlue dark:hover:bg-gray-700 font-medium text-brand-blue dark:text-gray-200">ScoreTest</button>
+            </div>
+            
+            <div id="loginWarning" class="p-4 mt-4 text-xs text-brand-gold bg-yellow-50 dark:bg-gray-800 rounded-lg border border-yellow-200 dark:border-gray-700">
+                <span data-th="กรุณาเข้าสู่ระบบเพื่อดูเมนูอื่นๆ" data-en="Please login to access other menus">กรุณาเข้าสู่ระบบเพื่อดูเมนูอื่นๆ</span>
+            </div>
+        </nav>
+    </div>
+    <!-- Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden" onclick="closeMenu()"></div>
+
+    <main class="max-w-7xl mx-auto pt-24 pb-20 px-4 min-h-screen">
+        
+        <!-- Loading Spinner -->
+        <div id="loading" class="fixed inset-0 bg-white dark:bg-brand-darkBg bg-opacity-80 dark:bg-opacity-80 z-50 flex flex-col items-center justify-center hidden">
+            <div class="loader mb-4"></div>
+            <p class="text-brand-blue dark:text-brand-gold font-medium animate-pulse" data-th="กำลังโหลดข้อมูล..." data-en="Loading data...">กำลังโหลดข้อมูล...</p>
+        </div>
+
+        <!-- 1. PORTFOLIO TAB -->
+        <section id="portfolio" class="tab-content active space-y-8">
+            <!-- Personal Info (Record) -->
+            <div class="bg-white dark:bg-brand-darkCard rounded-2xl shadow-lg p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center md:items-start border-t-4 border-brand-blue relative">
+                <div class="w-48 h-64 flex-shrink-0 rounded-xl overflow-hidden shadow-md border-2 border-brand-gold">
+                    <img id="pfImage" src="https://placehold.co/400x600/e0f2fe/1e3a8a?text=Profile" alt="Profile" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1 space-y-4 text-center md:text-left w-full">
+                    <h2 id="pfTitle1" class="text-3xl md:text-4xl font-bold text-brand-blue dark:text-brand-gold">Name</h2>
+                    <h3 id="pfTitle2" class="text-xl md:text-2xl font-medium text-gray-600 dark:text-gray-300">Title</h3>
+                    <p id="pfSubtitle" class="text-sm text-gray-500 dark:text-gray-400 pb-4 border-b border-gray-200 dark:border-gray-700">Subtitle</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-4">
+                        <div class="space-y-2">
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="วันเกิด :" data-en="DOB :">วันเกิด :</span> <span id="pfDob"></span></p>
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="อายุ :" data-en="Age :">อายุ :</span> <span id="pfAge"></span></p>
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="เชื้อชาติ :" data-en="Race :">เชื้อชาติ :</span> <span id="pfRace"></span></p>
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="สัญชาติ :" data-en="Nationality :">สัญชาติ :</span> <span id="pfNation"></span></p>
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="ศาสนา :" data-en="Religion :">ศาสนา :</span> <span id="pfReligion"></span></p>
+                        </div>
+                        <div class="space-y-2">
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="บิดา :" data-en="Father :">บิดา :</span> <span id="pfFather"></span></p>
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="มารดา :" data-en="Mother :">มารดา :</span> <span id="pfMother"></span></p>
+                            <p><span class="font-bold text-brand-blue dark:text-brand-gold" data-th="ที่อยู่ :" data-en="Address :">ที่อยู่ :</span> <span id="pfAddress"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-brand-lightBlue rounded-xl border border-blue-200">
+                        <p class="text-center font-medium italic text-brand-blue" id="pfMotto">"Motto"</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="font-bold text-brand-blue dark:text-brand-gold mb-2" data-th="ความสามารถพิเศษ :" data-en="Talents :">ความสามารถพิเศษ :</p>
+                        <ul id="pfTalents" class="list-disc list-inside text-sm space-y-1 ml-2"></ul>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="flex flex-wrap gap-3 mt-6 justify-center md:justify-start" id="pfContactContainer">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="bg-brand-lightBlue rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-center shadow-md border border-blue-200">
+                <img id="eduLogo" src="" alt="School Logo" class="w-24 h-24 object-contain">
+                <div class="text-center md:text-left space-y-2">
+                    <h3 id="eduSchool" class="text-2xl font-bold text-brand-blue">School Name</h3>
+                    <p id="eduAffiliation" class="text-lg text-gray-700 dark:text-gray-300">Affiliation</p>
+                    <p id="eduAddress" class="text-sm text-gray-600 dark:text-gray-400">Address</p>
+                    <p class="text-md font-medium text-brand-gold bg-white dark:bg-gray-800 px-3 py-1 rounded-full inline-block shadow-sm">
+                        <span data-th="ผลการเรียนเฉลี่ย :" data-en="GPA :">ผลการเรียนเฉลี่ย :</span> <span id="eduGPA"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Awards Section -->
+            <div class="relative">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-brand-blue dark:text-brand-gold border-l-4 border-brand-gold pl-3" data-th="ผลงานและรางวัล" data-en="Awards & Achievements">ผลงานและรางวัล</h2>
+                    <!-- Add Award Button (Visible only when logged in) -->
+                    <button id="addAwardBtn" onclick="openModal('awardModal')" class="hidden bg-brand-blue text-white p-2 rounded-full shadow-md hover:bg-blue-800 transition-transform hover:scale-110">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                </div>
+                
+                <div id="awardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Awards will be injected here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="reading" class="tab-content">
+            <div class="bg-white dark:bg-brand-darkCard rounded-2xl shadow-lg p-6">
+                <div class="text-center mb-6 border-b pb-4 dark:border-gray-700">
+                    <h2 class="text-2xl font-bold text-brand-blue dark:text-brand-gold mb-2" data-th="ตารางอ่านหนังสือ" data-en="Reading Schedule">ตารางอ่านหนังสือ</h2>
+                    <div class="inline-block bg-brand-lightBlue px-6 py-3 rounded-xl border-2 border-brand-blue">
+                        <p id="realtimeDate" class="text-lg font-medium text-gray-800 dark:text-gray-200"></p>
+                        <p id="realtimeClock" class="text-3xl font-bold text-brand-blue dark:text-brand-gold font-mono tracking-wider"></p>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse" id="scheduleTable">
+                        <thead>
+                            <tr class="bg-brand-blue text-white" id="scheduleHeader">
+                                <!-- Headers injected via JS -->
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="list" class="tab-content">
+            <div class="bg-white dark:bg-brand-darkCard rounded-2xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-brand-blue dark:text-brand-gold mb-6 border-l-4 border-brand-gold pl-3" data-th="รายการอ่านหนังสือ" data-en="List Reading">รายการอ่านหนังสือ</h2>
+                
+                <div id="listReadingContainer" class="space-y-4">
+                    <!-- Nested lists injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="work" class="tab-content">
+            <div class="bg-white dark:bg-brand-darkCard rounded-2xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-brand-blue dark:text-brand-gold border-l-4 border-brand-gold pl-3" data-th="ตารางภาระงาน" data-en="Work Timetable">ตารางภาระงาน</h2>
+                    <button onclick="openModal('workModal')" class="bg-brand-blue text-white p-2 rounded-full shadow-md hover:bg-blue-800 transition-transform hover:scale-110">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-brand-blue text-white">
+                                <th class="p-3">Check</th>
+                                <th class="p-3" data-th="กำหนดส่ง" data-en="Due Date">กำหนดส่ง</th>
+                                <th class="p-3" data-th="รหัส/วิชา" data-en="Code/Subject">รหัส/วิชา</th>
+                                <th class="p-3" data-th="ชื่องาน" data-en="Task">ชื่องาน</th>
+                                <th class="p-3" data-th="สถานที่ส่ง" data-en="Location">สถานที่ส่ง</th>
+                                <th class="p-3" data-th="ที่มา/ไฟล์" data-en="Source">ที่มา/ไฟล์</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="score" class="tab-content">
+            <div class="bg-white dark:bg-brand-darkCard rounded-2xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-brand-blue dark:text-brand-gold border-l-4 border-brand-gold pl-3" data-th="คะแนนการทดสอบ" data-en="Test Scores">คะแนนการทดสอบ</h2>
+                    <button onclick="openModal('scoreModal')" class="bg-brand-blue text-white p-2 rounded-full shadow-md hover:bg-blue-800 transition-transform hover:scale-110">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    </button>
+                </div>
+
+                <div id="scoreContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-brand-blue text-white text-center py-4 mt-auto absolute w-full bottom-0">
+        <p class="text-sm">©Portfolio Chissanucha Fadsura ALLRIGHT RESERVED</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-brand-darkCard rounded-xl shadow-2xl p-8 max-w-sm w-full mx-4 transform transition-all">
+            <h3 class="text-2xl font-bold text-center text-brand-blue dark:text-brand-gold mb-6">Admin Login</h3>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Username</label>
+                    <input type="text" id="username" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:border-brand-blue" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Password</label>
+                    <input type="password" id="password" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:border-brand-blue" required>
+                </div>
+                <div id="loginError" class="text-red-500 text-sm hidden">Invalid credentials.</div>
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="closeModal('loginModal')" class="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Cancel</button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-brand-blue text-white rounded-lg hover:bg-blue-800">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Alert Modal (Custom Alert) -->
+    <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 z-[110] hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-brand-darkCard rounded-xl shadow-2xl p-6 max-w-xs w-full mx-4 text-center">
+            <p id="alertMessage" class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-6"></p>
+            <button onclick="closeModal('alertModal')" class="px-6 py-2 bg-brand-blue text-white rounded-lg hover:bg-blue-800">OK</button>
+        </div>
+    </div>
+
+    <!-- Add Award Modal -->
+    <div id="awardModal" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden flex items-center justify-center overflow-y-auto pt-20 pb-10">
+        <div class="bg-white dark:bg-brand-darkCard rounded-xl shadow-2xl p-6 max-w-2xl w-full mx-4">
+            <h3 class="text-xl font-bold text-brand-blue mb-4">เพิ่มผลงาน</h3>
+            <form id="awardForm" class="space-y-3 text-sm">
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label>วันที่ได้รับ (เช่น 1 มกราคม 2569)</label><input type="text" id="awDate" required class="form-input"></div>
+                    <div><label>ขณะอยู่ระดับชั้น</label><input type="text" id="awLevel" class="form-input"></div>
+                    <div><label>ระดับรางวัล (กรอบทอง)</label><input type="text" id="awAwardLvl" class="form-input"></div>
+                    <div>
+                        <label>ประเภทสิทธิ์ (กรอบทอง/เงิน/ทองแดง/ขาว)</label>
+                        <select id="awPriv" class="form-input">
+                            <option value="ทอง">ทอง</option><option value="เงิน">เงิน</option>
+                            <option value="ทองแดง">ทองแดง</option><option value="ขาว">ขาว</option>
+                        </select>
+                    </div>
+                    <div><label>ประเภทเหรียญรางวัล (กรอบเขียว)</label><input type="text" id="awMedal" class="form-input"></div>
+                    <div><label>ชื่อผลงาน</label><input type="text" id="awName" required class="form-input"></div>
+                    <div class="col-span-2"><label>หน่วยงาน</label><input type="text" id="awAgency" class="form-input"></div>
+                    <div class="col-span-2"><label>ผู้ที่ได้รับรางวัล (แบ่งข้อด้วย Enter)</label><textarea id="awWinners" class="form-input h-20"></textarea></div>
+                    <div class="col-span-2"><label>ครูที่ปรึกษา (แบ่งข้อด้วย Enter)</label><textarea id="awAdvisors" class="form-input h-20"></textarea></div>
+                    <div class="col-span-2"><label>ความรู้สึก/อธิบาย</label><textarea id="awDesc" class="form-input h-20"></textarea></div>
+                    <div class="col-span-2">
+                        <label>รูปภาพ</label>
+                        <input type="file" id="awImage" accept="image/*" class="form-input p-1">
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-4 justify-end">
+                    <button type="button" onclick="closeModal('awardModal')" class="px-4 py-2 bg-gray-200 rounded-lg">ยกเลิก</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-blue text-white rounded-lg">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        // *** สำคัญ: นำ URL ของ Web App ที่ได้จาก Google Apps Script มาใส่ที่นี่ ***
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysP5i09z1b9j2H34_g-7x5L9O18wK/exec"; 
+        
+        // State
+        const state = {
+            isLoggedIn: false,
+            lang: 'th',
+            theme: 'light',
+            data: {}
+        };
+
+        // Utility: Custom Alert
+        function showAlert(msg) {
+            document.getElementById('alertMessage').innerText = msg;
+            document.getElementById('alertModal').classList.remove('hidden');
+        }
+
+        // Utility: API Fetcher
+        async function fetchAPI(action, payload = {}) {
+            if (SCRIPT_URL === "YOUR_WEB_APP_URL_HERE") {
+                showAlert("กรุณาใส่ SCRIPT_URL ในโค้ดก่อนใช้งาน");
+                return null;
+            }
+            document.getElementById('loading').classList.remove('hidden');
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: action, ...payload })
+                });
+                const result = await response.json();
+                document.getElementById('loading').classList.add('hidden');
+                return result;
+            } catch (error) {
+                console.error("API Error:", error);
+                document.getElementById('loading').classList.add('hidden');
+                showAlert("เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล");
+                return null;
+            }
+        }
+
+        // ==========================================
+        // UI & NAVIGATION LOGIC
+        // ==========================================
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        });
+
+        function closeMenu() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            closeMenu();
+            
+            // Load specific tab data if not loaded
+            if (tabId === 'reading' && !state.data.schedule) loadSchedule();
+            if (tabId === 'list' && !state.data.listReading) loadListReading();
+            if (tabId === 'work' && !state.data.work) loadWorkData();
+            if (tabId === 'score' && !state.data.scores) loadScoreData();
+        }
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        themeToggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                document.getElementById('iconSun').classList.add('hidden');
+                document.getElementById('iconMoon').classList.remove('hidden');
+                state.theme = 'light';
+            } else {
+                html.classList.add('dark');
+                document.getElementById('iconSun').classList.remove('hidden');
+                document.getElementById('iconMoon').classList.add('hidden');
+                state.theme = 'dark';
+            }
+        });
+
+        // Language Toggle
+        document.getElementById('langToggle').addEventListener('click', () => {
+            state.lang = state.lang === 'th' ? 'en' : 'th';
+            document.querySelectorAll('[data-th]').forEach(el => {
+                el.innerText = el.getAttribute(`data-${state.lang}`);
+            });
+        });
+
+        // Modals
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // ==========================================
+        // AUTHENTICATION
+        // ==========================================
+        function toggleAuth() {
+            if (state.isLoggedIn) {
+                state.isLoggedIn = false;
+                updateAuthUI();
+                switchTab('portfolio');
+            } else {
+                openModal('loginModal');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            const res = await fetchAPI('login', { username: user, password: pass });
+            if (res && res.status === 'success') {
+                state.isLoggedIn = true;
+                closeModal('loginModal');
+                updateAuthUI();
+                document.getElementById('loginForm').reset();
+                showAlert("เข้าสู่ระบบสำเร็จ");
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+
+        function updateAuthUI() {
+            const btn = document.getElementById('authBtn');
+            const authMenus = document.getElementById('authMenus');
+            const loginWarning = document.getElementById('loginWarning');
+            const addAwardBtn = document.getElementById('addAwardBtn');
+
+            if (state.isLoggedIn) {
+                btn.innerText = "Logout";
+                btn.classList.replace('bg-brand-blue', 'bg-red-600');
+                btn.classList.replace('hover:bg-blue-800', 'hover:bg-red-700');
+                authMenus.classList.replace('hidden', 'flex');
+                loginWarning.classList.add('hidden');
+                addAwardBtn.classList.remove('hidden');
+            } else {
+                btn.innerText = "Login";
+                btn.classList.replace('bg-red-600', 'bg-brand-blue');
+                btn.classList.replace('hover:bg-red-700', 'hover:bg-blue-800');
+                authMenus.classList.replace('flex', 'hidden');
+                loginWarning.classList.remove('hidden');
+                addAwardBtn.classList.add('hidden');
+            }
+        }
+
+        // ==========================================
+        // DATA PROCESSING & RENDERING
+        // ==========================================
+
+        function calculateAge(dobStr) {
+            // สมมติว่ารูปแบบเป็น dd/mm/yyyy หรือ string ที่ JS parse ได้ 
+            // หากเป็น string ภาษาไทย ต้องเขียน parser เฉพาะ กรณีนี้ใช้ Date.parse พื้นฐาน
+            let dob = new Date(dobStr);
+            if (isNaN(dob)) return "-";
+            const diff_ms = Date.now() - dob.getTime();
+            const age_dt = new Date(diff_ms); 
+            return Math.abs(age_dt.getUTCFullYear() - 1970) + " ปี " + age_dt.getUTCMonth() + " เดือน";
+        }
+
+        // 1. Portfolio Render
+        async function loadPortfolio() {
+            const res = await fetchAPI('getPortfolio');
+            if (res && res.status === 'success') {
+                const d = res.data;
+                document.getElementById('pfImage').src = d.profileImage || "https://placehold.co/400x600";
+                document.getElementById('pfTitle1').innerText = d.title1;
+                document.getElementById('pfTitle2').innerText = d.title2;
+                document.getElementById('pfSubtitle').innerText = d.subtitle;
+                document.getElementById('pfDob').innerText = d.dob;
+                document.getElementById('pfAge').innerText = calculateAge(d.dob);
+                document.getElementById('pfRace').innerText = d.race;
+                document.getElementById('pfNation').innerText = d.nationality;
+                document.getElementById('pfReligion').innerText = d.religion;
+                
+                if (d.motto) {
+                    document.getElementById('pfMotto').innerText = `"${d.motto}"`;
+                } else {
+                    document.getElementById('pfMotto').parentElement.style.display = 'none';
+                }
+
+                document.getElementById('pfFather').innerText = d.father;
+                document.getElementById('pfMother').innerText = d.mother;
+                document.getElementById('pfAddress').innerText = d.address;
+
+                // Talents List
+                const ul = document.getElementById('pfTalents');
+                ul.innerHTML = '';
+                if (d.talents) {
+                    d.talents.split('\n').forEach(t => {
+                        if(t.trim()) ul.innerHTML += `<li>${t}</li>`;
+                    });
+                }
+
+                // Contacts
+                const contactDiv = document.getElementById('pfContactContainer');
+                contactDiv.innerHTML = '';
+                const addContact = (icon, data) => {
+                    if (data.text) {
+                        contactDiv.innerHTML += `<a href="${data.link}" target="_blank" class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-lg text-sm hover:bg-brand-blue hover:text-white transition-colors cursor-pointer border border-gray-200 dark:border-gray-700">
+                            <span class="font-bold">${icon}</span> <span>${data.text}</span>
+                        </a>`;
+                    }
+                };
+                addContact("Tel", d.tel);
+                addContact("IG", d.ig);
+                addContact("Line", d.line);
+                addContact("FB", d.fb);
+                addContact("Threads", d.threads);
+
+                // Edu
+                document.getElementById('eduLogo').src = d.eduLogo;
+                document.getElementById('eduSchool').innerText = d.eduSchool;
+                document.getElementById('eduAffiliation').innerText = d.eduAffiliation;
+                document.getElementById('eduAddress').innerText = d.eduAddress;
+                document.getElementById('eduGPA').innerText = d.eduGPA;
+            }
+            
+            // Load Awards after Portfolio
+            loadAwards();
+        }
+
+        async function loadAwards() {
+            const res = await fetchAPI('getAwards');
+            if (res && res.status === 'success') {
+                const container = document.getElementById('awardsContainer');
+                container.innerHTML = '';
+                res.data.forEach(aw => {
+                    // Logic for border color based on privilege
+                    let privBorder = 'border-gray-400';
+                    if (aw.privilegeType === 'ทอง') privBorder = 'border-yellow-400';
+                    else if (aw.privilegeType === 'เงิน') privBorder = 'border-gray-300';
+                    else if (aw.privilegeType === 'ทองแดง') privBorder = 'border-orange-400';
+
+                    let winnersList = aw.winners ? aw.winners.split('\n').map(w => `<li>${w}</li>`).join('') : '';
+                    let advisorsList = aw.advisors ? aw.advisors.split('\n').map(w => `<li>${w}</li>`).join('') : '';
+
+                    container.innerHTML += `
+                    <div class="bg-brand-lightBlue dark:bg-gray-800 rounded-xl overflow-hidden shadow-md border border-blue-100 dark:border-gray-700 flex flex-col h-full">
+                        <div class="h-48 bg-gray-200 relative">
+                            <img src="${aw.image || 'https://placehold.co/600x400'}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex-1 flex flex-col gap-2">
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="text-xs px-2 py-1 border border-yellow-500 text-yellow-600 dark:text-yellow-400 rounded-md font-medium">${aw.awardLevel}</span>
+                                <span class="text-xs px-2 py-1 border ${privBorder} rounded-md font-medium">${aw.privilegeType}</span>
+                                <span class="text-xs px-2 py-1 border border-green-500 text-green-600 dark:text-green-400 rounded-md font-medium">${aw.medalType}</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-brand-blue dark:text-gray-100 leading-tight">${aw.name}</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">${aw.agency}</p>
+                            <p class="text-xs text-brand-gold mt-1">${aw.date} | ${aw.level}</p>
+                            
+                            <div class="mt-2 text-xs text-gray-700 dark:text-gray-300 flex-1">
+                                <p class="font-bold">ผู้รับรางวัล:</p>
+                                <ul class="list-disc list-inside ml-1 mb-1">${winnersList}</ul>
+                                <p class="font-bold mt-1">ครูที่ปรึกษา:</p>
+                                <ul class="list-disc list-inside ml-1">${advisorsList}</ul>
+                                ${aw.description ? `<p class="mt-2 italic">"${aw.description}"</p>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            }
+        }
+
+        // Handle Add Award
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        document.getElementById('awardForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('awImage');
+            let base64 = null, fileName = null;
+            if (fileInput.files.length > 0) {
+                base64 = await fileToBase64(fileInput.files[0]);
+                fileName = fileInput.files[0].name;
+            }
+
+            const data = {
+                date: document.getElementById('awDate').value,
+                level: document.getElementById('awLevel').value,
+                awardLevel: document.getElementById('awAwardLvl').value,
+                privilegeType: document.getElementById('awPriv').value,
+                medalType: document.getElementById('awMedal').value,
+                name: document.getElementById('awName').value,
+                agency: document.getElementById('awAgency').value,
+                winners: document.getElementById('awWinners').value,
+                advisors: document.getElementById('awAdvisors').value,
+                description: document.getElementById('awDesc').value,
+                imageBase64: base64,
+                imageName: fileName
+            };
+
+            const res = await fetchAPI('addAward', { data: data });
+            if (res && res.status === 'success') {
+                showAlert("บันทึกผลงานสำเร็จ");
+                closeModal('awardModal');
+                document.getElementById('awardForm').reset();
+                loadAwards(); // Reload
+            }
+        });
+
+        function updateClock() {
+            const now = new Date();
+            // Thai Date formatting
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const thDate = now.toLocaleDateString('th-TH', options);
+            document.getElementById('realtimeDate').innerText = thDate;
+            
+            // Time
+            const time = now.toLocaleTimeString('th-TH');
+            document.getElementById('realtimeClock').innerText = time;
+
+            // Optional: Highlight logic based on time can be called here periodically
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        async function loadSchedule() {
+            const res = await fetchAPI('getSchedule');
+            if (res && res.status === 'success') {
+                state.data.schedule = res.data;
+                const data = res.data;
+                const thead = document.getElementById('scheduleHeader');
+                const tbody = document.getElementById('scheduleBody');
+                
+                thead.innerHTML = ''; tbody.innerHTML = '';
+                if(data.length === 0) return;
+
+                // Header
+                data[0].forEach(th => {
+                    thead.innerHTML += `<th class="p-3 whitespace-nowrap">${th}</th>`;
+                });
+
+                // Body & Highlight Logic (Simple match)
+                const now = new Date();
+                const thDateMatch = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' }); // e.g. 11 ตุลาคม 2569
+                
+                // Find column index for today
+                let todayColIdx = -1;
+                for(let i=1; i<data[0].length; i++){
+                    if(data[0][i].includes(thDateMatch)) todayColIdx = i;
+                }
+
+                for (let i = 1; i < data.length; i++) {
+                    const row = data[i];
+                    let tr = document.createElement('tr');
+                    
+                    // Simple check if current time is within slot (e.g., "08.30 น. - 10.00 น.")
+                    // This is a naive check. A robust one parses the string.
+                    let isCurrentSlot = false;
+                    const slot = row[0];
+                    if(todayColIdx !== -1) {
+                        // Extract hours (Very simplified logic for UI demonstration)
+                        const currentHour = now.getHours();
+                        const currentMin = now.getMinutes();
+                        const currentTimeVal = currentHour + (currentMin/60);
+                        
+                        try {
+                            const parts = slot.replace(/น\./g, '').split('-');
+                            const startStr = parts[0].trim().split('.');
+                            const endStr = parts[1].trim().split('.');
+                            const start = parseInt(startStr[0]) + (parseInt(startStr[1])/60);
+                            const end = parseInt(endStr[0]) + (parseInt(endStr[1])/60);
+                            
+                            if (currentTimeVal >= start && currentTimeVal <= end) {
+                                isCurrentSlot = true;
+                            }
+                        } catch(e){}
+                    }
+
+                    if (isCurrentSlot) tr.classList.add('bg-yellow-100', 'dark:bg-yellow-900', 'border-2', 'border-yellow-500');
+                    else tr.classList.add('hover:bg-gray-50', 'dark:hover:bg-gray-800');
+
+                    row.forEach((cell, idx) => {
+                        let td = document.createElement('td');
+                        td.className = "p-3 border-b dark:border-gray-700";
+                        // If it's today's column and current slot, highlight text
+                        if (isCurrentSlot && idx === todayColIdx) {
+                            td.innerHTML = `<span class="font-bold text-brand-gold text-lg">${cell}</span>`;
+                        } else {
+                            td.innerText = cell;
+                        }
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                }
+            }
+        }
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        
+        // Setup initial Tailwind form classes helper
+        document.head.insertAdjacentHTML("beforeend", `<style>
+            .form-input { width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; padding: 0.5rem; outline: none; }
+            .dark .form-input { background-color: #374151; border-color: #4b5563; color: white; }
+        </style>`);
+
+        window.onload = () => {
+            loadPortfolio(); // Load public data on start
+            
+            // Generate other forms UI via JS to save HTML lines
+            generateWorkModal();
+            generateScoreModal();
+        };
+
+        async function loadListReading() {
+            const res = await fetchAPI('getListReading');
+            if (res && res.status === 'success') {
+                state.data.listReading = res.data;
+                renderListReading();
+            }
+        }
+
+        function renderListReading() {
+            const container = document.getElementById('listReadingContainer');
+            container.innerHTML = '';
+            const data = state.data.listReading;
+            
+            // Grouping: Level -> Subject -> Unit -> Subtopics
+            let tree = {};
+            data.forEach(item => {
+                if(!tree[item.level]) tree[item.level] = {};
+                if(!tree[item.level][item.subject]) tree[item.level][item.subject] = {};
+                if(!tree[item.level][item.subject][item.unit]) tree[item.level][item.subject][item.unit] = [];
+                tree[item.level][item.subject][item.unit].push(item);
+            });
+
+            // Generate HTML (Using standard Details/Summary for dropdowns)
+            for (let lvl in tree) {
+                let lvlHtml = `<details class="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-2">
+                    <summary class="p-3 font-bold text-brand-blue dark:text-brand-gold cursor-pointer outline-none">${lvl}</summary>
+                    <div class="p-3 pl-6 space-y-2 border-t dark:border-gray-700">`;
+                
+                for (let sub in tree[lvl]) {
+                    lvlHtml += `<details class="bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600">
+                        <summary class="p-2 font-semibold text-gray-700 dark:text-gray-200 cursor-pointer outline-none">${sub}</summary>
+                        <div class="p-2 pl-6 space-y-2 border-t dark:border-gray-600">`;
+                    
+                    for (let unit in tree[lvl][sub]) {
+                        // Check if all subtopics are checked
+                        const allChecked = tree[lvl][sub][unit].every(i => i.checked);
+                        
+                        lvlHtml += `<details class="bg-gray-50 dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-500">
+                            <summary class="p-2 flex items-center gap-2 cursor-pointer outline-none text-sm text-gray-800 dark:text-gray-200">
+                                <input type="checkbox" ${allChecked ? 'checked' : ''} onclick="toggleUnit(event, this)" class="w-4 h-4 text-brand-blue">
+                                <span class="font-medium">${unit}</span>
+                            </summary>
+                            <div class="p-2 pl-8 space-y-1 border-t dark:border-gray-500 text-sm">`;
+                        
+                        tree[lvl][sub][unit].forEach(item => {
+                            lvlHtml += `<div class="flex items-center gap-2">
+                                <input type="checkbox" id="chk_${item.row}" ${item.checked ? 'checked' : ''} onchange="updateReadCheck(${item.row}, this.checked)" class="w-4 h-4 sub-chk text-brand-blue">
+                                <label for="chk_${item.row}" class="text-gray-600 dark:text-gray-300">${item.subtopic}</label>
+                            </div>`;
+                        });
+                        
+                        lvlHtml += `</div></details>`;
+                    }
+                    lvlHtml += `</div></details>`;
+                }
+                lvlHtml += `</div></details>`;
+                container.innerHTML += lvlHtml;
+            }
+        }
+
+        async function updateReadCheck(row, isChecked) {
+            // Update UI state silently, send to API
+            fetchAPI('updateReadingList', { row: row, isChecked: isChecked });
+            // Optional: Re-evaluate parent checkbox state (omitted for brevity)
+        }
+
+        function toggleUnit(e, checkbox) {
+            // Stop details from toggling
+            e.stopPropagation(); 
+            const details = checkbox.closest('details');
+            const subChecks = details.querySelectorAll('.sub-chk');
+            subChecks.forEach(chk => {
+                if (chk.checked !== checkbox.checked) {
+                    chk.checked = checkbox.checked;
+                    // Trigger change event to save
+                    chk.dispatchEvent(new Event('change')); 
+                }
+            });
+        }
+
+        async function loadWorkData() {
+            const res = await fetchAPI('getWork');
+            if (res && res.status === 'success') {
+                state.data.work = res.data;
+                const tbody = document.getElementById('workTableBody');
+                tbody.innerHTML = '';
+                
+                res.data.forEach(w => {
+                    // Check Due Date
+                    let dueStr = w.dueDate;
+                    let isOverdue = false;
+                    try {
+                        // Assuming string format can be parsed or is sortable. 
+                        // Real implementation needs precise Date parsing based on Thai string format
+                        let dDate = new Date(dueStr);
+                        if(dDate < new Date() && !w.checked) isOverdue = true;
+                    }catch(e){}
+
+                    const rowClass = isOverdue ? "text-red-600 dark:text-red-400 font-bold" : "text-gray-700 dark:text-gray-300";
+
+                    let sourceHtml = w.source;
+                    if(w.source && w.source.toString().startsWith('http')) {
+                        sourceHtml = `<a href="${w.source}" target="_blank" class="text-blue-500 underline">เปิดไฟล์</a>`;
+                    }
+
+                    tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="p-3 border-b dark:border-gray-700"><input type="checkbox" ${w.checked ? 'checked' : ''} disabled></td>
+                        <td class="p-3 border-b dark:border-gray-700 ${rowClass}">${w.dueDate}</td>
+                        <td class="p-3 border-b dark:border-gray-700">
+                            <span class="block font-bold">${w.code}</span>
+                            <span class="block text-xs text-gray-500">${w.name}<br>(${w.teacher})</span>
+                        </td>
+                        <td class="p-3 border-b dark:border-gray-700">${w.task}</td>
+                        <td class="p-3 border-b dark:border-gray-700 text-xs">${w.location}</td>
+                        <td class="p-3 border-b dark:border-gray-700 text-xs">${sourceHtml}</td>
+                    </tr>`;
+                });
+            }
+        }
+
+        function generateWorkModal() {
+            const html = `
+            <div id="workModal" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden flex items-center justify-center pt-10">
+                <div class="bg-white dark:bg-brand-darkCard rounded-xl shadow-2xl p-6 max-w-lg w-full mx-4">
+                    <h3 class="text-xl font-bold text-brand-blue mb-4">เพิ่มภาระงาน</h3>
+                    <form id="workForm" class="space-y-3 text-sm">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label>วันที่บันทึก</label><input type="date" id="wkRecord" required class="form-input"></div>
+                            <div><label>รหัสวิชา</label><select id="wkCode" onchange="fillWorkSubject()" required class="form-input"><option value="">โหลด...</option></select></div>
+                            <div class="col-span-2 text-xs text-gray-500" id="wkSubjInfo">เลือกวิชาเพื่อแสดงข้อมูล</div>
+                            
+                            <div class="col-span-2"><label>ชื่องาน</label><input type="text" id="wkTask" required class="form-input"></div>
+                            
+                            <div><label>วันที่สั่ง</label><input type="date" id="wkOrder" required class="form-input"></div>
+                            <div><label>กำหนดส่ง</label><input type="date" id="wkDue" required class="form-input"></div>
+                            
+                            <div class="col-span-2"><label>สถานที่ส่ง</label><input type="text" id="wkLoc" class="form-input"></div>
+                            
+                            <div class="col-span-2">
+                                <label>ที่มา (แนบไฟล์ หรือ พิมพ์ข้อความ)</label>
+                                <input type="file" id="wkFile" class="form-input p-1 mb-1">
+                                <input type="text" id="wkSourceText" placeholder="หรือพิมพ์ URL/ข้อความที่นี่" class="form-input">
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4 justify-end">
+                            <button type="button" onclick="closeModal('workModal')" class="px-4 py-2 bg-gray-200 rounded-lg">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-brand-blue text-white rounded-lg">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', html);
+
+            // Load subjects for dropdown when clicking work tab
+            document.getElementById('menuBtn').addEventListener('click', loadWorkSubjects);
+            
+            document.getElementById('workForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const fileInput = document.getElementById('wkFile');
+                let base64 = null, fileName = null;
+                if (fileInput.files.length > 0) {
+                    base64 = await fileToBase64(fileInput.files[0]);
+                    fileName = fileInput.files[0].name;
+                }
+                
+                // Get selected subject data
+                const subjInfo = state.data.subjects.find(s => s.code === document.getElementById('wkCode').value);
+
+                const data = {
+                    recordDate: document.getElementById('wkRecord').value,
+                    code: document.getElementById('wkCode').value,
+                    name: subjInfo ? subjInfo.name : "",
+                    teacher: subjInfo ? subjInfo.teacher : "",
+                    task: document.getElementById('wkTask').value,
+                    orderDate: document.getElementById('wkOrder').value,
+                    dueDate: document.getElementById('wkDue').value,
+                    location: document.getElementById('wkLoc').value,
+                    sourceText: document.getElementById('wkSourceText').value,
+                    fileBase64: base64,
+                    fileName: fileName
+                };
+
+                const res = await fetchAPI('addWork', { data: data });
+                if (res && res.status === 'success') {
+                    showAlert("บันทึกงานสำเร็จ");
+                    closeModal('workModal');
+                    document.getElementById('workForm').reset();
+                    loadWorkData();
+                }
+            });
+        }
+
+        async function loadWorkSubjects() {
+            if (state.data.subjects) return;
+            const res = await fetchAPI('getSubjectList');
+            if (res && res.status === 'success') {
+                state.data.subjects = res.data;
+                const select = document.getElementById('wkCode');
+                select.innerHTML = '<option value="">เลือกรหัสวิชา</option>';
+                res.data.forEach(s => {
+                    select.innerHTML += `<option value="${s.code}">${s.code}</option>`;
+                });
+            }
+        }
+
+        function fillWorkSubject() {
+            const code = document.getElementById('wkCode').value;
+            const info = document.getElementById('wkSubjInfo');
+            const subj = state.data.subjects?.find(s => s.code === code);
+            if (subj) {
+                info.innerHTML = `<span class="font-bold">${subj.name}</span> <br> ครูผู้สอน: ${subj.teacher}`;
+            } else {
+                info.innerHTML = '';
+            }
+        }
+
+        async function loadScoreData() {
+            const res = await fetchAPI('getScores');
+            if (res && res.status === 'success') {
+                const container = document.getElementById('scoreContainer');
+                container.innerHTML = '';
+                res.data.forEach(sc => {
+                    // Score Progress calculation
+                    const pct = (parseFloat(sc.score) / parseFloat(sc.maxScore)) * 100 || 0;
+                    const colorClass = pct >= 80 ? 'bg-green-500' : (pct >= 50 ? 'bg-yellow-500' : 'bg-red-500');
+
+                    // Images (Simple slider placeholder using flex overflow)
+                    let imgsHtml = '';
+                    if(sc.images && sc.images.length > 0) {
+                        imgsHtml = `<div class="flex overflow-x-auto gap-2 hide-scroll py-2">`;
+                        sc.images.forEach(img => {
+                            if(img.trim()) imgsHtml += `<img src="${img.trim()}" class="h-24 w-auto object-cover rounded shadow-sm border border-gray-200">`;
+                        });
+                        imgsHtml += `</div>`;
+                    }
+
+                    container.innerHTML += `
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-blue dark:text-gray-100">${sc.name}</h4>
+                                <p class="text-xs text-gray-500">${sc.center} ${sc.round ? `| รอบ: ${sc.round}` : ''}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-black text-brand-gold">${sc.score}</span>
+                                <span class="text-sm text-gray-500">/${sc.maxScore}</span>
+                            </div>
+                        </div>
+                        <p class="text-sm font-medium mb-2">${sc.subject}</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-4 dark:bg-gray-700">
+                            <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
+                        </div>
+                        ${imgsHtml}
+                    </div>`;
+                });
+            }
+        }
+
+        function generateScoreModal() {
+            const html = `
+            <div id="scoreModal" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden flex items-center justify-center pt-10">
+                <div class="bg-white dark:bg-brand-darkCard rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
+                    <h3 class="text-xl font-bold text-brand-blue mb-4">เพิ่มคะแนนทดสอบ</h3>
+                    <form id="scoreForm" class="space-y-3 text-sm">
+                        <div><label>ชื่อการทดสอบ</label><input type="text" id="scName" required class="form-input"></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label>ศูนย์การทดสอบ</label><input type="text" id="scCenter" class="form-input"></div>
+                            <div><label>รอบที่</label><input type="text" id="scRound" class="form-input"></div>
+                            <div class="col-span-2"><label>วิชา</label><input type="text" id="scSubj" required class="form-input"></div>
+                            <div><label>คะแนนที่ได้</label><input type="number" id="scScore" step="0.01" required class="form-input"></div>
+                            <div><label>คะแนนเต็ม</label><input type="number" id="scMax" step="0.01" required class="form-input"></div>
+                        </div>
+                        <div>
+                            <label>ภาพประกอบ (เลือกได้หลายภาพ)</label>
+                            <input type="file" id="scImages" accept="image/*" multiple class="form-input p-1">
+                        </div>
+                        <div class="flex gap-3 mt-4 justify-end">
+                            <button type="button" onclick="closeModal('scoreModal')" class="px-4 py-2 bg-gray-200 rounded-lg">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-brand-blue text-white rounded-lg">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', html);
+
+            document.getElementById('scoreForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const fileInput = document.getElementById('scImages');
+                let imagesData = [];
+                
+                // Read all selected files
+                if (fileInput.files.length > 0) {
+                    for(let i=0; i<fileInput.files.length; i++) {
+                        let base64 = await fileToBase64(fileInput.files[i]);
+                        imagesData.push({ base64: base64, name: fileInput.files[i].name });
+                    }
+                }
+
+                const data = {
+                    name: document.getElementById('scName').value,
+                    center: document.getElementById('scCenter').value,
+                    round: document.getElementById('scRound').value,
+                    subject: document.getElementById('scSubj').value,
+                    score: document.getElementById('scScore').value,
+                    maxScore: document.getElementById('scMax').value,
+                    images: imagesData
+                };
+
+                const res = await fetchAPI('addScore', { data: data });
+                if (res && res.status === 'success') {
+                    showAlert("บันทึกคะแนนสำเร็จ");
+                    closeModal('scoreModal');
+                    document.getElementById('scoreForm').reset();
+                    loadScoreData();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
