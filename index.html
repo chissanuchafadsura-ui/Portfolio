@@ -949,16 +949,35 @@ footer p {
 var CONFIG = {
   // ถ้าใช้กับ Apps Script ให้ตั้งเป็น null จะใช้ google.script.run อัตโนมัติ
   // ถ้าใช้กับ GitHub Pages ให้ใส่ URL ของ Web app เช่น
-  // apiUrl: 'https://script.google.com/macros/s/AKfy.../exec'
+  // apiUrl: 'https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec'
+  //
+  // ===== อัตโนมัติ: ถ้าไม่ตั้งค่า ระบบจะตรวจจาก URL ปัจจุบัน =====
+  // - ถ้าเปิดจาก script.google.com (โหมด Apps Script) → ใช้ google.script.run
+  // - ถ้าเปิดจาก origin อื่น (เช่น github.io) → ต้องตั้ง apiUrl เอง
   apiUrl: null
 };
+
+// ตรวจอัตโนมัติว่าอยู่ในโหมด Apps Script หรือไม่ (script.google.com)
+(function autoDetectMode() {
+  try {
+    var host = (typeof window !== 'undefined' && window.location && window.location.hostname) || '';
+    if (CONFIG.apiUrl === null && host.indexOf('script.google.com') > -1) {
+      // เปิดจาก Apps Script ใช้ google.script.run
+      CONFIG.apiUrl = 'https://script.google.com/macros/s/AKfycbz7LzSeNWo7zs1cDpaPmj0Ipuh7B5Qh9zIjKO2rar8E3JajUFamdgIHYQtZPhXbGWArHg/exec';
+    } else if (CONFIG.apiUrl === null && host && host !== '' &&
+               typeof google !== 'undefined' && google.script && google.script.run) {
+      // มี google.script.run อยู่ (ใน iframe ของ Apps Script)
+      CONFIG.apiUrl = null;
+    }
+  } catch (e) { /* ignore */ }
+})();
 
 /* ============ STATE ============ */
 var state = {
   lang: 'th',
   theme: 'light',
-  token: sessionStorage.getItem('pf_token') || '',
-  user: sessionStorage.getItem('pf_user') || '',
+  token: (function () { try { return sessionStorage.getItem('pf_token') || ''; } catch (e) { return ''; } })(),
+  user: (function () { try { return sessionStorage.getItem('pf_user') || ''; } catch (e) { return ''; } })(),
   page: 'portfolio',
   portfolio: null,
   awards: [],
@@ -1122,7 +1141,23 @@ function api(action, payload, opts) {
         .withFailureHandler(reject);
       runner[mapGasFn(action)].apply(runner, args);
     } else {
-      reject(new Error('ไม่พบ backend — ตั้งค่า CONFIG.apiUrl หรือใช้ใน Apps Script'));
+      // แสดงข้อความชัดเจนว่าต้องทำอะไรต่อ
+      var host = (typeof window !== 'undefined' && window.location && window.location.hostname) || '';
+      var isLocal = !host || host === 'localhost' || host === '127.0.0.1' || window.location.protocol === 'file:';
+      var msg = 'ไม่พบ backend — ต้องเลือก 1 ใน 2 วิธี:\n\n' +
+        '① โหมด Apps Script (ง่ายที่สุด):\n' +
+        '   ใน Apps Script กด + (เพิ่มไฟล์) > HTML ตั้งชื่อ index\n' +
+        '   วางโค้ด index.html ทั้งหมดแล้วบันทึก\n' +
+        '   จากนั้น Deploy เป็น Web app แล้วเปิด URL ที่ได้\n\n' +
+        '② โหมด GitHub Pages:\n' +
+        '   อัปโหลด index.html ไปที่ GitHub repository\n' +
+        '   เปิด Settings > Pages เลือก branch main\n' +
+        '   แล้วแก้ CONFIG.apiUrl ในบรรทัดที่มี "apiUrl:" ให้เป็น URL ของ Web app เช่น\n' +
+        "   apiUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'";
+      if (isLocal) {
+        msg += '\n\n⚠ คุณกำลังเปิดไฟล์แบบ local (file:// หรือ localhost) — ต้องเปิดผ่าน URL ของ Web app หรือ GitHub Pages เท่านั้น';
+      }
+      reject(new Error(msg));
     }
   });
 }
@@ -1283,23 +1318,26 @@ function parseTimeSlot(text) {
 }
 
 /* ============ THEME ============ */
+// ตัวช่วยอ่าน/เขียน localStorage แบบปลอดภัย (รองรับกรณีเปิดแบบ file://)
+function lsGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+function lsSet(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
 function initTheme() {
   // default เป็น light เสมอ เว้นแต่ผู้ใช้เลือก dark ไว้ชัดเจน
-  var saved = localStorage.getItem('pf_theme');
+  var saved = lsGet('pf_theme');
   if (saved === 'dark') setTheme('dark');
   else setTheme('light');
 }
 function setTheme(mode) {
   state.theme = mode;
   document.body.setAttribute('data-theme', mode);
-  localStorage.setItem('pf_theme', mode);
+  lsSet('pf_theme', mode);
   $('icoMoon').style.display = mode === 'light' ? '' : 'none';
   $('icoSun').style.display = mode === 'dark' ? '' : 'none';
 }
 
 /* ============ LANGUAGE ============ */
 function initLang() {
-  var saved = localStorage.getItem('pf_lang');
+  var saved = lsGet('pf_lang');
   state.lang = saved || 'th';
   applyLang();
 }
@@ -1365,8 +1403,8 @@ function doLogin(username, password) {
     if (res && res.ok) {
       state.token = res.token;
       state.user = res.user;
-      sessionStorage.setItem('pf_token', res.token);
-      sessionStorage.setItem('pf_user', res.user);
+      try { sessionStorage.setItem('pf_token', res.token); } catch (e) {}
+      try { sessionStorage.setItem('pf_user', res.user); } catch (e) {}
       updateAuthUI();
       toast(t('toast.login.ok'));
       goto(state.page);
@@ -1380,8 +1418,8 @@ function doLogout() {
   api('logout').catch(function () {}).then(function () {
     state.token = '';
     state.user = '';
-    sessionStorage.removeItem('pf_token');
-    sessionStorage.removeItem('pf_user');
+    try { sessionStorage.removeItem('pf_token'); } catch (e) {}
+    try { sessionStorage.removeItem('pf_user'); } catch (e) {}
     updateAuthUI();
     goto('portfolio');
   });
@@ -2344,7 +2382,7 @@ $('btnTheme').addEventListener('click', function () {
 });
 $('btnLang').addEventListener('click', function () {
   state.lang = state.lang === 'th' ? 'en' : 'th';
-  localStorage.setItem('pf_lang', state.lang);
+  lsSet('pf_lang', state.lang);
   applyLang();
   // รีเรนเดอร์หน้าปัจจุบัน
   goto(state.page);
@@ -2388,11 +2426,13 @@ $('modalOverlay').addEventListener('click', function (e) {
 });
 
 /* ============ INIT ============ */
-// กู้คืนสถานะล็อกอินจาก sessionStorage
-if (sessionStorage.getItem('pf_token')) {
-  state.token = sessionStorage.getItem('pf_token');
-  state.user = sessionStorage.getItem('pf_user') || '';
-}
+// กู้คืนสถานะล็อกอินจาก sessionStorage (ป้องกันกรณีเปิดแบบ file:// ที่ sessionStorage ใช้ไม่ได้)
+try {
+  if (sessionStorage.getItem('pf_token')) {
+    state.token = sessionStorage.getItem('pf_token');
+    state.user = sessionStorage.getItem('pf_user') || '';
+  }
+} catch (e) {}
 initTheme();
 initLang();
 updateAuthUI();
